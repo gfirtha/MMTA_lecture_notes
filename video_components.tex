@@ -1,11 +1,11 @@
-\section{Videojel formátumok}
+\section{Videóformátumok}
 
 A következő szakasz a különböző analóg, valamint digitális videoformátumok paraméterválasztásának kérdéseivel foglalkozik.
 Láthatjuk, milyen irányelvek mentén került megválasztásra az egyes formátumok képmérete, térbeli felbontása (pixelszáma), képfrissítési frekvenciája. 
 
 \subsection{SD formátumok}
 
-Elsőként a korai, alacsony felbontású NTSC és PAL analóg televíziós rendszerek képformátumát és paramétereinek megválasztását tárgyaljuk.
+Elsőként a korai, normál felbontású NTSC és PAL analóg televíziós rendszerek képformátumát és paramétereinek megválasztását tárgyaljuk.
 Bár ezen analóg rendszerek már csak elvétve vannak használatban világszerte---Magyarországon például több éves digitális átállásra való előkészülés után 2013-ban szűnt meg az analóg műsorszórás---, mégis fontos tárgyalni főbb jellemzőit.
 Ennek oka történelmi jelentőségük mellett az, hogy a jelenlegi digitális műsorszórásban (a HD adás mellett) legelterjedtebb \textbf{normál felbontású (Standard Definition, SD)} digitális formátumokat közvetlenül az NTSC és PAL videojelek digitalizálásával kapjuk meg.\footnote{Pontosabban az NTSC és PAL kompozit jeleket alkotó chroma és luma komponensek digitalizálásával.}
 
@@ -19,7 +19,7 @@ Adott pixelméret/sortávolság mellett az optimális nézőtávolság megválas
 
 A kép mérete mellett fontos térbeli jellemző a kijelző horizontális és vertikális dimenziójának aránya, azaz az ún. \textbf{képarány}.
 Az SD formátum alapjául szolgáló NTSC szabvány létrehozása az 1940-es évekig nyúlik vissza, és kidolgozása során nyilvánvaló törekvés volt a korabeli mozifilmek megjelenítésével való kompatibilitás biztosítása.
-A mozi korai korszaka, így a teljes némafilm korszak (az anamorf lencsék megjelenése előtt) kizárólag 4:3 képarányt alkalmazott, azaz a horizontális és vertikális képhosszak aránya $1.3\dot{3}$\footnote{A 4:3 képarány létrejötte egészen Thomas Alva Edison munkájáig vezethető vissza, aki az általa használt 35 mm széles filmen egy képkockát 4 perforációnyi magasságúra (19 mm) definiált. 
+A mozi korai korszaka, így a teljes némafilm korszak (az anamorf lencsék megjelenése előtt) kizárólag 4:3 képarányt alkalmazott, azaz a horizontális és vertikális képhosszak aránya $1.3\dot{3}$ volt\footnote{A 4:3 képarány létrejötte egészen Thomas Alva Edison munkájáig vezethető vissza, aki az általa használt 35 mm széles filmen egy képkockát 4 perforációnyi magasságúra (19 mm) definiált. 
 A perforációk közötti kihasználható szélességből (25.375 mm) így a hasznos terület épp 4:3-hoz képarányúra adódik. 
 A 35 mm-es filmen 4 perforációnyi képméretet 1909-ben fogadták el általános szabványnak ("4-perf negative pulldown"), lehetővé téve a szabványos mozikamerák, mozigépek és így a mozi térhódítását.}.
 Habár az 50-es években megjelentek az első szélesvásznú mozis formátumok, az NTSC szabvány ezt a 4:3 képarányt fogadta el a televízió szabványos képarányának.
@@ -27,22 +27,118 @@ Habár az 50-es években megjelentek az első szélesvásznú mozis formátumok,
 % Forrás: https://www.shutterstock.com/blog/4-3-aspect-ratio
 % https://www.cinematographers.nl/FORMATS1.html
 
-\paragraph{Képfrissítési frekvencia és váltott-soros letapogatás:\\}
+\paragraph{Képfrissítési frekvencia:\\}
 
 Következő kérdésként vizsgáljuk a mozgókép temporális mintavételi frekvenciájának, azaz a másodpercenként felvillantott képelemek számának megválasztási szempontjait.
 A továbbiakban ezt a frekvenciát \textbf{képfrissítési frekvenciának} nevezzük.
-Ennek meghatározása két szempontot szükséges figyelembe vennünk.
+Ennek meghatározáséhoz két szempontot szükséges figyelembe vennünk.
 Egyrészt mozgó objektumok képi reprodukciója során fontos, hogy elegendő mozgási fázist tároljunk ahhoz, hogy a megfigyelő folytonosnak érzékelje a képtartalom változását.
-Emellett elegendően magas képfrissítési frekvenciát kell választanunk a villogás (flickering) elkerüléséhez, azaz a képfrissítési frekvenciának a fúziós frekvencia (flicker fusion threshold) fölé kell, hogy essen.
+Emellett elegendően magas képfrissítési frekvenciát kell választanunk a \textbf{villogás (flickering)} elkerüléséhez, azaz a képfrissítési frekvenciának a \textbf{fúziós frekvencia (flicker fusion threshold)} fölé kell, hogy essen.
 
 Mint látni fogjuk, az utóbbi igény támaszt szigorúbb követelményt a képfrissítési frekvencia megválasztásánál.
-Ennek oka, hogy az ún. béta mozgás (beta movement) nevű optikai illúzió amely a látás azon jellemzője, hogy egymás utána levetített statikus képek sorozata kb. 10-12 kép/másodperc változás fölött az emberi szem már folytonos, látszólagos mozgásként érzékel.
+Ennek oka az ún. béta mozgás (beta movement) nevű optikai illúzió, amely a látás azon jellemzője, hogy egymás után vetített statikus képek sorozatát $~10-12~\mathrm{kép/másodperc}$ (vagy frame-per-sec, fps) változás fölött az emberi szem már folytonos, látszólagos mozgásként érzékeli.
 A béta mozgás magyarázata máig sem teljesen tisztázott, leggyakrabban a látóidegen terjedő ingerület létrejöttének gyakoriságával, terjedési tulajdonságaival magyarázzák.
-Ennek megfelelően a folytonos mozgás biztosításához $~20 \mathrm{Hz}$ képfrissítési frekvencia már elegendő lenne.
+A béta mozgás miatt tehát a folytonos mozgás biztosításához $~20 \mathrm{Hz}$ képfrissítési frekvencia már elegendő lenne 
+\footnote{Érdemes megjegyezni, hogy ez a képfrissítési frekvencia csak ahhoz elegendő, hogy ténylegesen mozgásnak érzékeljük a képsorozatot, ettől még a mozgás gyakran ,,darabos'': a nagyobb---pl. 60 kép/másodperccel rögzített és vetített képek folytonosabbnak, ,,simábbnak'' fognak tűnni. 
+Épp ezért számos modern kijelző, illetve számítógépes szoftver képes időbeli interpolációra, amely során az MPEG kódolóban is használatos mozgásbecslés alkalmazásával megpróbálják ''kitalálni'' az egyes képkockák közötti tartalmat.
+Érdekes tény azonban, hogy a néző szeme már kellően hozzászokott a mozis 24 fps rögzítési frekvenciához, emiatt a magasabb fps-el rögzített, vagy interpolált videó természetellenesen hat.
+Ennek a hatásnak a neve a szappanopera effektus (soap opera effect), amely elnevezés onnan származik, hogy a TV-s szappanoperákat---a klasszikus filmhez képest olcsón---közvetlenül digitális videóra rögzítették jellemzően $60 \mathrm{fps}$-el.},
+ezt a képfrissítési frekvenciát azonban az átlagos néző még villogónak érzékelné.
 
+Ahhoz, hogy ezt elkerüljük, a képfrissítési frekvenciának tehát magasabbnak kell lennie a fúziós frekvenciánál.
+A fúziós frekvencia fényingerek változásának azon frekvenciája, amely fölött a fényinger változását az emberi szem már nem képes követni.
+Különböző világosságú felületek váltakozása esetén a gyakorlatban efölött a megfigyelő csak egy ,,összeolvadt" átlagos világosságot érzékelni.
+A fúziós frekvencia értéke számtalan tényezőtől függ. 
+Többek között emberről emberre változik, függ az átlagos megvilágítási szinttől és színhőmérséklettől, az adaptációs állapottól, a váltakozó fényinger színétől (a frekvencia növelésével jellemzően 15-20 Hz környékén a színezetbeli fluktuáció megszűnik, és csak a világosságszintek közötti vibrálás érzékelhető) amplitúdójától, és a gerjesztés helytől a retinán: azaz, hogy a villogást a fő látóterünkben, vagy a periférikus látásunkkal érzékeljük-e.
 
+Általánosan elmondható, hogy a fúziós frekvencia az embereknél 50-90 Hz közé esik: a fő látótérben, amelyet a csapok dominálnak a látás lassabb, itt a fúziós frekvencia ~50 Hz, míg a periférikus látás jóval gyorsabb, itt a fúziós frekvencia magasabb.
+Mivel az NTSC bevezetésénél a cél a fő látótér tartalommal való kitöltése volt, így célszerűen a képfrissítési frekvenciát 50-60 Hz környékére kellett választani.
+A konkrét érték megválasztását azonban már a katódsugárcsöves TV technológia egy hátránya határozta meg: a katódsugárcső tápfeszültségére rákerülő hálózati ,,brumm''.
 
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/ripple.png}
+	\end{overpic}
+	\caption{Periodikus hálózati brumm megjelenése az egyenirányított tápfeszültségen egyutas egyenirányítás esetén}
+	\label{Fig:ripple}
+\end{figure}
 
+\vspace{3mm}
+A brumm (angolul ripple) a hálózati váltófeszültség egyenirányításának tökéletlenségéből származó periodikus zavarjel, ahogy az a \ref{Fig:ripple} ábrán látható.
+A zavarjel frekvenciája a hálózati frekvenciával egyezik meg (egyutas egyenirányítás), vagy annak kétszerese (kétutas egyenirányítás esetén).
+Magyar elnevezése a hangerősítők kimenetén megszólaló jellemzően 50 Hz-es mélyfrekvenciás zugásból származik.
+Televízió esetében mivel ez a zavarjel közvetlenül hozzáadódik a katódsugárcső vezérlőjeléhez, ezért a zavarjel kirajzolódik a kijelzőn, így látható hibát okoz.
+
+Vizsgáljuk meg, mi rajzolódik ki a képernyőn, ha a katódsugárcső vezérlőjele, azaz maga a videó jel (az egyszerűség kedvéért fekete-fehér esetben, azaz a jel a kirajzolandó fénysűrűség) periodikus, legegyszerűbb esetben 0 és 1 között oszcilláló szinuszos, azaz
+\begin{equation}
+Y(t) = \frac{1}{2} \sin 2 \pi f t + \frac{1}{2},
+\end{equation}
+ahol $f$ a vezérlőjel frekvenciája.
+A képernyőre ekkora sorról sorra kirajzolódik ez a szinuszos vezérlőjel.
+A kérdés, hogy mi a képernyő tartalma a $f$ vezérlőfrekvencia függvényében.
+
+Jelölje a képfrekvenciát $f_V$ (mint vertikális frekvencia), és a sorfrekvenciát $f_H$ (mint horizontális frekvencia), köztünk természetesen fennáll az
+\begin{equation}
+f_H = N_V \cdot f_V
+\end{equation}
+összefüggés, ahol $N_V$ a képernyő sorainak száma.
+Könnyen belátható, hogy 
+\begin{itemize}
+\item $f = f_H$ választással minden sor tartalma ugyanazon szinuszhullám, a hullám kezdőfázisa minden sor elején és minden kép elején azonos, így egy álló, horizontális hullámforma jelenik meg a képernyőn, ahogy az a \ref{Fig:ripple_display} (a) ábrán látható.
+\item $f > f_H$ választással a szinuszos jel fázisa sorról sorra lassan növekszik (mivel a periódushossza rövidebb, mint egy TV sor), így a hullámforma a horizontálishoz képest enyhe dőlést mutat.
+Emellett már az első sorban is a hullám kezdőfázisa képről képre változik, így a teljes képtartalom lassan balra mozog.
+Hasonlóképp a sorfrekvencia alatti választással lassan jobbra mozgó képet kapunk.
+\item $f = f_V$ választással a teljes szinuszhullám egy teljes kép kirajzolásának ideje alatt rajzolódik ki.
+Mivel egy sor ideje alatt (megfelelően nagy $N_V$ sorszám esetén) a jel értéke alig változik, ezért soronként állandónak tekintheő a tartalom.
+Így tehát a teljes képidő alatt egy álló, vertikális szinuszhullám jelenik meg a kijelzőn, ahogy az az \ref{Fig:ripple_display} (b) ábrán látszik.
+\item $f > F_V$ választással a jelalak kezdőfázisa képről képre nő, így a hullámalak lassan felfelé mozdul.
+Hasonlóképp $f < F_V$ esetén a hullámalak lefelé mozog.
+\end{itemize}
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/vertical_sine.png}
+	\small
+	\put(0,0){(a)}
+	\end{overpic}
+	\hspace{5mm}
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/horizontal_sine.png}
+	\small
+	\put(0,0){(b)}
+	\end{overpic}
+	\caption{Periodikus jel képernyőn megjelenítve $f = f_V$ (a) és $f = f_H$ (b) választással}
+	\label{Fig:ripple_display}
+\end{figure}
+
+Az eszmefuttatás eredményeképp beláttuk, hogy periodikus jelek megjelenítése során megfelelő választással álló rajzolatot jeleníthetünk meg a kijelzőn.
+Márpedig a hálózati brumm épp ilyen periodikus zavarjelként jelenik meg a képernyőn, frekvenciája pedig az adott régió hálózati frekvenciája.
+A korai, fekete-fehér televíziós rendszer megalkotása során végzett megfigyelési tesztek egyértelműen kimutatták, hogy elektromos zavar esetén az álló zavarkép jóval kevésbé zavarja a nézőt, mintha a zavar mozgó rajzolatként jelenne meg.
+Ennek megfelelően mind az amerikai, mind később, az európai rendszer esetében a képfrekvenciát a hálózati frekvenciának választották meg, így biztosítva, hogy az esetleges hálózati brumm a kijelzőn egy vertikális állóképként jelenik meg, amely a nézők számára alig észrevehető.
+Így tehát az amerikai rendszerben a képfrekvencia értéke $f_{\mathrm{V,USA}} = 60~\mathrm{Hz}$, az európai rendszerben $f_{\mathrm{V,Eu}} = 50~\mathrm{Hz}$ lett \footnote{A helyzet a színes TV bevezetésével, azaz az NTSC megjelenésével Amerikában bonyolódott, mivel a színsegédvivő frekvenciáját nem lehetett megfelelően megválasztani.
+Részletek nélkül: ennek eredményeképp mind a képfrekvenciát, mind a sorfrekvenciát $0.1~\%$-al csökkentették, így az amerikai rendszer képfrekvenciája $f_V = 60\cdot \frac{1000}{1001} = 59.94~\mathrm{Hz}$ lett végül. Ezt a változás szerencsére a megfelelő szinkronjeleknek köszönhetően a már létező TV vevőkészüléket nem befolyásolta.}.
+
+\paragraph{Váltott soros letapogatás:\\}
+Az előzőekben láthattuk, hogy a folytonos mozgás biztosításához már $20-25~\mathrm{Hz}$ képfrekvencia elegendő lenne, míg a villogás elkerüléséhez legalább $50-60~\mathrm{Hz}$ képfrissítési frekvencia szükséges.
+Ez már bizonyos szintű tömörítést tesz lehetővé, hiszen a teljes képtartalom elegendő, ha lassabban változik, mint kijelző rajzolási frekvenciája.
+
+\begin{figure}  
+\small
+  \begin{minipage}[c]{0.64\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures/triple_blade_shutter.png}
+	\end{overpic}   \end{minipage}\hfill
+	\begin{minipage}[c]{0.3\textwidth}
+    \caption{Triple blade shutter működése: \url{https://www.youtube.com/watch?v=jrSzRAch930} }
+\label{fig:triple_blade_shutter}  \end{minipage}
+\end{figure}
+
+Ez a tömörítés már a korai mozitechnikában is megjelent: 
+A korai, némafilmes korszakban számos képfrekvencia volt használatban $16-24~\mathrm{Hz}$ között.
+Manapság mozitechnikában a szabványos rögzítési frekvenciát $24~\mathrm{fps}$-re rögzítették.
+A villogás elkerüléséhez (tehát a képfrissítési frekvencia növeléséhez) speciális rekesszel látták el a vetítőgépet.
+A fénynyaláb útjában forgó rekesz, amelyen kettő, vagy három rés volt található (az ún. ''two'', vagy ''three blade shutter'') egy képkocka megjelenítése során tett meg egy teljes fordulatot, így a vetítőgép ugyanazt a képkockát kétszer, vagy háromszor villantja fel, mielőtt továbbhúzza a mozigép a szalagot.
+Ezzel az egyszerű trükkel a $24~\mathrm{fps}$-en rögzített tartalmat $48\mathrm{fps}$, illetve manapság jellemzően $72~\mathrm{fps}$-en lehet megjeleníteni a mozikban.
+
+Hasonlóan elven, a modern megjelenítők esetében a kijelző képfrissítési frekvenciája (pl. amivel egy LCD kijelző esetében a háttérvilágítás villog $200~\mathrm{Hz}$ körül) jóval a tényleges képtartalom frissítési frekvenciája fölött van.
+A TV műsorszórás bevezetésének idején azonban a vevőkészülékek nem voltak képesek a képtartalom tárolására, a vett jel közvetlenül, valós időben rajzolódott ki a kijelzőre.
 
 \subsubsection{Térbeli felbontás, pixelméret:}
 
