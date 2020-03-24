@@ -1,14 +1,52 @@
 \section{Videojel formátumok}
 
-A következő szakasz a különböző analóg, valamint digitális videoformátumok paraméterválasztásának kérdésével foglalkozik.
+A következő szakasz a különböző analóg, valamint digitális videoformátumok paraméterválasztásának kérdéseivel foglalkozik.
 Láthatjuk, milyen irányelvek mentén került megválasztásra az egyes formátumok képmérete, térbeli felbontása (pixelszáma), képfrissítési frekvenciája. 
 
 \subsection{SD formátumok}
 
 Elsőként a korai, alacsony felbontású NTSC és PAL analóg televíziós rendszerek képformátumát és paramétereinek megválasztását tárgyaljuk.
-Bár ezen analóg rendszerek már csak elvétve vannak világszerte használatban, mégis, történelmi jelentőségük mellett a jelenlegi digitális műsorszórásban legelterjedtebb SDTV (Standard Definition) digitális formátumokat közvetlenül az NTSC és PAL videojelek digitalizálásával kapjuk meg.\footnote{Pontosabban az NTSC és PAL kompozit jeleket alkotó chroma és luma jelek digitalizálásával.}
+Bár ezen analóg rendszerek már csak elvétve vannak használatban világszerte---Magyarországon például több éves digitális átállásra való előkészülés után 2013-ban szűnt meg az analóg műsorszórás---, mégis fontos tárgyalni főbb jellemzőit.
+Ennek oka történelmi jelentőségük mellett az, hogy a jelenlegi digitális műsorszórásban (a HD adás mellett) legelterjedtebb \textbf{normál felbontású (Standard Definition, SD)} digitális formátumokat közvetlenül az NTSC és PAL videojelek digitalizálásával kapjuk meg.\footnote{Pontosabban az NTSC és PAL kompozit jeleket alkotó chroma és luma komponensek digitalizálásával.}
 
-\paragraph{Raszterformátum:}
+\paragraph{Képarány és képméret:\\}
+Elsőként fontos leszögezni, mekkora képméretre kell optimális formátum-paramétereket választani.
+Az \ref{sec:HVS} fejezetben látható volt, hogy az emberi szemben a színlátás helye a sárgafolt, ezen belül is az éleslátásért a látógödörben (fovea centralis) elhelyezkedő receptorok felelnek.
+A látógödör mérete alapján az éleslátásunk a teljes $\approx200$ fokos látószögünkből kb. 10-15 fokot fed le a horizontális irányban.\footnote{http://hyperphysics.phy-astr.gsu.edu/hbase/vision/retina.html}
+A normál felbontású televíziós szabvány megalkotása során a cél ezen fő látószög tartalommal való kitöltése volt, vagyis a normál felbontású televízió kb. a látótérből 10 fokot kell, hogy kitöltsön (azaz a periférikus látásnak a képalkotásban nem volt szerepe).
+Természetesen a konkrét képméret ezek után a nézőtávolság függvénye.
+Adott pixelméret/sortávolság mellett az optimális nézőtávolság megválasztásával a későbbiekben foglalkozunk.
+
+A kép mérete mellett fontos térbeli jellemző a kijelző horizontális és vertikális dimenziójának aránya, azaz az ún. \textbf{képarány}.
+Az SD formátum alapjául szolgáló NTSC szabvány létrehozása az 1940-es évekig nyúlik vissza, és kidolgozása során nyilvánvaló törekvés volt a korabeli mozifilmek megjelenítésével való kompatibilitás biztosítása.
+A mozi korai korszaka, így a teljes némafilm korszak (az anamorf lencsék megjelenése előtt) kizárólag 4:3 képarányt alkalmazott, azaz a horizontális és vertikális képhosszak aránya $1.3\dot{3}$\footnote{A 4:3 képarány létrejötte egészen Thomas Alva Edison munkájáig vezethető vissza, aki az általa használt 35 mm széles filmen egy képkockát 4 perforációnyi magasságúra (19 mm) definiált. 
+A perforációk közötti kihasználható szélességből (25.375 mm) így a hasznos terület épp 4:3-hoz képarányúra adódik. 
+A 35 mm-es filmen 4 perforációnyi képméretet 1909-ben fogadták el általános szabványnak ("4-perf negative pulldown"), lehetővé téve a szabványos mozikamerák, mozigépek és így a mozi térhódítását.}.
+Habár az 50-es években megjelentek az első szélesvásznú mozis formátumok, az NTSC szabvány ezt a 4:3 képarányt fogadta el a televízió szabványos képarányának.
+%TODO anamorphic lenses?
+% Forrás: https://www.shutterstock.com/blog/4-3-aspect-ratio
+% https://www.cinematographers.nl/FORMATS1.html
+
+\paragraph{Képfrissítési frekvencia és váltott-soros letapogatás:\\}
+
+Következő kérdésként vizsgáljuk a mozgókép temporális mintavételi frekvenciájának, azaz a másodpercenként felvillantott képelemek számának megválasztási szempontjait.
+A továbbiakban ezt a frekvenciát \textbf{képfrissítési frekvenciának} nevezzük.
+Ennek meghatározása két szempontot szükséges figyelembe vennünk.
+Egyrészt mozgó objektumok képi reprodukciója során fontos, hogy elegendő mozgási fázist tároljunk ahhoz, hogy a megfigyelő folytonosnak érzékelje a képtartalom változását.
+Emellett elegendően magas képfrissítési frekvenciát kell választanunk a villogás (flickering) elkerüléséhez, azaz a képfrissítési frekvenciának a fúziós frekvencia (flicker fusion threshold) fölé kell, hogy essen.
+
+Mint látni fogjuk, az utóbbi igény támaszt szigorúbb követelményt a képfrissítési frekvencia megválasztásánál.
+Ennek oka, hogy az ún. béta mozgás (beta movement) nevű optikai illúzió amely a látás azon jellemzője, hogy egymás utána levetített statikus képek sorozata kb. 10-12 kép/másodperc változás fölött az emberi szem már folytonos, látszólagos mozgásként érzékel.
+A béta mozgás magyarázata máig sem teljesen tisztázott, leggyakrabban a látóidegen terjedő ingerület létrejöttének gyakoriságával, terjedési tulajdonságaival magyarázzák.
+Ennek megfelelően a folytonos mozgás biztosításához $~20 \mathrm{Hz}$ képfrissítési frekvencia már elegendő lenne.
+
+
+
+
+
+\subsubsection{Térbeli felbontás, pixelméret:}
+
+
 
 \subsection{HD formátumok}
 
@@ -16,3 +54,5 @@ Whitaker 592. oldal
 
 \subsection{UHD formátumok}
 
+Periférikus látás:
+https://www.quora.com/What-is-the-aspect-ratio-of-human-vision
