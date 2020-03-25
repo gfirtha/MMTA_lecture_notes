@@ -202,6 +202,32 @@ Gyors kameramozgások esetén, pl. sporttartalom már láthatóvá válhatnak a 
 Az elmondottak alapján a normálfelbontású SD formátum kizárólag váltottsoros letapogatási módot alkalmaz.
 A HD szabvány bevezetésével már mind interlaced, mind progesszív formátumok léteznek, míg UHDTV esetén a szabványok már kizárólag progresszív formátumokat definiálnak.
 
+\vspace{3mm}
+Érdekességképp elmondható, hogy az interlaced technika számos kérdést, nehézséget is felvet egyszerűsége mellett.
+
+Egyik példaképp: korábban (előadáson) láthattuk, hogy a térbeli mintavételi frekvencia megsértése térbeli átlapolódási jelenségekhez vezet, amelyek jellegzetesen térben periodikus képek esetében (pl. téglafal, ,,kockás'' ing) jól látható Moiré ábrák megjelenését okozza.
+Mivel interlaced esetben a vertikális mintavételi frekvenciát lefelezzük, ezért félképeken ezek a Moiré ábrák erőteljesen megjelenhetnek, az egymás utáni átlapolódó félképek váltakozása pedig igen zavaró átlapolódási jelenségekhez, ún. interline twitter jelenséghez vezet már állókép megjelenítése esetén is.
+A jelenségre egy szemléltető példa \href{https://en.wikipedia.org/wiki/File:Indian_Head_interlace.gif}{itt} található.
+Minthogy az összes SD formátum interlaced letapogatást alkalmazott, épp az interline twitter jelensége volt a fő oka a TV felvételek során a négyzetrácsos, csíkos öltözékek elkerülésének.
+
+\begin{figure}  
+\small
+  \begin{minipage}[c]{0.64\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures/Interlaced_video_frame_(car_wheel).jpg}
+	\end{overpic}   \end{minipage}\hfill
+	\begin{minipage}[c]{0.3\textwidth}
+    \caption{Megfelelő deinterlacing technika nélkül váltottsoros formátum megjelenítése progresszív kijelzőn.}
+\label{fig:deinterlacing}  \end{minipage}
+\end{figure}
+
+További érdekes kérdést vet fel az interlaced és progresszív formátum közötti konverzió.
+Progresszívről interlaced formátumba a feladat viszonylag egyértelmű, a teljes kép páros és páratlan sorokra bontásával megoldható.
+A váltottsoros formátumról progresszívre történő konverzió konzumer felhasználási szempontból gyakoribb, gondoljunk csak egy jellegzetesen váltottsoros formátumban rögzített DVD lemez jellemzően progresszív számítógép monitoron történő megjelenítésére.
+Legegyszerűbb stratégiaként a monitor a szomszédos félképeket összeszőve alakít ki egy teljes felbontású képet.
+Ez azonban gyors mozgások esetén ún. fésűsödési jelenségekhez vezet, amelyet az \ref{fig:deinterlacing} ábra szemléltet.
+Épp ezért, a konverzióhoz kifinomultabb \textbf{deinterlacing} eljárás szükséges a félképek sorai közötti adatok interpolációjához.
+A feladat létjogosultsága manapság is nagy, hiszen a jelenlegi LCD TV és számítógép monitorok már nem támogatnak natív interlaced megjelenítést, míg a HD műsorszórás még napjainkban is váltottsoros formátumot alkalmaz (jellemzően 1080i-t).
+
 %TODO : interlaced video on progresszv display and deinterlacing
 
 \paragraph{Analóg SD formátumok, az analóg videójel:\\}
