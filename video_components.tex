@@ -82,6 +82,7 @@ Jelölje a képfrekvenciát $f_V$ (mint vertikális frekvencia), és a sorfrekve
 f_H = N_V \cdot f_V
 \end{equation}
 összefüggés, ahol $N_V$ a képernyő sorainak száma.
+Továbbá a későbbiekben jelölj $T_H = \frac{1}{f_H}$ a soridőt és $T_V = \frac{1}{f_V}$ a képidőt.
 Könnyen belátható, hogy 
 \begin{itemize}
 \item $f = f_H$ választással minden sor tartalma ugyanazon szinuszhullám, a hullám kezdőfázisa minden sor elején és minden kép elején azonos, így egy álló, horizontális hullámforma jelenik meg a képernyőn, ahogy az a \ref{Fig:ripple_display} (a) ábrán látható.
@@ -114,10 +115,34 @@ Márpedig a hálózati brumm épp ilyen periodikus zavarjelként jelenik meg a k
 A korai, fekete-fehér televíziós rendszer megalkotása során végzett megfigyelési tesztek egyértelműen kimutatták, hogy elektromos zavar esetén az álló zavarkép jóval kevésbé zavarja a nézőt, mintha a zavar mozgó rajzolatként jelenne meg.
 Ennek megfelelően mind az amerikai, mind később, az európai rendszer esetében a képfrekvenciát a hálózati frekvenciának választották meg, így biztosítva, hogy az esetleges hálózati brumm a kijelzőn egy vertikális állóképként jelenik meg, amely a nézők számára alig észrevehető.
 Így tehát az amerikai rendszerben a képfrekvencia értéke $f_{\mathrm{V,USA}} = 60~\mathrm{Hz}$, az európai rendszerben $f_{\mathrm{V,Eu}} = 50~\mathrm{Hz}$ lett \footnote{A helyzet a színes TV bevezetésével, azaz az NTSC megjelenésével Amerikában bonyolódott, mivel a színsegédvivő frekvenciáját nem lehetett megfelelően megválasztani.
-Részletek nélkül: ennek eredményeképp mind a képfrekvenciát, mind a sorfrekvenciát $0.1~\%$-al csökkentették, így az amerikai rendszer képfrekvenciája $f_V = 60\cdot \frac{1000}{1001} = 59.94~\mathrm{Hz}$ lett végül. Ezt a változás szerencsére a megfelelő szinkronjeleknek köszönhetően a már létező TV vevőkészüléket nem befolyásolta.}.
+Részletek nélkül: ennek eredményeképp mind a képfrekvenciát, mind a sorfrekvenciát $0.1~\%$-al csökkentették, így az amerikai rendszer képfrekvenciája $f_V = 60\cdot \frac{1000}{1001} = 59.94~\mathrm{Hz}$ lett végül. 
+Ezt a változás szerencsére a megfelelő szinkronjeleknek köszönhetően a már létező TV vevőkészüléket nem befolyásolta.}.
 
-\paragraph{Váltott soros letapogatás:\\}
-Az előzőekben láthattuk, hogy a folytonos mozgás biztosításához már $20-25~\mathrm{Hz}$ képfrekvencia elegendő lenne, míg a villogás elkerüléséhez legalább $50-60~\mathrm{Hz}$ képfrissítési frekvencia szükséges.
+\paragraph{Progresszív és váltott soros letapogatás:\\}
+A következőekben a különböző képernyő-letapogatási (scanning) módok vizsgáljuk.
+Az elnevezés a CRT kijelzőkhöz köthetők, ahol a katódsugár ténylegesen végigpásztázta valamilyen trajektória mentén.
+
+\vspace{3mm}
+A legkézenfekvőbb képernyő bejárási mód az ún. \textbf{progresszív letapogatás (progessive scanning)}, amely során a katódsugár egy képidő alatt sorról-sorra bejárja a képernyő összes sorát.
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.6\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures/progressive_scan.png}
+	\end{overpic}   \end{minipage}\hfill
+		\begin{minipage}[c]{0.3\textwidth}
+	\caption{Progresszív letapogatás szemléltetése (az egyszerűség kedvéért 11 sorral ábrázolva), az aktív sortartalommal (1), sorvisszafutással (2) és képvisszafutással (3)}
+	\label{Fig:progressive}  \end{minipage}
+\end{figure}
+A letapogatás módját a \ref{Fig:progressive} ábra szemlélteti.
+Természetesen a jelenlegi LCD kijelzők esetében értelmetlen letapogatásról beszélni, ezek progresszív megjelenítési módban egyszerre változtatják az összes pixelsor tartalmát.
+Átviteltechnika szempontjából hasonlóan, ez azt jelenti, hogy az adott interface-en (konzumer berendezések esetében jellegzetesen HDMI-n keresztül) a kijelzőn megjelenítendő adat sorról sorra érkezik, és természetesen a teljes kép adatait egy soridő alatt továbbítani kell.
+A progresszív formátumot az alkalmazott sorszám utáni ,,p'' jelölés mutatja, lásd HD esetében 1080p.
+
+Bár a progresszív letapogatás tűnik a legegyértelműbb, legkézenfekvőbb megoldásnak, mégis, egészen az UHDTV szabvány megjelenéséig nem ez volt az általánosan elfogadott megoldás.
+Ennek okait a következőekben tárgyaljuk.
+
+\vspace{3mm}
+Az előző fejezetben láthattuk, hogy a folytonos mozgás biztosításához már $20-25~\mathrm{Hz}$ képfrekvencia elegendő lenne, míg a villogás elkerüléséhez legalább $50-60~\mathrm{Hz}$ képfrissítési frekvencia szükséges.
 Ez már bizonyos szintű tömörítést tesz lehetővé, hiszen a teljes képtartalom elegendő, ha lassabban változik, mint kijelző rajzolási frekvenciája.
 
 \begin{figure}  
@@ -139,8 +164,50 @@ Ezzel az egyszerű trükkel a $24~\mathrm{fps}$-en rögzített tartalmat $48\mat
 
 Hasonlóan elven, a modern megjelenítők esetében a kijelző képfrissítési frekvenciája (pl. amivel egy LCD kijelző esetében a háttérvilágítás villog $200~\mathrm{Hz}$ körül) jóval a tényleges képtartalom frissítési frekvenciája fölött van.
 A TV műsorszórás bevezetésének idején azonban a vevőkészülékek nem voltak képesek a képtartalom tárolására, a vett jel közvetlenül, valós időben rajzolódott ki a kijelzőre.
+A feladat megoldásául, azaz a másodpercenként átvivendő képek számának csökkentésére, és így sávszélesség-takarékosságra az ún. \textbf{váltott-soros letapogatást (interlaced scanning)} vezették be.
 
-\subsubsection{Térbeli felbontás, pixelméret:}
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.85 \columnwidth ]{Figures/interlaced_scan.png}
+	\end{overpic}
+	\caption{Váltott-soros képbontás (TV sorok közbeszövése), a jobb áttekinthetőség kedvéért 21 sorral.
+	A teljes képernyő pásztázásához (feltéve, hogy az elektronnyaláb az első félkép első sorának elejéről indul) az első félképnek fél sorban kell végződnie, míg a második félképnek félsorral kell kezdődnie.
+	Ez csak páratlan teljes sorszám esetén teljesül (mindkét félkép $N_{\frac{V}{2}} + \frac{1}{2}$ sorból áll, a teljes sorszám $2 N_{\frac{V}{2}} + 1$, ami szükségszerűen páratlan) }
+	\label{Fig:interlaced}
+\end{figure}
+
+A megoldás alapötlete--ahogy a \ref{Fig:interlaced} ábrán is látható---a következő:
+Ahelyett, hogy a kijelző egy teljes képidő alatt az összes sort egymás után végigpásztázná, bontsuk a képernyőt páros és páratlan sorszámú sorokra, amelyek így egy páratlan és egy páros félképet alkotnak.
+A teljes képet (angolul \textbf{frame}) tehát két \textbf{félképre} (angolul \textbf{field}) bontjuk.
+A kijelző ezután a teljes képidő első felében a páratlan, a második felében a páros sorokat pásztázza végig.
+A váltottsoros formátum jelzése a sorszám mögé illesztett ,,i'' jelzés (pl. 1080i).
+
+Természetesen a képernyő tartalma a félképek frissítési frekvenciájával, az ún. \textbf{félképfrekvenciával} frissül, tehát ahhoz, hogy elkerüljük a villogást a félképfrekvenciának kell a fúziós frekvencia fölé esnie. 
+Így váltottsoros letapogatás esetén a félképfrekvencia lett az európai rendszerben $50$, valamint az amerikaiban $60~\mathrm{Hz}$-re (pontosabban $59.94~\mathrm{Hz}$-re) választva.
+A teljes, effektív képfrekvencia pedig ezek felére, tehát $25~\mathrm{Hz}$, illetve $30~\mathrm{Hz}$-re ($29.97~\mathrm{Hz}$-re) adódik
+A technikával tehát a mozis technikához hasonlóan, a képfrissítési frekvenciát elegendően magasra emelték, míg a tényleges, teljes ,,felbontású'' képtartalom ehhez képest fele sebességgel érkezik.
+
+Fontos megjegyezni, hogy a félképek (field-ek) különböző időpillanatokban készülnek, azaz nem ugyanazon teljes képhez tartoznak (nem állítható elő egy teljes kép páros-páratlan sorra való felbontásával). 
+Ez eltérés a mozis rendszerhez képest, amely ugyanazt a képkockát mutatta be többször.
+Ennek eredményeként a következő módhatóak el a váltottsoros videóról:
+\begin{itemize}
+\item A váltott-soros letapogatás a progresszívhez képest 2:1 arányú tömörítést valósít meg, azaz a továbbítandó adatmennyiséget (és így a szükséges sávszélességet) lefelezi
+\item Álló képtartalomnál a progresszív letapogatással megegyező vertikális felbontást valósít meg (hiszen a páros és páratlan félképek ugyanazt a képet egészítik ki)
+\item Gyorsan mozgó képtartalom mellett a függőleges felbontás gyakorlatilag a progresszív formátum fele (hiszen a félkép tartalma folyamatosan változik)
+\end{itemize}
+Általánosan elmondhatjuk, hogy lassan változó képtartalom esetén (pl. filmek) a váltott-soros letapogatás megfelelően nagy vertikális felbontást és a progresszívnál folytonosabb mozgásreprodukciót biztosít, megfelelő tömörítés (sávszélesség-hatékonyság) mellett.
+Gyors kameramozgások esetén, pl. sporttartalom már láthatóvá válhatnak a felezett vertikális felbontásból származó hatások.
+\vspace{3mm}
+
+Az elmondottak alapján a normálfelbontású SD formátum kizárólag váltottsoros letapogatási módot alkalmaz.
+A HD szabvány bevezetésével már mind interlaced, mind progesszív formátumok léteznek, míg UHDTV esetén a szabványok már kizárólag progresszív formátumokat definiálnak.
+
+%TODO : interlaced video on progresszv display and deinterlacing
+
+\paragraph{Analóg SD formátumok, az analóg videójel:\\}
+
+
+\paragraph{Térbeli felbontás, pixelméret:\\}
 
 
 
