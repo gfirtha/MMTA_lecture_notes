@@ -380,13 +380,143 @@ Ez az európai rendszerben 1 sorra 864, az amerikaiban 858 teljes mintaszámot e
 
 A két rendszer további egységesítésének érdekében egy soron belül az aktív pixelek számát közösen 720 pixelre választották (amelyből csak 704 pixel tartalmaz tényleges képi adatot, a digitalizálás előtti analóg jel kezdetének bizonytalansága, szélekhez közeli torzításai, elmosódásai miatt).
 Ezzel tehát megkaptuk az SD formátum tényleges képméretét, ahogy az az \ref{Fig:SD_format} ábrán látható.
+Az aktív sorok száma alapján, és mivel mindkét rendszerben kizárólag interlaced videó definiált, a két formátum megjelölése \textbf{480i} és \textbf{576i}.
 
-\paragraph{Optimális nézőtávolság:\\}
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.4 \columnwidth ]{Figures/sd_gamut.png}
+	\small
+	\put(0,0){(a)}
+	\end{overpic}
+	\hspace{2mm}
+	\begin{overpic}[width = 0.55 \columnwidth ]{Figures/sd_OETF.png}
+	\small
+	\put(0,0){(b)}
+	\end{overpic}
+	\caption{Az SD formátum gamutja(a) és Gamma-függvénye (b)}
+	\label{Fig:SD_gamut}
+\end{figure}
 
+Röviden összefoglalva a jelen, és előző fejezetet a két SD formátum létrehozásának lépései és főbb tulajdonságai:
+\begin{itemize}
+\item A formátum primary színei és a színtér gamutja a \ref{Fig:SD_gamut} (a) ábrán látható.
+A színtér fehérpontja D65 fehér.
+A luma komponens számításának módja (amely természetesen az előző adatok ismeretében levezethető)
+\begin{equation}
+Y' = 0.299 R' + 0.587 G' + 0.112 B'
+\end{equation}
+\item A forrás RGB jelei a perceptuális kvantálás megvalósításának érdekében Gamma-torzításon mennek keresztül, ahol a Gamma-függvény, vagy Optoelectronic Transfer Function:
+\begin{equation}
+E = 
+\begin{cases}
+4.500 L, \hspace{20mm} \mathrm{ha}\, L < 0.018 \\
+1.099 L^{0.45} - 0.099, \hspace{3mm} \mathrm{ha}\, L \geq 0.018,
+\end{cases}
+\end{equation}
+ahol $L \in \{ R, G, B \}$.
+A teljes görbe jól közelíthető egy $L^{0.5}$ függvénnyel
+\item A formátum képaránya 4:3. A későbbiekben a HD megjelenése után ezt kiegészítették 16:9 képarányú formátummal is.
+\item Kizárólag interlaced formátum definiált
+\item A videókomponensek megfelelő sávkorlátozás után mintavételezésen és kvantáláson esnek át.
+A kvantálás 8, vagy 10 biten történik.
+\item A világosságjel mintavételi frekvenciája $f_s = 13.5~\mathrm{MHz}$.
+Az 576i (625 soros, 50 félkép/s) rendszerben az aktív felbontás így 720x576 pixel, a 480i (525 soros, 60 félkép/s) rendszerben 720x480 px.
+\item A színkülönbségi jel az eredeti, stúdióformátumban 4:2:2, tehát a horizontális színfelbontás a világosságjelének a fele.
+Ezt később kiegészítették 4:2:0 struktúrával is konzumer célokra.
+\end{itemize}
 
 \subsection{HD formátumok}
 
-Whitaker 592. oldal
+%Whitaker 592. oldal
+Az előzőekben részletesen tárgyaltuk as SD digitális videoformátum megalkotásának alapelveit.
+A részletes vizsgálat oka, hogy ugyanezek az alapelvek, jelfeldolgozási lépések érvényesek a jelenlegi HD és UHD formátumok esetén is, valamint a jelenlegi SD műsorszórás Magyarországon is 576p (azaz már progresszív) formátumban történik.
+
+Láthattuk, hogy az SD formátum megalkotásánál az egyes paramétereket úgy választották meg, hogy a kitűzött kb. 10 fokos látószögben minél élethűbb képi reprodukciót lehessen megvalósítani.
+A HD és UHD formátumok tárgyalása előtt vizsgáljuk meg, hogy adott felbontás (pixelméret) mellett mekkora távolságból kell az adott kijelzőt megfigyelni, rávilágítva ezzel a HD formátum létrehozásának fő motivációjára.
+
+\paragraph{Optimális nézőtávolság:\\}
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.67 \columnwidth ]{Figures/hd_pixel_angle_mod.png}
+	\small
+	\end{overpic}
+	\caption{Geometria az optimális nézőtávolság származtatásához}
+	\label{Fig:optimal_vd}
+\end{figure}
+
+Általánosan elmondható, hogy pixel alapú képi reprodukció során a fő szempont, hogy a szomszédos pixelekből érkező fénysugarak által bezárt szög az emberi szem felbontóképessége alá essen.
+Ezzel biztosítva van, hogy a kijelző pixelstruktúrája nem látható (a kép nem ,,pixeles''), valamint az RGB alapszíneket alkalmazó reprodukció is lehetővé válik, hiszen az egyes alapszínek érzékelése helyett az additív színkeverés a szemben megvalósul.
+
+Korábban láthattuk, hogy az emberi szem felbontása 1 szögperc (azaz $\frac{1}{60}^{\circ}$) (legalábbis a világosságjelre véve, segítségünkre van, hogy színezetre ennél is rosszabb).
+Adott pixelméretre természetesen ebből már meghatározható az a minimális nézőtávolság, amelyre az előbbi feltétel teljesül.
+Mivel jellemzően a kijelzőknek nem a pixelmérete van megadva, hanem a kijelző mérete és a vertikális, ill. horizontális pixelszám, ezért célszerű a fenti minimális nézőtávolságot ezek függvényében kifejezni.
+
+Vizsgáljuk az \ref{Fig:optimal_vd} ábrán látható geometriát adott $H$ magasságú, $N_V$ sorszámú kijelző esetén.
+A pixelméret ekkor természetesen $\frac{H}{N_V}$.
+A kijelző a megfigyelőtől $D$ távolságra helyezkedik el.
+A szomszédos (szemközti) pixelekből a megfigyelő szemébe érkező fénysugarakra felírható ekkor a 
+\begin{equation}
+\tan \frac{\Phi}{2} = \frac{H}{2 N_V D}
+\end{equation}
+egyenlőség.
+Alkalmazzuk a tangens függvény kisargumentumú lineáris közelítését, azaz $\tan x \approx x$, ha $x \ll 1$.
+Ekkor
+\begin{equation}
+\Phi = \frac{H}{N_V D} \hspace{3mm} \rightarrow \hspace{3mm} D = \frac{H}{N_V \Phi}
+\end{equation}
+érvényes.
+Az emberi szem felbontását $\frac{1}{60}\cdot \frac{\pi}{180}~\mathrm{rad} = 2.9 \cdot 10^{-4}$ behelyettesítve adott felbontású és méretű kijelző esetén az optimális (minimális) nézőtávolságra
+\begin{equation}
+D = H \frac{1}{N_V \,  2.9 \cdot 10^{-4}}
+\end{equation}
+adódik. 
+Ez a távolság az ún. Lechner-távolság, amely tehát megadja, hogy a tervezés során figyelembe vett képméret és felbontás mellett mekkora az optimális nézőtávolság adott képformátum esetén.
+\begin{table}[h!]
+\caption{Fontosabb SD és HD formátumok ideális nézőtávolsága és az így kitöltött horizontális látószög}
+\renewcommand*{\arraystretch}{2.25}
+\label{tab:viewing_dist}
+\begin{center}
+    \begin{tabular}[h!]{ @{}c | | l | l | l @{} }%\toprule
+				         &   Amerikai 		   & Európai 				&	 HDTV \\ \hline
+    TV-sor/képmagasság:	 &     480 	  		   &   576   				&	 1080\\
+    Nézőtávolság:   &  7-szeres képmagasság    &  6-szoros képmagasság & 3-szoros képmagasság \\
+    Nézőtávolság:       &  4.25-szörös képátló &  3.6-szoros képátló	& 1.5-szörös képátló \\
+    Vízszintes látószög &  kb. 11 fok 		&    kb. 13 fok & kb. 32 fok\\
+    \end{tabular}
+\end{center}
+\end{table}
+
+Amennyiben az $a_r$ képátló ismert (SD esetén 4:3, HD esetén 16:9), az összefüggés kifejezhető a képszélesség függvényében is.
+SD esetén ez
+\begin{equation}
+D = \frac{W}{a_r} \frac{1}{N_V \,2.9 \cdot 10^{-4}},
+\end{equation}
+ahol $W$ a kép szélessége.
+Ekkor ha a kijelzőt az így kapott optimális távolságról nézzük, meghatározható a képernyő által bezárt vízszintes látószög:
+\begin{equation}
+\tan \frac{\Phi_H}{2} = \frac{W}{2 D} \hspace{1cm} \rightarrow \hspace{1cm} D = \frac{W}{2 \tan \frac{\Phi_H}{2}}, 
+\end{equation}
+és így adott felbontás mellett a horizontális látószög:
+\begin{equation}
+\Phi_H = 2\arctan \left( \frac{a_r \, N_V \, 2.9\cdot 10^{-4}}{2} \right).
+\end{equation}
+
+Az eredményeket az eddig bemutatott SD és a következőekben tárgyalt HD formátumokra kiszámítva a \ref{tab:viewing_dist} táblázat foglalja össze.
+Láthatjuk, hogy az SD felbontást ideálisan a képmagasság 6-7-szereséről célszerű nézni.
+Ekkor valóban, a formátum tervezésének kiindulási pontjába érünk vissza, azaz a kijelző a fő látóterünket, kb. 10-13 fokot tölti ki horizontálisan.
+
+Ez már előrevetíti a HD formátum megalkotásának fő célját: a vizuális élmény fokozását nagyobb kitöltött látószög alkalmazásával.
+
+%\begin{figure}[]
+%	\centering
+%	\begin{overpic}[width = 0.75 \columnwidth ]{Figures/optimal-viewing-distance-television-graph-size.png}
+%	\small
+%	\end{overpic}
+%	\caption{Optimális nézőtávolság a kijelzőátmérő függvényében}
+%	\label{Fig:optimal_vd_2}
+%\end{figure}
+
 
 \subsection{UHD formátumok}
 
