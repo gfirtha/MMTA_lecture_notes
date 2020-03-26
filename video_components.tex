@@ -228,13 +228,160 @@ Ez azonban gyors mozgások esetén ún. fésűsödési jelenségekhez vezet, ame
 Épp ezért, a konverzióhoz kifinomultabb \textbf{deinterlacing} eljárás szükséges a félképek sorai közötti adatok interpolációjához.
 A feladat létjogosultsága manapság is nagy, hiszen a jelenlegi LCD TV és számítógép monitorok már nem támogatnak natív interlaced megjelenítést, míg a HD műsorszórás még napjainkban is váltottsoros formátumot alkalmaz (jellemzően 1080i-t).
 
-%TODO : interlaced video on progresszv display and deinterlacing
-
 \paragraph{Analóg SD formátumok, az analóg videójel:\\}
 
+Az előzőek alapján bevezethetjük a normál felbontású analóg televíziós műsorszórás képformátumát:
 
-\paragraph{Térbeli felbontás, pixelméret:\\}
+Ahogy azt már korábban láthattuk két analóg képformátum terjedt el a világon a színes műsorszórás kezdetével:
+\begin{itemize}
+\item Az Egyesült Államokban és Japánban alkalmazott NTSC képformátumot az FCC vezette be 1953-ban.
+Az NTSC formátum a korabeli technológiának megfelelően 525 TV-sorból áll, és váltott-soros letapogatást alkalmaz.
+A korábban tárgyalt okokból kifolyólag a rendszer képfrissítési frekvenciája, azaz a félképfrekvencia $60~\mathrm{Hz}$ ($59.94~\mathrm{Hz}$), amelyből természetesen a képfrekvencia $30~\mathrm{Hz}$-re ($29.97~\mathrm{Hz}$-re) adódik.
+\item Európában, Ausztráliában és Ázsiában a PAL rendszer került bevezetésre 1967-ben.
+A PAL formátum sorszáma $N_V = 625$, váltott-soros letapogatással, míg a helyi hálózati frekvenciának megfelelően a félképfrekvencia $50~\mathrm{Hz}$ és így a képfrekvencia $25~\mathrm{Hz}$.
+\end{itemize}
+Az NTSC és PAL formátum fő jellemzőit a \ref{tab:sd_formats} táblázat tartalmazza.
 
+\begin{table}[h!]
+\caption{}
+\renewcommand*{\arraystretch}{2.25}
+\label{tab:sd_formats}
+\begin{center}
+    \begin{tabular}[h!]{ @{}c | | l | l @{} }%\toprule
+				         &   NTSC  							       & PAL \\ \hline
+    Összes sorok száma:	 &  525   								   &  625 \\
+    Aktív sorok száma:   &  480   								   &  576 \\
+    Képfrekvencia:       &  $30~\mathrm{Hz}$ ($29.97~\mathrm{Hz}$) & $25~\mathrm{Hz}$ \\
+    Félképfrekvencia     &  $60~\mathrm{Hz}$ ($59.94~\mathrm{Hz}$) & $30~\mathrm{Hz}$ \\
+    Sorfrekvencia: 		 &  $525 \cdot 30 = 15750~\mathrm{Hz}$ ($15734~\mathrm{Hz}$) & $15625~\mathrm{Hz}$ \\
+    Soridő:              &  $63.49~\mathrm{\mu s}$ ($63.55~\mathrm{\mu s}$) & $64~\mathrm{\mu s}$ \\
+    \end{tabular}
+\end{center}
+\end{table}
+
+Fontos megjegyezni, hogy a CRT kijelző letapogatása során mind az egyes sorok végén, mind a félképek végén az elektronnyaláb kioltásra került, míg visszatérítették a következő sor, illetve félkép elejére.
+Ez a visszatérítés természetesen véges időbe telik.
+Ennek eredményeképp minden soridő, illetve félképidő tartalmaz inaktív, kioltási időintervallumokat (\textbf{blanking interval}), amelyben hasznos videójel nem található.
+Ezeket az időintervallumokat nevezzük \textbf{sorkioltási időnek} (\textbf{horizontal blanking}) valamint \textbf{félképkioltási időnek} (\textbf{vertical blanking}).
+
+Ennek megfelelően a teljes soridő felbontható ún. \textbf{aktív soridőre}, amely a tényleges videojelet tartalmazza és a sorkioltási időre, amely a sorszinkron (horizontális szinkron) jeleket, és egyéb jelzéseket tartalmaz.
+
+Hasonlóan, a teljes félképidő felbontható aktív sorokra, amelyek a megjelenítésre kerülő TV sorok, valamint a félképkoltási időre, amely vertikális szinkronjeleket és egyéb járulékos adatokat tartalmaz.
+Az aktív sorok számát szintén a \ref{tab:sd_formats} táblázat tartalmazza.
+ 
+\begin{figure}[t!]
+\captionsetup{singlelinecheck=off}
+\small
+  \begin{minipage}[c]{0.64\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures/Timing_PAL_FrameSignal.png}
+	\end{overpic}
+\label{fig:PAL_frame}
+    \end{minipage} \hfill
+	  \begin{minipage}[c]{0.3\textwidth}
+    \caption[]{ Egy teljes kép felépítése váltottsoros letapogatás esetén egyetlen videokomponensre ábrázolva:
+    \begin{itemize}
+    \item aktív soridő: szürke
+    \item sorkioltási idő: magenta, cián és sárga
+    \item félképkioltási idő: zöld, narancssárga, fehér
+    \end{itemize}
+    }
+    \end{minipage}
+\end{figure}
+Egy teljes TV kép (azaz két egymás utáni félkép) felépítése a PAL rendszerben a \ref{fig:PAL_frame} ábrán látható.
+Az ábra természetesen csak egyetlen video komponens felépítését szemlélteti.
+Az ábrán jól megfigyelhetőek a a félkép és képkioltási idők, bennük pedig az ún. \textbf{félképszinkron jelek} (\textbf{VSYNC}) (a zöld tartományban) és \textbf{sorszinkron jelek} (\textbf{HSYNC}) (sárga tartomány).
+Ezek a jelek a TV vevő (vagy általában a megjelenítőeszköz) szinkronizációját biztosítják a megfelelő megjelenítés érdekében.
+A szinkronjelek hibás vétele esetén a kép vertikálisan (félképszinkron hiányában), vagy horizontális (sorszinkron hiányába) elmozdul.
+Ezeket a jelenségeket ,,jitter''-nek, illetve ,,rolling''-nak nevezzük.
+
+%\begin{figure}  
+%\small
+%  \begin{minipage}[c]{0.65\textwidth}
+%      \includegraphics[width= 1\columnwidth  ]{Figures/Vertical_blank_2.png}\\ (a) \\
+%    \includegraphics[width= 1\columnwidth  ]{Figures/Horizonta_blank.png}\\ (b) \\
+%    \end{minipage} \hfill
+%	  \begin{minipage}[c]{0.3\textwidth}
+%    \caption{PAL jel félképkioltási intervalluma (a) és sorkioltási intervalluma (b).}
+%    \end{minipage}
+%\label{fig:PAL}
+%\end{figure}
+
+A jelenleg elterjedt megjelenítők esetén ezek a kioltási idők természetesen okafogyottá váltak:
+a modern, főként stúdió célú CRT megjelenítők már jóval kisebb kioltási idő mellett is működőképesek, míg LCD megjelenítők esetén egyáltalán nincs szükség kioltási időre.
+Ennek ellenére a kioltási idők a jelenlegi digitális szabványok esetén is ugyanúgy jelen vannak, így pl. a HDMI szabvány esetében is.
+Ennek egyik, természetes oka az, hogy a technika fejlődésével megjelenő újabb és újabb szabványok mind a már létező, korábbi szabványokra épülnek.
+Másrészt a kioltási idők lehetővé tették egyéb, kiegészítő adatok tárolását is ezekben az időszegmensekben.
+Így a kioltási időkben továbbítható pl. a teletext adat, feliratok, és digitális esetben a video kísérő audio adat is.
+Ezen adatok helyét az ITU-R BT.1364 és az SMPTE 291M szabványok definiálják. 
+Megjegyezhető, hogy a szabványok a digitális hang átvitelét (pl. a HDMI szabvány esetén is) a sorkioltási időben írják elő \footnote{
+Egy egyszerű példaként HDMI audio átvitelre:
+1080p HD formátum esetén (összes sor: 1125, ld. később) $60~\mathrm{Hz}$-es képfrekvencia mellett a sorfrekvencia $f_V = 67.5~\mathrm{kHz}$.
+$192~\mathrm{kHz}$ mintavételi frekvenciájú 8 csatornás audioanyag átvitele esetén az egy kép alatt átvivendő audiominták száma: $\frac{8 \cdot 192 000 }{60} = 25600~\mathrm{minta}$, azaz soronként kb. 23 minta átvitele szükséges.
+Ez a HDMI 1.0 szabvány által megengedett audiosebesség. (Példa folytatása \href{https://www.sciencedirect.com/science/article/pii/B9780128016305000049}{itt} található.)
+}.
+
+% https://www.sciencedirect.com/topics/computer-science/blanking-interval
+% https://www.sciencedirect.com/topics/computer-science/horizontal-blanking
+
+\paragraph{Térbeli felbontás és az SD formátum:\\}
+
+Az analóg videojel tárgyalása után a továbbiakban rátérhetünk a videojel digitális reprezentációjának tárgyalására.
+Az első digitális videoformátumot a normálfelbontású, SD videót az ITU (akkoriban CCIR) alkotta meg 1982-ben a ITU-601 szabvány formájában \footnote{Munkájáért a CCIR 1983-ban tehcnikai Emmy díjat is kapott}.
+
+Az SD formátum gyakorlatilag az eddig tárgyalt videojel komponensek digitális reprezentációjának tekinthető, azaz a \ref{fig:PAL_frame} látható videojel teljes egészében digitalizációra került kioltási intervallumokkal együtt, mind a luma és chroma komponensekre (más szóval az $Y'P_b'P_r'$ jelek közvetlen digitalizációjával kaphatjuk).
+A digitalizált videojelek neve--ahogy arról már szó volt--$Y'C_b'C_r'$ jelek.
+A jelek elvi előállítása az \ref{Fig:SD_production} ábrán látható.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.8 \columnwidth ]{Figures/YCbCr_production.png}
+	\end{overpic}
+	\caption{Digitális SD jel előállítása a videokomponensek digitalizálásával}
+	\label{Fig:SD_production}
+\end{figure}
+
+
+A digitalizáció egyes kérdéseit már a korábbiakban érintettük.
+Nyitott kérdés még a soronkénti mintaszám meghatározása, amely a sorok számával együtt megadja az SD formátum felbontását (pixelszámát).
+A feladat tehát az analóg videójel mintavételi frekvenciájának meghatározása.
+
+A mintavételi frekvencia megválasztásánál a következő szempontokat vették figyelembe:
+\begin{itemize}
+\item Természetes törekvés volt, hogy a több évtizede egymás mellett létező NTSC és PAL rendszerre egyszerre alkalmazható legyen, azaz mind PAL, mind NTSC video digitális ábrázolását lehetővé tegye.
+Emellett nyilvánvalóan a mintavételezést úgy kell végrehajtani, hogy mindkét rendszerben egy sorba egész számú mintavételi periódus (azaz pixel) férjen bele.
+Ebből következik, hogy a mintavételi frekvencia a sorfrekvencia egész számú többszöröse kell, hogy legyen mind az NTSC, mind a PAL rendszerben, azaz
+\begin{equation}
+f_s = n \cdot f_H^{\mathrm{PAL}} = m \cdot f_H^{\mathrm{NTSC}},
+\end{equation}
+ahol $n, m$ egész számok.
+Minthogy a sorfrekvenciák 
+\begin{align}
+f_H^{\mathrm{PAL}} &= 25 \cdot 625 = 15625~\mathrm{Hz} \\
+f_H^{\mathrm{NTSC}} &= 30 \cdot \frac{1000}{1001} \cdot 525 = 15734.2~\mathrm{Hz} ,
+\end{align}
+ezek legkisebb közös többszöröse
+\begin{equation}
+144 \cdot f_H^{\mathrm{PAL}} = 143 \cdot f_H^{\mathrm{NTSC}} = 2.25~\mathrm{MHz}.
+\end{equation}
+A mintavételi frekvencia tehát $2.25~\mathrm{MHz}$ egész számú többszöröse.
+\item Emellett a mintavételi tétel értelmében a mintavételi frekvencia az átlapolódás elkerülésének érdekében legalább a mintavett jel sávszélességének kétszerese kell, hogy legyen.
+Korábban láttuk, hogy a luma jel sávszélessége $6~\mathrm{MHz}$, a chroma jeleké pedig ennek a fele.
+\end{itemize}
+A legkisebb frekvencia amire a két előbbi feltétel teljesül $13.5~\mathrm{MHz}$.
+Ezt választották tehát a világosságjel mintavételi frekvenciájának, miközben a színkülönbségi jelek számára, figyelembe véve az emberi látás tulajdonságait, felezett mintavételi frekvenciát ($6.5~\mathrm{MHz}$) választottak.
+Ez az európai rendszerben 1 sorra 864, az amerikaiban 858 teljes mintaszámot eredményez, amely a sorkioltási időt is tartalmazza.
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.65 \columnwidth ]{Figures/SD_formats.png}
+	\end{overpic}
+	\caption{Az SD formátum képmérete az amerikai és az európai rendszerben}
+	\label{Fig:SD_format}
+\end{figure}
+
+A két rendszer további egységesítésének érdekében egy soron belül az aktív pixelek számát közösen 720 pixelre választották (amelyből csak 704 pixel tartalmaz tényleges képi adatot, a digitalizálás előtti analóg jel kezdetének bizonytalansága, szélekhez közeli torzításai, elmosódásai miatt).
+Ezzel tehát megkaptuk az SD formátum tényleges képméretét, ahogy az az \ref{Fig:SD_format} ábrán látható.
+
+\paragraph{Optimális nézőtávolság:\\}
 
 
 \subsection{HD formátumok}
