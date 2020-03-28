@@ -381,6 +381,9 @@ Ez az európai rendszerben 1 sorra 864, az amerikaiban 858 teljes mintaszámot e
 A két rendszer további egységesítésének érdekében egy soron belül az aktív pixelek számát közösen 720 pixelre választották (amelyből csak 704 pixel tartalmaz tényleges képi adatot, a digitalizálás előtti analóg jel kezdetének bizonytalansága, szélekhez közeli torzításai, elmosódásai miatt).
 Ezzel tehát megkaptuk az SD formátum tényleges képméretét, ahogy az az \ref{Fig:SD_format} ábrán látható.
 Az aktív sorok száma alapján, és mivel mindkét rendszerben kizárólag interlaced videó definiált, a két formátum megjelölése \textbf{480i} és \textbf{576i}.
+Könnyen belátható, hogy szabványos 4:3 képarány azonos horizontális pixelszám de különböző sorszám mellett csak úgy érhető el, ha az egyes képelemek (pixelek) nem négyzetalakúak (azaz a \textbf{pixel aspect ratio (PAR)} értéke 1-től különböző).
+Számítástechnikában a monitorok ezzel szemben négyzetes pixelméretet definiáltak, így az elterjedt számítógépes SD formátum a jól ismert 640x480 pixelszám.
+%TODO Pixel apsect ratio, storage aspect ratio, display aspect ratio kifejteni
 
 \begin{figure}[]
 	\centering
@@ -401,7 +404,9 @@ Röviden összefoglalva a jelen, és előző fejezetet a két SD formátum létr
 \begin{itemize}
 \item A formátum primary színei és a színtér gamutja a \ref{Fig:SD_gamut} (a) ábrán látható.
 A színtér fehérpontja D65 fehér.
-A luma komponens számításának módja (amely természetesen az előző adatok ismeretében levezethető)
+A luma komponens számításának módja \footnote{Itt jegyezzük meg, hogy ,,matematikaiatlanul'', ezek a luma együtthatók az NTSC szabvány együtthatókból származnak, tradíció miatt a luma jel számítási módját nem változtatták meg az SD szabvány bevezetésével annak ellenére, hogy az alapszínek megváltoztak. 
+Emiatt az $XYZ \rightarrow RGB$ mátrix második sora jelen esetben nem az itt bemutatott luma együtthatókat eredményezné.
+Ez egy újabb példa arra, hogy a hasonló matematikai következetlenségek nem állnak távol a gyakorlatban alkalmazott videotechnikától.}
 \begin{equation}
 Y' = 0.299 R' + 0.587 G' + 0.112 B'
 \end{equation}
@@ -415,7 +420,8 @@ E =
 \end{equation}
 ahol $L \in \{ R, G, B \}$.
 A teljes görbe jól közelíthető egy $L^{0.5}$ függvénnyel
-\item A formátum képaránya 4:3. A későbbiekben a HD megjelenése után ezt kiegészítették 16:9 képarányú formátummal is.
+\item A formátum képaránya 4:3. 
+A későbbiekben a HD megjelenése után ezt kiegészítették 16:9 képarányú formátummal is.
 \item Kizárólag interlaced formátum definiált
 \item A videókomponensek megfelelő sávkorlátozás után mintavételezésen és kvantáláson esnek át.
 A kvantálás 8, vagy 10 biten történik.
@@ -506,9 +512,130 @@ Az eredményeket az eddig bemutatott SD és a következőekben tárgyalt HD form
 Láthatjuk, hogy az SD felbontást ideálisan a képmagasság 6-7-szereséről célszerű nézni.
 Ekkor valóban, a formátum tervezésének kiindulási pontjába érünk vissza, azaz a kijelző a fő látóterünket, kb. 10-13 fokot tölti ki horizontálisan.
 
-Ez már előrevetíti a HD formátum megalkotásának fő célját: a vizuális élmény fokozását nagyobb kitöltött látószög alkalmazásával.
 
-%\begin{figure}[]
+Ez már előrevetíti a HD formátum megalkotásának fő célját: a vizuális élmény fokozását nagyobb kitöltött látószög alkalmazásával.
+A HD formátum célja tehát---ellentétben a közhiedelemmel---nem a pixelben kifejezett felbontás növelése, és így azonos felületre minél nagyobb számú képpont belezsúfolása, hanem az otthoni vizuális élmény növelése a tartalommal lefedett látótér megnövelésével.
+
+\paragraph{Rövid HD történelem:\\}
+
+A nagyfelbontású (High Definition) formátum létrehozása gyakorlatilag a televíziózás megjelenése óta a teljes XX. századon átívelt.
+Noha manapság a kifejezés jellemzően digitális formátumra utal, már a korai analóg technika korában is léteztek HD kezdeményezések.
+Olyannyira, hogy már 1949-ben, Franciaországban kísérleti műsorszórást kezdtek monokromatikus (fekete-fehér), de 819 sort alkalmazó analóg rendszerben (a műsorszórás ebben a formátumban egészen 1983-ig tartott).
+A Szovjetunióban kísérleti jelleggel 1958-ban kifejlesztettek egy színes, 1125 sorból álló analóg rendszert, a hadászati célra létrehozott technikát azonban végül a gyakorlatban nem hasznosították.
+Végül a japán NHK cég vezette be az első mai értelemben vett HD műsorszórást 1989-ben.
+Rendszerük, az ún. Hi-Vision, vagy MUSE (Multiple sub-Nyquist Sampling Encoding) 5:3-as képarányú, 1125 soros analóg interlaced videó műsorszórására volt képes.
+A japán HD műsorszórás erőteljesen ösztönözte a HD formátum szabványosítását, amely azonban az analóg rendszer hatalmas sávszélességigénye miatt egészen a 90-es évek elejéig nem valósult meg.
+
+A HD szabvány létrejötte végül a digitális tömörítési módszerek, főként az MPEG-1 és MPEG-2 tömörítések megjelenésének köszönhető.
+A szabványt 1990-ben tették közre az ITU-709 (Rec. 709) ajánlásban.
+
+\paragraph{HD paraméterek:\\}
+
+Az ITU-709 szabvány a következő HD paramétereket határozta meg:
+\begin{itemize}
+\item \textbf{Képarány:} az első szabványosított formátumjellemző a HD rendszer képaránya volt, amelyet 16:9 értékűre választottak.
+A választás nem kézenfekvő, mivel a formátum létrehozásakor gyakorlatilag nem állt rendelkezésre ebben a képarányban nyersanyag: mind a mozifilmek, mind a korábbi SD formátumú anyagok ettől eltérő képformátumban kerültek rögzítésre.
+A korabeli nyersanyagok jellegzetesen 4:3 (SD videó), 15:9, 1.85:1, 2.2:1, illetve 2,35:1 (mozis szabványok) voltak.
+Azt találták, hogy amennyiben azonos területű téglalapokat vetítünk egymásra a fenti, gyakori oldalarányokkal, akkor az így kapott téglalap sokaság éppen egy 16:9 oldalarányú téglalapba rajzolható bele.
+Továbbá az ezen téglalapok metszete szintén éppen egy 16:9 arányú téglalapot határoz meg.
+A geometria a \ref{Fig:kerns_powers} ábrán látható.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.9 \columnwidth ]{Figures/KernsPowers.png}
+	\small
+	\end{overpic}
+	\caption{A 16:9 oldalarány, mint sok gyakori képarányú téglalap határoló-síkidoma és metszete}
+	\label{Fig:kerns_powers}
+\end{figure}
+A gondolatmenet eredményeképp, annak érdekében, hogy a legtöbb létező képarányú korabeli nyersanyag optimálisan megjeleníthető legyen az új formátumban esett a választás a ma már jól ismert 16:9 képarányra.
+
+\item \textbf{Képfrissítési frekvencia:} Az SD rendszer hagyatékaként a HD szabvány számos képfrissítési frekvenciát támogat, így a $24~\mathrm{Hz}$, $25~\mathrm{Hz}$, $30~\mathrm{Hz}$, $50~\mathrm{Hz}$ és $60~\mathrm{Hz}$ képfrekvenciákat, valamint és ezek $\frac{1000}{1001}$-szeres módosításait.
+Ezen kívül, ezek a frissítési frekvenciák mind progresszív, mind váltottsoros módban alkalmazhatóak.
+
+\item \textbf{Mintavételi frekvencia:}
+A mintavételi frekvencia esetében kiindulásul az SD mintavételi frekvencia szolgált.
+A HD formátum célja SD-hez képest mind függőleges ($\times 2$), mind vízszintes ($\times 2$) felbontásduplázás, ezen felül a 4:3 képarány helyett 16:9 alkalmazása ($\times 4/3$), amely együttesen a mintaszám--és így a mintavételi frekvencia---legalább $2\times 2 \times \frac{4}{3} = 5.33$-szorozódását jelenti.
+A legtöbb képfrekvenciához való kompatibilitás biztosítása érdekében (azaz egy sorba egész számú minta férjen) a mintavételi frekvencia $5.5 \cdot 13.5 = 74.25~\mathrm{MHz}$ lett, illetve törtszámú képfrekvencia esetén ennek az $\frac{1000}{1001}$-szerese.
+Progresszív esetben $50-60~\mathrm{Hz}$ képfrekvencia esetén a mintavételi frekvencia ennek a duplája: $fs = 148.5~\mathrm{MHz}$.
+%TODO : kibogarászni KovácsI jegyzetéből a mintavételi frek. megválasztását (VidStTech 01.pdf, 46.o)
+\item \textbf{Felbontás:} Hosszas egyeztetések után\footnote{Az első HD szabvány a Japán rendszer nyomán 1035 sort definiált. Ezt később visszavonták} a szabvány 1080 aktív sort definiált 1125 teljes sorszámmal mind progresszív, mind váltottsoros letapogatás mellett (SMPTE 274M szabvány).
+Emellett a különböző képfrekvenciák egységes kezelése érdekében a soronkénti mintaszámot fixen 1920 mintára választották, így a HD formátum felbontása 1290x1080 pixel.
+A különböző képfrekvenciájú HD formátumok így tehát kizárólag a soronkénti inaktív pixelek számában különböznek egymástól (azaz a sorkioltási idő hosszában).
+
+\begin{table}[h!]
+\caption{Néhány HD formátum mintavételi frekvenciája, összes sor és oszlopszáma, felbontása. 
+A soronkénti pixelek száma $S_{\mathrm{LT}} = $} alapján számítható.
+\renewcommand*{\arraystretch}{2.25}
+\label{tab:viewing_dist}
+\begin{center}
+    \begin{tabular}[h!]{ @{}c | l | l | l | l | l @{} }%\toprule
+		Rendszer     &   $f_s \, [\mathrm{MHz}]$ 				& $S_{TL}$ & $L_T$ & Aktív pixelszám \\ \hline
+		$720p50$     &   $74.25~\mathrm{MHz}$    				& 1980     &  750  & $1280 \times 720$ \\
+		$720p59.94$  &$74.25\cdot\frac{1000}{1001}~\mathrm{MHz}$& 1650     &  750  & $1280 \times 720$ \\
+		$1080i25$ 	 &   $74.25~\mathrm{MHz}$    				& 2640     & 1125  & $1920 \times 1080$ \\
+		$1080i30$  	 &   $74.25~\mathrm{MHz}$    				& 2200     & 1125  & $1920 \times 1080$ \\
+		$1080p50$ 	 &   $148.5~\mathrm{MHz}$    		    	& 2640     & 1125  & $1920 \times 1080$ \\
+		$1080p59.94$ &$148.5\cdot\frac{1000}{1001}~\mathrm{MHz}$& 2200     & 1125  & $1920 \times 1080$ 
+        \end{tabular}
+\end{center}
+\end{table}
+
+A különböző HD formátumok jelölése a következő:
+\begin{itemize}
+\item Teljes aktív felbontás pixelben kifejezve.
+Gyakran rövidítésképp csak a vertikális méretet jelölik meg.
+\item képletapogatás módja: $p$ a progresszív, $i$ az interlaced letapogatást jelöli
+\item képfrekvencia (frame rate) mind $p$, mind $i$ esetben.
+Interlaced videó esetén gyakran a képfrekvencia helyett---hibásan---a félképfrekvenciát jelölik.
+\end{itemize}
+Így pl. az $1080i25$ a 1080 soros, váltottsoros $25~\mathrm{Hz}$ képfrekvenciájú, és $50~\mathrm{Hz}$ félkép-frekvenciájú formátumot jelöli.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1 \columnwidth ]{Figures/HD_format.png}
+	\small
+	\end{overpic}
+	\caption{Az 1080 soros és 720 soros HD formátum szemléltetése}
+	\label{Fig:HD_formats}
+\end{figure}
+
+A progresszív HD formátumok nagy adatsebesség-igénye miatt az ITU-709-et néhány évvel később kibővítették egy alacsonyabb felbontású formátummal, ez 720 aktív sort és 1280 aktív pixelt alkalmaz, és kizárólag progresszív letapogatással definiálták \footnote{Az 1080p bevezetése során az egyik kitűzött cél a legalább duplázott sorszám volt.
+A 720p az SD és HD között félúton: másfélszeres sort alkalmaz így a sorszáma $\frac{3}{2} \cdot 480 = 720$-ból adódik, míg az oszlopszám a 16:9 képarányból, négyzetes pixelek mellett}.
+Jelölése: \textbf{720p}.
+A két HD formátumra egy-egy példa a \ref{Fig:HD_formats} ábrán látható.
+\item A HD formátum alapszínei az SD ITU-601-el megegyezőek, így a gamutja is azonos.
+A luma komponens számításának módja 
+\begin{equation}
+Y' = 0.2126 R' + 0.7152 G' + 0.0722B'.
+\end{equation}
+Az együtthatók az SD-vel ellentétben már kolorimetriailag is helyesek, azaz a színtér alapszíneiből (és fehérpontjából) felírható $RGB \hspace{3mm} \rightarrow \hspace{3mm} XYZ$ transzformációs mátrix $Y$ sorából ugyanezeket a világosság-együtthatókat kapnánk.
+\item A szabvány Gamma-karakterisztikája az SD-vel megegyező:
+\begin{equation}
+E = 
+\begin{cases}
+4.500 L, \hspace{20mm} \mathrm{ha}\, L < 0.018 \\
+1.099 L^{0.45} - 0.099, \hspace{3mm} \mathrm{ha}\, L \geq 0.018,
+\end{cases}
+\end{equation}
+ahol $L \in \{ R, G, B \}$.
+\item A szabvány az SD-vel azonos 8 és 10 bites digitális reprezentációt ír elő.
+\end{itemize}
+
+\paragraph{Tömörítetlen HD adatsebesség:\\}
+
+Vizsgáljuk most 
+
+
+
+Megyjegyezhető, hogy a $720p$ és $1080i$ formátumok tömörítetlenül közel azonos adatmennyiséget generálnak, azonban nagy előnye a progresszív formátumnak jóval hatékonyabban tömöríthetősége.
+
+%Ezt a végére
+Korábban tárgyaltuk, hogy a váltott-soros formátum állóképekre a progresszívvel azonos vertikális felbontást biztosít, azonban gyors mozgásokra ez a felbontás romlik.
+Épp ezért, azon műszorszolgáltatók, amelyeknél a sport-tartalom elsődleges (pl. FOX, ESPN) jellemzően a $720p50/60$ formátumot használ, míg a főként filmeket, hírműsorokat sugárzó operátorok jellemzően $1080i25/30$-t alkalmaz.
+
+%
+%
+%
+%%\begin{figure}[]
 %	\centering
 %	\begin{overpic}[width = 0.75 \columnwidth ]{Figures/optimal-viewing-distance-television-graph-size.png}
 %	\small
