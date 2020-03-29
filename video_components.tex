@@ -512,7 +512,6 @@ Az eredményeket az eddig bemutatott SD és a következőekben tárgyalt HD form
 Láthatjuk, hogy az SD felbontást ideálisan a képmagasság 6-7-szereséről célszerű nézni.
 Ekkor valóban, a formátum tervezésének kiindulási pontjába érünk vissza, azaz a kijelző a fő látóterünket, kb. 10-13 fokot tölti ki horizontálisan.
 
-
 Ez már előrevetíti a HD formátum megalkotásának fő célját: a vizuális élmény fokozását nagyobb kitöltött látószög alkalmazásával.
 A HD formátum célja tehát---ellentétben a közhiedelemmel---nem a pixelben kifejezett felbontás növelése, és így azonos felületre minél nagyobb számú képpont belezsúfolása, hanem az otthoni vizuális élmény növelése a tartalommal lefedett látótér megnövelésével.
 
@@ -527,7 +526,7 @@ Rendszerük, az ún. Hi-Vision, vagy MUSE (Multiple sub-Nyquist Sampling Encodin
 A japán HD műsorszórás erőteljesen ösztönözte a HD formátum szabványosítását, amely azonban az analóg rendszer hatalmas sávszélességigénye miatt egészen a 90-es évek elejéig nem valósult meg.
 
 A HD szabvány létrejötte végül a digitális tömörítési módszerek, főként az MPEG-1 és MPEG-2 tömörítések megjelenésének köszönhető.
-A szabványt 1990-ben tették közre az ITU-709 (Rec. 709) ajánlásban.
+A szabványt 1990-ben tették közre az \href{https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.709-6-201506-I!!PDF-E.pdf}{ITU-709} (Rec. 709) ajánlásban.
 
 \paragraph{HD paraméterek:\\}
 
@@ -559,7 +558,7 @@ A legtöbb képfrekvenciához való kompatibilitás biztosítása érdekében (a
 Progresszív esetben $50-60~\mathrm{Hz}$ képfrekvencia esetén a mintavételi frekvencia ennek a duplája: $fs = 148.5~\mathrm{MHz}$.
 %TODO : kibogarászni KovácsI jegyzetéből a mintavételi frek. megválasztását (VidStTech 01.pdf, 46.o)
 \item \textbf{Felbontás:} Hosszas egyeztetések után\footnote{Az első HD szabvány a Japán rendszer nyomán 1035 sort definiált. Ezt később visszavonták} a szabvány 1080 aktív sort definiált 1125 teljes sorszámmal mind progresszív, mind váltottsoros letapogatás mellett (SMPTE 274M szabvány).
-Emellett a különböző képfrekvenciák egységes kezelése érdekében a soronkénti mintaszámot fixen 1920 mintára választották, így a HD formátum felbontása 1290x1080 pixel.
+Emellett a különböző képfrekvenciák egységes kezelése érdekében a soronkénti mintaszámot fixen 1920 mintára választották, így a HD formátum felbontása 1920x1080 pixel.
 A különböző képfrekvenciájú HD formátumok így tehát kizárólag a soronkénti inaktív pixelek számában különböznek egymástól (azaz a sorkioltási idő hosszában).
 
 \begin{table}[h!]
@@ -607,6 +606,13 @@ A luma komponens számításának módja
 \begin{equation}
 Y' = 0.2126 R' + 0.7152 G' + 0.0722B'.
 \end{equation}
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{Figures/hd_line.png}
+	\end{overpic} 
+	\caption{1080 soros HD formátum egy sorának felépítése}
+	\label{Fig:hd_line}
+\end{figure}
 Az együtthatók az SD-vel ellentétben már kolorimetriailag is helyesek, azaz a színtér alapszíneiből (és fehérpontjából) felírható $RGB \hspace{3mm} \rightarrow \hspace{3mm} XYZ$ transzformációs mátrix $Y$ sorából ugyanezeket a világosság-együtthatókat kapnánk.
 \item A szabvány Gamma-karakterisztikája az SD-vel megegyező:
 \begin{equation}
@@ -618,23 +624,92 @@ E =
 \end{equation}
 ahol $L \in \{ R, G, B \}$.
 \item A szabvány az SD-vel azonos 8 és 10 bites digitális reprezentációt ír elő.
+\item A stúdió szabvány alapvetően 4:2:2 szín-mintavételezési struktúrát definiál.
 \end{itemize}
+A szabványos HD videójel ezek mellett teljesen az SD-vel azonos felépítésű, egy egyszerű példa a \ref{Fig:hd_line} ábrán látható.
+Az egyetlen különbség gyakorlati megvalósítás szempontjából, hogy a kioltási időszakokban a szinkron impulzusok ún. 3 állapotúak ($0, \pm300~\mathrm{mV}$).
 
-\paragraph{Tömörítetlen HD adatsebesség:\\}
+\paragraph{Tömörítetlen videó adatsebesség:\\}
 
-Vizsgáljuk most 
+Vizsgáljuk most néhány alapvető képformátum esetén a videó tömörítetlen adatsebességét!
+Az aktív és teljes pixelszámokat a \ref{Fig:size} ábrán látható jelölésekkel jelölve a teljes adatsebesség
+\begin{equation}
+B\!R_T = \underbrace{S_{TL} \cdot L_T \cdot f_f \cdot n_{\mathrm{bit}}}_{\text{mintánkénti bitrate}} \cdot n_{\mathrm{CS}},
+\end{equation}
+ahol $f_f$ a képfrekvencia, $n_{\mathrm{bit}}$ a mintánkénti bitszám és $n_{\mathrm{CS}}$ a színkülönbségi jelek alulmintavételezését jelöli (komponens/minta).
+Utóbbi értéke 4:4:4 struktúra esetén $n_{\mathrm{CS}} = 3$, 4:2:2 estén $n_{\mathrm{CS}}=2$, 4:2:0 esetén $n_{\mathrm{CS}} = 1.5$.
 
+Hasonlóan, az aktív tartalom bitsebessége
+\begin{equation}
+B\!R_A = S_{TA} \cdot L_A \cdot f_f \cdot n_{\mathrm{bit}} \cdot n_{\mathrm{CS}}
+\end{equation}
+alapján számítható.
 
-
-Megyjegyezhető, hogy a $720p$ és $1080i$ formátumok tömörítetlenül közel azonos adatmennyiséget generálnak, azonban nagy előnye a progresszív formátumnak jóval hatékonyabban tömöríthetősége.
-
-%Ezt a végére
-Korábban tárgyaltuk, hogy a váltott-soros formátum állóképekre a progresszívvel azonos vertikális felbontást biztosít, azonban gyors mozgásokra ez a felbontás romlik.
-Épp ezért, azon műszorszolgáltatók, amelyeknél a sport-tartalom elsődleges (pl. FOX, ESPN) jellemzően a $720p50/60$ formátumot használ, míg a főként filmeket, hírműsorokat sugárzó operátorok jellemzően $1080i25/30$-t alkalmaz.
-
+Néhány gyakran alkalmazott videóformátum teljes és aktív videósebessége a \ref{tab:bitrate} táblázatban látható\footnote{Az UHD formátum kioltási idejei \href{http://programmersought.com/article/7908103552/}{szabványosan} 90 inaktív sor és 560 inaktív pixel/sor}.
+\begin{figure}[]
+\captionsetup{singlelinecheck=off}
+	\centering
+	\begin{minipage}[c]{0.4\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures/size.png}
+	\end{overpic}   \end{minipage}\hfill
+		\begin{minipage}[c]{0.55\textwidth}
+	\caption[]{Jelölés-konvenció az adatsebesség számításához
+	\begin{itemize}
+	\item $S_{TL}$: Összes mintaszám/sor
+	\item $S_{TA}$: Aktív mintaszám/sor
+	\item $L_T$: Összes sor/kép
+	\item $L_A$: Aktív sor/kép
+	\end{itemize}}
+	\label{Fig:size}  \end{minipage}
+\end{figure}
 %
+\begin{table}[h!]
+\caption{Videóformátum mintavételi frekvenciája, összes sor és oszlopszáma, felbontása, $n_{\mathrm{bit}} = 10$ bitmélység esetén}
+\renewcommand*{\arraystretch}{2.25}
+\label{tab:bitratet}
+\begin{center}
+    \begin{tabular}[h!]{ @{}c | l | l | l | l | l @{} }%\toprule
+\thead{Rendszer} & \thead{Mintavételi \\ frekvencia} &    \thead{Teljes bitrate \\ 4:2:2} & \thead{Aktív bitrate\\ 4:2:2} & \thead{Aktív bitrate\\ 4:4:4} \\ \hline
+$576p50$     &   $13.5~\mathrm{MHz}$        & $0.54~\mathrm{Gbit/s}$  & $0.41~\mathrm{Gbit/s}$ & $0.62~\mathrm{Gbit/s}$ \\
+$720p60$     &   $74.25~\mathrm{MHz}$    	& $1.49~\mathrm{Gbit/s}$  & $1.11~\mathrm{Gbit/s}$ & $1.67~\mathrm{Gbit/s}$ \\
+$1080i30$ 	 &   $74.25~\mathrm{MHz}$    	& $1.49~\mathrm{Gbit/s}$  & $1.24~\mathrm{Gbit/s}$ & $1.86~\mathrm{Gbit/s}$ \\
+$1080p60$ 	 &   $148.5~\mathrm{MHz}$    	& $2.97~\mathrm{Gbit/s}$  & $2.49~\mathrm{Gbit/s}$ & $3.73~\mathrm{Gbit/s}$ \\
+$2160p60$ 	 &   $297~\mathrm{MHz}$         &  $11.88~\mathrm{Gbit/s}$& $9.96~\mathrm{Gbit/s}$ & $14.93~\mathrm{Gbit/s}$
+\end{tabular}
+\end{center}
+\end{table}
 %
-%
+Látható, hogy a $720p$ és $1080i$ formátumok tömörítetlenül azonos adatmennyiséget generálnak, ugyanakkor nagy előnye a progresszív formátumnak jóval hatékonyabban tömöríthetősége.
+Ahogy korábban a váltott-soros formátum előnye ezzel szemben, hogy állóképekre a progresszívvel azonos vertikális felbontást biztosít, bár gyors mozgásokra ez a felbontás romlik.
+Épp ezért, azon műsorszolgáltatók, amelyeknél a sport-tartalom elsődleges jellemzően a $720p50/60$ formátumot használ, míg a főként filmeket, hírműsorokat sugárzó operátorok jellemzően $1080i$-t alkalmaznak.
+Magyarországon jelenleg a HD adások mellett minden szolgálgató biztosít SD felbontású verziót is, amely jellemzően $576p50$ formátumot alkalmaz.
+
+Jelenleg stúdiótechnikában a legelterjedtebb digitális videóinterface az SDI (Serial Digital Interface), konzumer elektronikában pedig a HDMI (High-Definition Multimedia Interface).
+A fenti adatsebességek kézzelfoghatóvá-tételéhez, néhány jelenleg is használt HDMI verzió a következő adatmennyiségek továbbítását teszi lehetővé:
+\begin{itemize}
+\item HDMI 1.0-1.2: 4.95 Gbit/s (3.96 Gbit/s tényleges)\footnote{A HDMI szabvány itt nem részletezett okokból ún. 8b/10b csatornakódolást alkalmaz, amely során 8 bitnyi adatot 10 biten visz át.
+A 4.95 Gbit/s teljes sávszélességnek tehát csak $\frac{8}{10}$ része használható ki tényleges adatra.}
+\item HDMI 2.0: 18 Gbit/s (14.4 Gbit/s tényleges)
+\item HDMI 2.1: 48 Gbit/s (38.4 Gbit/s tényleges)
+\end{itemize}
+Természetesen a HDMI méretezéshez a fenti táblázatból a teljes adatsebességet kell tekinteni, hiszen a HDMI kábelen terjedő HD jel tartalmazza a kioltási időket is: mint korábban tárgyaltuk ezekben az időrésekben kerülnek az audio csatornák és egyéb járulékos adatok elhelyezésre.
+Látható, hogy a HDMI 1.0 szabványt főként 1080p videó továbbítására fejlesztették ki 4:2:2 formátum 10, vagy 12 bit, míg 4:4:4 formátum már csak 8 biten továbbítható.
+A HDMI 2.0 szabványt már 4k míg a 2.1 szabvány 8k UHD videó továbbítására fejlesztették ki.
+
+%TODO 8b/10b codin
+% Fischer Digital Video and Audio broadcasting technology 227.o
+
+
+%TODO HD ready
+%TODO Gaumt coverage percentage, Surface colors
+%TODO In typical production practice the encoding function of image sources is adjusted so that the final picture has the desired aesthetic look, as viewed on a reference monitor with a gamma of 2.4 (per ITU-R BT.1886) in a dim reference viewing environment (per ITU-R BT.2035).[10][11][12]
+%TODO Rec. 2100, a standard for HDTV and UHDTV with high dynamic range
+
+\subsection{UHD formátumok}
+
+Periférikus látás:
+https://www.quora.com/What-is-the-aspect-ratio-of-human-vision
+
 %%\begin{figure}[]
 %	\centering
 %	\begin{overpic}[width = 0.75 \columnwidth ]{Figures/optimal-viewing-distance-television-graph-size.png}
@@ -643,9 +718,3 @@ Korábban tárgyaltuk, hogy a váltott-soros formátum állóképekre a progress
 %	\caption{Optimális nézőtávolság a kijelzőátmérő függvényében}
 %	\label{Fig:optimal_vd_2}
 %\end{figure}
-
-
-\subsection{UHD formátumok}
-
-Periférikus látás:
-https://www.quora.com/What-is-the-aspect-ratio-of-human-vision
