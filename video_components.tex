@@ -699,7 +699,6 @@ A HDMI 2.0 szabványt már 4k míg a 2.1 szabvány 8k UHD videó továbbításá
 %TODO 8b/10b codin
 % Fischer Digital Video and Audio broadcasting technology 227.o
 
-
 %TODO HD ready
 %TODO Gaumt coverage percentage, Surface colors
 %TODO In typical production practice the encoding function of image sources is adjusted so that the final picture has the desired aesthetic look, as viewed on a reference monitor with a gamma of 2.4 (per ITU-R BT.1886) in a dim reference viewing environment (per ITU-R BT.2035).[10][11][12]
@@ -707,14 +706,113 @@ A HDMI 2.0 szabványt már 4k míg a 2.1 szabvány 8k UHD videó továbbításá
 
 \subsection{UHD formátumok}
 
-Periférikus látás:
-https://www.quora.com/What-is-the-aspect-ratio-of-human-vision
+Láthattuk, hogy a HD formátum megalkotása során a fő cél a néző látóterének---az SD-hez képest---nagyobb részének tartalommal való kitöltése volt.
+A HD-hez hasonlóan az UHD (Ultra High Definition) formátum a vizuális élmény továbbfokozását tűzte ki fő céljául a pixel-szám---és így a kitöltött látószög---további növelésével.
 
-%%\begin{figure}[]
-%	\centering
-%	\begin{overpic}[width = 0.75 \columnwidth ]{Figures/optimal-viewing-distance-television-graph-size.png}
-%	\small
-%	\end{overpic}
-%	\caption{Optimális nézőtávolság a kijelzőátmérő függvényében}
-%	\label{Fig:optimal_vd_2}
-%\end{figure}
+Hasonlóan a HD-hoz, a továbbemelt felbontású formátum fejlesztése a japán NHK nevéhez kötődik, akik már 2003-ban kísérleti UHDTV felvételt készítettek 16 darab HDTV rögzítővel és 4 darab 3840x2048 felbontású CCD szenzorral.
+Az első UHDTV szabvány ezek után már 2007-ben megjelent (SMPTE 2036), majd a jelenleg is érvényben lévő \textbf{ITU-R BT.2020} szabványt 2012-ben fogadták.
+A szabvány két új formátum paramétereit kodifikálja, a 4k formátumot, amely az 1080 soros HD formátumhoz képest mindkét dimenzió mentén duplázott felbontást (így 4-szeres teljes pixelszámot) alkalmaz, és a 8k-t, amely a 4k-hoz képest kétszeres felbontást definiál.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.85 \columnwidth ]{Figures/fov_formats.png}
+	\small
+	\end{overpic}
+	\caption{Az egyes formátumok által biztosított horizontális látószög, a kijelzőt ideális nézőtávolságból nézve.}
+	\label{Fig:fov_formats}
+\end{figure}
+
+A szabvány célja szerint ideálisan a 4k formátum a néző horizontális látószögéből kb. $58^{\circ}$-ot, a 8k formátum $96^{\circ}$-ot tölt ki, azaz már a periférikus látás jelentős részét is tartalommal tölti ki.
+Az egyes formátumok által ideálisan kitöltött látószög változását a \ref{Fig:fov_formats} ábra szemlélteti.
+
+Ahhoz, hogy az ekkora látószögben megfelelő minőségű képi reprodukció valósuljon meg, az ITU-2020 szabvány számos szempontból javította a HD formátum alapparamétereit:
+\begin{itemize}
+\item \textbf{Felbontás: } A szabvány két felbontást deifiniál, ezek a 3840x2160 (4k) és a 7680x4320 (8k) aktív képméretek.
+A HD szabványnak megfelelően mindkét formátum képaránya 16:9 és négyzetes pixelekből áll.
+\item A HD-vel ellentétben az ITU-2020 szabvány már kizárólag csak progresszív letapogatást támogat (így a $p/i$ formátummegjelölés UHD esetén okafogyott.
+Fontos, hogy a kijelző már optimális esetben a néző periférikus látásának jelentős részét is kitölti, ahol az érzékelést már a szem pálcikái dominálják.
+Mivel ezek fúziós frekvenciája jóval nagyobb, mint a fő látóterünké, ezért a villogás elkerülése érdekében a képfrekvenciát az UHD esetében emelni kellett.
+Ennek megfelelően a szabvány a 120, 119.88, 100, 60, 59.94, 50, 30, 29.97, 25, 24, 23.976 Hz képfrekvenciákat támogatja.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.75 \columnwidth ]{Figures/uhd_gamut.png}
+	\small
+	\end{overpic}
+	\caption{Az ITU-2020 szabvány gamutja, összehasonlítva a HD színtérrel}
+	\label{Fig:UHD_gamut}
+\end{figure}
+
+\item \textbf{Színtér:} Az ITU-2020 szabvány az NTSC óta először új alapszíneket vezetett be a nagyobb ábrázolható színtartomány érdekében (és a világosság dinamikatartományának növelése érdekében, ld. köv. pont).
+A szabvány színterének gamutja a \ref{Fig:UHD_gamut} ábrán látható.
+Megfigyelhető, hogy a választott alapszínek spektrálszínek (azaz a színpatkó határán helyezkednek el), az RGB hullámhosszok rendre 630 nm, 532 nm és 467 nm
+\footnote{Természetesen ez nem azt jelenti, hogy az UHD kijelzők RGB fényforrásai spektrálszínek lennének, a szabvány csak a tároláshoz és továbbításhoz használt színteret kodifikálja. 
+A megjelenítés már az egyes kijelzők saját színterében történik, amit a ténylegesen alkalmazott alapszínek korlátoznak.
+Szakmai körökön belül napjainkban is fontos hírnek számít, ha egy kijelző az ITU-2020 szabványos színterét közel egészében képes megjeleníteni.
+Így pl. 2018-ban a JDI cég \href{https://www.displaydaily.com/?view=article&id=62235:jdi-may-have-commercial-problems-but-has-technical-highlights}{bemutatott} egy 17.3"-es kijelzőt, amely lézeres háttérvilágítással az ITU-2020-as szabvány gamutjának 97\%-át képes megjeleníteni.}.
+Ezzel a CIE színpatkó 75.8\%-át lefedi (összehasonlításképp, a HD esetében ez 35.9\%), és a Pointer féle valós felületi színek egészét\footnote{
+A Pointer féle valós felületi színek azon színek halmaza, amelyek a természetben előfordulnak, mint valamely felületről visszavert fény által keltett színérzet (ellentétben a természetben elő nem forduló színekkel, pl. neon, vagy monitor által kikevert színek).
+A Pointer gamutot egy 4089 mintából álló mérési adatbázisból állították össze, és publikálták az eredményeket 1980-ban, azóta a Pointer gamut-lefedés az egyes színterek minősítésének de facto szabványa.
+A Pointer féle gamut \href{https://cinepedia.com/picture/color-gamut/}{itt} található, illetve \href{https://www.tftcentral.co.uk/articles/pointers_gamut.htm}{itt} található egy összehasonlítás a gyakran alkalmazott színterek gamutjával.
+}.
+Az új alapszínekből a világosság a következőképp számítható:
+\begin{equation}
+Y = 0.2627 \, R + 0.6780 \, G + 0.0593 \, B.
+\label{eq:2020_Y}
+\end{equation}
+\item \textbf{Mintánkénti bitszám:} A tárolt színek tartományának növelése természetesen magával vonja a világosságjel dinamikatartományának növekedését is (nyilván, hiszen adott szín világosságtartalma \ref{eq:2020_Y} alapján az RGB értékekből kiszámítható).
+UHD esetében  tehát már nem csak az SD esetében ökölszabályként tárgyalt 100:1 dinamikatartomány ábrázolása volt a cél.
+Ennek oka, hogy a 100:1 dinamikatartomány a látás fő látóterében, rögzített tekintet mellett értelmezendő.
+Amennyiben egy jeleneten belül a nézőnek lehetősége van körülnézni, úgy a pupilla tágulása és összeszűkülése ezt a dinamikatartományt kb. 5-szörösére emeli.
+Mivel rendeltetésszerűen egy UHD kijelző akkora részét tölti ki a látómezőnek, hogy ez a lokális adaptációs mechanizmus végbe tud menni, így a megfelelő reprodukált dinamikatartomány biztosításához a reprezentálandó dinamikatartományt is növelni kellett.
+Részben ezt valósítja meg a szabvány növelt gamutja, illetve erre szolgál a jelenleg elterjedőben levő HDR kiegészítés is.
+Az ábrázolt dinamikatartomány növelése természetesen magával vonja az ábrázolásra használt bitek számának növelését is, hogy az egyes szintekhez tartozó világosságértékek közti különbség továbbra is az emberi látás modulációs küszöbje alatt maradjon.
+Kísérletek kimutatták, hogy a  ITU-2020 színterének perceptuális kvantálásához 11 bit elegendő, így a szabvány a HD szabvánnyal ellentétben már kizárólag 10 és 12 bit reprezentációt ír elő.
+\item \textbf{Gamma függvény:} Az ITU-2020 szabvány Gamma-korrekciós függvénye az SD és HD szabványokkal megegyezik:
+\begin{equation}
+E = 
+\begin{cases}
+4.500 L, \hspace{20mm} \mathrm{ha}\, L < \beta \\
+\alpha L^{0.45} - (\alpha - 1 ), \hspace{3mm} \mathrm{ha}\, L \geq \beta,
+\end{cases}
+\end{equation}
+ahol $\alpha = 1.09929682680944$ és $\beta = 0.018053968510807$.
+Különbségként látható: a szabvány a függvény paramétereit nagyobb pontossággal definiálja, és 12 bites ábrázolás esetén a paraméterek 5 tizedesjegy pontossággal számolandók.
+\item \textbf{Mintavételi struktúra:} A szabvány 4:2:0, 4:2:2 és 4:4:4 chromamintavételi-struktúrákat engedélyez, utóbbi esetben természetesen luma/chroma jelek helyett közvetlenül RGB jelek kerülnek tárolásra és átvitelre.
+4:2:0 és 4:2:2 esetében az $YC_bC_r$ ábrázolás mellett lehetőség van ún. konstans fénysűrűségű luma-chroma reprezentációra is.
+\end{itemize}
+
+%TODO \paragraph{Konstans fénysűrűségű mód:\\}
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.75 \columnwidth ]{Figures/optimal-viewing-distance-television-graph-size.png}
+	\small
+	\end{overpic}
+	\caption{Optimális nézőtávolság a kijelzőátmérő függvényében}
+	\label{Fig:optimal_vd_2}
+\end{figure}
+
+A fejezet zárógondolataként térjünk vissza a különböző sorszámú kijelzők ideális nézőtávolságához, az ún. Lechner távolsághoz.
+Az optimális nézőtávolságra vonatkozóan számos ajánlás létezik, így léteznek gyártói, forgalmazói, illetve THX ajánlások.
+\begin{itemize}
+\item SMPTE 30: a már tárgyalt, Lechner távolságon alapuló ajánlás, amely HD felbontás esetén 1.6 x képátló nézőtávolságot ír elő, így a horizontális látószög kb. 30 fok.
+Ez a házimozi közösségen belül legelfogadottabb, általános nézőtávolság
+\item Gyártói és forgalmazói ajánlás: HD felbontás esetén 2.5 x képátló nézőtávolság, így a horizontális látószög kb. 20 fok.
+\item THX ajánlás: HD felbontás esetén 1.2 x képátló nézőtávolság, így a horizontális látószög kb. 40 fok, amely a THX szerint a legjobban közelíti a mozikban biztosított élményt.
+\end{itemize}
+Bár a fenti ajánlások jelentősen eltérnek egymástól, abban azonban egyetértenek, hogy "minél közelebb, annál jobb".
+
+Az optimális nézőtávolság ábrázolható a képernyőátmérő függvényében különböző videóformátumok mellett.
+Az így kapott grafikont \ref{Fig:optimal_vd_2} mutatja.
+Ekkor egy adott képernyő méret mellett a nézőtávolságot növelve természetesen a pixelstruktúra nem válik láthatóvá, így pl. az $1080p$ vonala fölött a HD kijelzők használhatók.
+A gondolatmenet alapján a grafikon területekre oszthatók, amelyek megadják, egy adott kijelzőméret és nézőtávolság mellett milyen felbontású kijelző az optimális választás.
+
+Statisztikák szerint (egy szintén Bernard J. Lechner nevéhez köthető felmérés szerint) a háztartásokban az átlagos nézőtávolság kb. 2.7 méterre adódott.
+Ekkora nézőtávolság mellett 50" képátló felett már 1080p felbontású TV-t érdemes venni, míg az UHD tartalom adta előnyök kiélvezéséhez legalább 75"-es ($\sim 1.9~\mathrm{m}$) kijelzőre lenne szükség.
+Jelenleg az ekkora kijelzők természetesen még nem elterjedtek, így ez az adat leginkább azt mutatja, hogy jelenleg a 4k tartalmak előnyeit sem használják ki teljes egészében a kijelzők, és a vásárlók nagyrésze.
+Ennek ellenére mára sorra jelennek meg a konzumer felhasználásra szánt 8k felbontású kijelzők is, és a 8k műsorszórás is kísérleti jelleggel megkezdődött.
+Többek között 2017-ben lőtték fel az első dedikáltan 8k tartalom közvetítésére szánt műholdat (BSAT-4a), amely tervek szerint a 2020-as Japánban tartandó nyári olimpiát hivatott 8k felbontással az ITU-2020 szabvány szerint közvetíteni (amelyet végül a koronavírus járvány miatt 2021 nyarára ütemeztek át).
+
+
+%Periférikus látás:
+%https://www.quora.com/What-is-the-aspect-ratio-of-human-vision
+
+%TODO \subsection{A HDR kiterjesztés}
