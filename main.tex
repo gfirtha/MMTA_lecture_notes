@@ -12,7 +12,12 @@
 \usepackage{caption,graphicx,enumitem}
 \usepackage{array}
 \usepackage{makecell}
-
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
 
 \renewcommand\theadalign{bc}
 \renewcommand\theadfont{\bfseries}
@@ -46,11 +51,25 @@
 \renewcommand{\@chapapp}{Fejezet}
 \makeatother
 
+
+
+\title{A multimédiatechnológiák alapjai}
+\author{Dr. Firtha Gergely}
+\date{\today}
+  
+
 \begin{document}
 \sloppy 
 
 
 \titlepage
+\maketitle
+\cleardoublepage 
+  
+\tableofcontents
+
+\pagenumbering{arabic}			% arabic page numbering
+\setcounter{page}{1}			% set page counter 
 \chapter{Az emberi látás tulajdonságai}
 \label{sec:HVS}
 \input{HVS} 
@@ -59,9 +78,22 @@
 \label{sec:colorimetry}
 \input{colorimetry}
 
-\chapter{Videojel komponensek}
-\label{sec:components}
+\chapter{Videókomponensek}
+\label{sec:video_components}
 \input{video_components} 
+
+
+%\chapter{Videóformátumok}
+%\label{sec:video_formats}
+%\input{video_formats} 
+
+%\chapter{A videótömörítés alapjai}
+%\label{sec:compression}
+%\input{compression} 
+%
+%\chapter{Az MPEG tömörítés}
+%\label{sec:mpeg}
+%\input{mpeg} 
 
 \end{document}
 
