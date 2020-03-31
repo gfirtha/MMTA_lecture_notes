@@ -66,6 +66,13 @@ Az alapszín-vektorok $XYZ$ koordinátáit jelölje rendre
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.75\columnwidth ]{figures/device_dep.png}
+	\small
+	\put(89,19){$X$}
+	\put(12,96){$Y$}
+	\put(0,4){$Z$}
+	\put(36,64){$(X_g,Y_g,Z_g)$}
+	\put(10,8){$(X_b,Y_b,Z_b)$}
+	\put(39,33){$(X_r,Y_r,Z_r)$}
 	\end{overpic}
 	\caption{RGB színtér alapszíneinek helye, és metszéspontja az egységsíkkal az XYZ színtérben.}
 	\label{Fig:device_dep}
@@ -136,6 +143,10 @@ Itt jegyezzük meg, hogy az $XYZ$ térben vizsgálva adott $RGB$ bázisvektorokk
 	\small
 	(a)
 	\begin{overpic}[width = 0.45\columnwidth ]{figures/device_dep_2.png}
+	\small
+	\put(-2,5){$Z$}
+	\put(89,17){$X$}
+	\put(11,97){$Y$}
 	\end{overpic}
 	(b)
 	\begin{overpic}[width = 0.45\columnwidth ]{figures/The-RGB-colour-cube.png}
@@ -175,17 +186,107 @@ Látható tehát, hogy a fehér szín önmagában szubjektív fogalom: adott kö
 A fehér fogalom egységesítéséhez bevezettek ún. szabványos megvilágításokat (standard illuminants), amelyet szabványosított $RGB$ színterek esetén előírnak, mint fehérpont.
 Ezeknek a szabványos megvilágításoknak a spektrális sűrűségfüggvénye adott (és persze az általa keltett színinger $xy$-koordinátái).
 Ilyen szabványos megvilágítások a következők:
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.6\textwidth}
+	\begin{overpic}[width = 0.9\columnwidth ]{figures/1200px-PlanckianLocus.png}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.4\textwidth}
+	\caption{Különböző hőmérsékletű feketetest sugárzók által keltett színek összessége, azaz a Planck görbe.}
+	\label{Fig:planck}  \end{minipage}
+\end{figure}
 \begin{itemize}
-\item E fehér:
-\item A fehér:
-\item B fehér:
-\item C fehér:
-\item D fehér:
+\item E fehér: egyenlő energiájú fehér, a CIE XYZ színtér fehérpontja. Kolorimetria szempontjából jelentős, videótechnikában kevésbé fontos a szerepe, mivel a gyakorlatban nem fordul elő olyan fényforrás, amely minden hullámhosszon azonos energiával sugároz.
+\item A fehér: a CIE által szabványosított, egyszerű háztartási wolfram-szálas izzó fényét (azzal azonos színérzetet keltő) fényforrás spektruma és színe, $2856~\mathrm{K}$ korrelált színhőmérséklette\footnote{A korrelált színhőmérséklet (correlated color temperature, CCT, $T_{\mathrm{C}}$) azon feketetest sugárzó hőmérsékletét jelzi, amely az emberi szemben a minősítendő fényforrással azonos színérzetet kelt.
+A feketetest (hőmérsékleti) sugárzó által keltett színingerek az $xy$ színdiagramon az ún. Planck-görbét járják be, amely a \ref{Fig:planck} ábrán látható.}.
+\item B és C fehér: Az A fehérből egyszerű szűréssel nyerhető, napfényt szimuláló megvilágítások.
+A B fehér a déli napsütést modellezi $4874~\mathrm{K}$ színhőmérséklettel, míg a C fehér a teljes napra vett átlagos fény színét (spektrumát) modellezi $6774~\mathrm{K}$ színhőmérséklettel.
+\item D fehér: szintén a napfény közelítésére alkalmazott megvilágítások sora.
+Videótechnika szempontjából a legfontosabb a D65 fehér, amely jelenleg is az UHD formátumok színterének szabványos fehérpontja.
 \end{itemize}
 
 \paragraph{Színtér konverziók:\\}
+Az eddigiekben látható volt, hogyan definiálható egy eszközfüggő színtér az alapszíneivel.
+Ahogy az elnevezés is mutatja, ezek a színterek jellegzetesen adott eszközre érvényesek, pl. egy kamera a beépített $RGB$ szenzorok, egy kijelző az alkalmazott $RGB$ kristályok által meghatározott $RGB$ színtérben dolgoznak.
+Emellett léteznek szabványos $RGB$ színterek amely a képi és videotartalom tárolására, továbbítására szolgálnak egységesített, szabványos módon.
+A következő bekezdés ezeket a szabványos videószíntereket tárgyalja részletesebben.
+%TODO Lab, luv spaces: conversion
+Felmerül tehát a természetes igény az egyes színterek közti átjárásra, amelyet \textbf{színtér konverziónak} nevezünk.
 
-\paragraph{A TV technika eszközfüggő színterei:\\}
+A színtérkonverziót az $XYZ$ színtér teszi lehetővé, amely egy eszközfüggetlen, abszolút színtér:
+egyes színterek közti konverzió a forrás által létrehozott jelek $XYZ$ színtérbe való transzformációjával, majd ezen reprezentáció a nyelő színterébe való transzformációval történik.
+Az $XYZ$ színtér így tehát színterek közti átjárást biztosít, ún. Profile Connection Space-ként működik (hasonlóan pl. a gyakran azonos célra alkalmazott $Lab$ színtérhez).
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth]{figures/cs_conversion.png}
+	\small
+	\put(1,37){$RGB_{\mathrm{cam}}$}
+	\put(35,37.5){$XYZ$}
+	\put(67,39){$RGB_{\mathrm{ITU}-709}$}
+	\put(13,18){$RGB_{\mathrm{ITU}-709}$}
+	\scriptsize
+	\put(15,29.25){$\mathbf{M}_{\!R\!G\!B_{\mathrm{c\!a\!m}} \!\!\rightarrow \!\!X\!Y\!Z}$}
+	\scriptsize
+	\put(49,29.25){$\mathbf{M}_{\!X\!Y\!Z \!\rightarrow \!R\!G\!B_{7\!0\!9}} $}
+	\small
+	\put(87,29){\parbox{.86in}{MPEG kódolás, műsorszórás, tárolás}}
+	\put(52,18){$XYZ$}
+	\put(87,17){$RGB_{\mathrm{TV}}$}
+	\scriptsize
+	\put(32.5,9.5){$\mathbf{M}_{\!R\!G\!B_{\mathrm{7\!0\!9}} \!\!\rightarrow \!\!X\!Y\!Z}$}
+	\scriptsize
+	\put(66.5,9.6){$\mathbf{M}_{\!X\!Y\!Z \!\rightarrow \!R\!G\!B_{7\!0\!9}} $}	
+	\end{overpic} 	
+	\caption{Színtér-konverzió folyamatábrája.}
+	\label{Fig:cs_conversion}
+\end{figure}
+Egy tipikus színtér konverziós folyamatot az \ref{Fig:cs_conversion} ábra mutat.
+Tegyük fel, hogy adott egy HD kamera által rögzített képanyag, ahol a kamera színterét $RGB_{\mathrm{cam}}$ jelöli.
+A HD formátum szabványos színteret alkalmaz, amelyet az ITU-709 ajánlásban rögzítettek (lásd később).
+A kamera $RGB$ jeleit tehát az esetleges kódolás és tárolás előtt ebbe a HD színtérbe kell konvertálni.
+Ez a konverzió a kamerajelek $XYZ$ térbe, majd innen az ITU-709 színtérbe való konverzióval oldható meg, amely konverziók a megfelelő transzformációsmátrixszal való szorzással valósítható meg:
+\begin{equation} 
+\begin{bmatrix}[c]
+       R_{\mathrm{ITU}-709} \\[0.3em]
+       B_{\mathrm{ITU}-709} \\[0.3em]
+       G_{\mathrm{ITU}-709} \end{bmatrix}
+       =
+       \mathbf{M}_{ X\!Y\!Z \rightarrow R\!G\!B_{709} } \cdot 
+\left(     \mathbf{M}_{R\!G\!B_{\mathrm{cam}} \rightarrow X\!Y\!Z } \cdot
+\begin{bmatrix}[c]
+       R_{\mathrm{cam}} \\[0.3em]
+       B_{\mathrm{cam}} \\[0.3em]
+       G_{\mathrm{cam}} \end{bmatrix} \right)
+\end{equation}
+Természetesen az egymás utáni két mátrixszorzás összevonható, így a két $RGB$ színtér között közvetlen lineáris leképzés határozható meg.
+Ez a transzformáció jellegzetesen már a kamerán belül megvalósul.
+%
+Hasonlóképp, megjelenítőoldalon a
+\begin{equation} 
+\begin{bmatrix}[c]
+       R_{\mathrm{cam}} \\[0.3em]
+       B_{\mathrm{cam}} \\[0.3em]
+       G_{\mathrm{cam}} \end{bmatrix}
+       =
+       \mathbf{M}_{ X\!Y\!Z \rightarrow R\!G\!B_{\mathrm{TV}} } \cdot 
+\left(     \mathbf{M}_{R\!G\!B_{709}  \rightarrow X\!Y\!Z } \cdot
+\begin{bmatrix}[c]
+       R_{\mathrm{ITU}-709} \\[0.3em]
+       B_{\mathrm{ITU}-709} \\[0.3em]
+       G_{\mathrm{ITU}-709} \end{bmatrix}
+ \right)
+\end{equation}
+transzformációt kell elvégezni.
+
+Ez az egyszerű transzformációs módszer lehetővé teszi egy adott színtérben mért színpontok másik térbe való ábrázolását.
+Ugyanakkor felmerül a probléma, hogy nagyobb gamuttal rendelkező színtérből kisebbe való áttérés esetén az új színtérben nem ábrázolható, gamuton kívüli színek negatív $RGB$ koordinátákkal jelennek meg, míg kisebb gamutú térből való áttérés esetén a nagyobb gamutú tér egy része kihasználatlan marad.
+A probléma megoldására a fenti transzformációk mellett az egyes színterek gamutját valamilyen nemlineáris leképzés segítségével lehet egymásrailleszteni (expandálással, kompresszálással).
+Ezek az ún. gamut-mapping technikák.
+
+A következőekben a konkrét kamerák, illetve megjelenítők által alkalmazott színtereket vizsgálatától eltekintve, a szabványos SD, HD és UHD szabványokban alkalmazott színtereket vizsgáljuk.
+
+\paragraph{A videótechnika színterei:\\}
 
 
 \section{A TV-technika luma és chroma komponensei}
