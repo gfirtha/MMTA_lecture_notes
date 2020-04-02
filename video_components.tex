@@ -280,14 +280,197 @@ Hasonlóképp, megjelenítőoldalon a
 transzformációt kell elvégezni.
 
 Ez az egyszerű transzformációs módszer lehetővé teszi egy adott színtérben mért színpontok másik térbe való ábrázolását.
-Ugyanakkor felmerül a probléma, hogy nagyobb gamuttal rendelkező színtérből kisebbe való áttérés esetén az új színtérben nem ábrázolható, gamuton kívüli színek negatív $RGB$ koordinátákkal jelennek meg, míg kisebb gamutú térből való áttérés esetén a nagyobb gamutú tér egy része kihasználatlan marad.
-A probléma megoldására a fenti transzformációk mellett az egyes színterek gamutját valamilyen nemlineáris leképzés segítségével lehet egymásrailleszteni (expandálással, kompresszálással).
+Ugyanakkor felmerül a probléma, hogy nagyobb gamuttal rendelkező színtérből kisebbe való áttérés esetén az új színtérben nem ábrázolható, gamuton kívüli színek negatív, és egynél nagyobb $RGB$ koordinátákkal jelennek meg, míg kisebb gamutú térből való áttérés esetén a nagyobb gamutú tér egy része kihasználatlan marad.
+A probléma megoldására a fenti transzformációk mellett az egyes színterek gamutját valamilyen nemlineáris leképzés segítségével lehet egymásra illeszteni (expandálással, kompresszálással).
 Ezek az ún. gamut-mapping technikák.
 
-A következőekben a konkrét kamerák, illetve megjelenítők által alkalmazott színtereket vizsgálatától eltekintve, a szabványos SD, HD és UHD szabványokban alkalmazott színtereket vizsgáljuk.
+A következőekben az egyes SD, HD és UHD videóformátumok tárolására és továbbítására alkalmazott eszközfüggő színtereket vizsgáljuk.
 
 \paragraph{A videótechnika színterei:\\}
 
+% http://www.displaymate.com/crtvslcd.html
+Az első kodifikált színmérő rendszer az NTSC (National Television System Committee) által 1953-ban szabványosított színes-televíziós műsorszóráshoz alkalmazott, az azt létrehozó bizottság után elnevezett NTSC szabvány volt.
+A színteret a korabeli foszfortechnológiával létrehozható CRT kijelzők (TV vevők) alapszíneik megfelelően írták elő, így színtérkorrekció vevő oldalon nem volt szükség.
+Egy egyszerű példa CRT kijelző alapszíneinek meghatározása a következőekben lesz látható.
+A színmérő rendszer C fehérponttal dolgozott, alapszíneit pedig a \ref{tab:ntsc_colorimetry} táblázat mutatja.
+Az így kapott gamut az xy ábrán látható.
+\begin{table}[h!]
+\caption{Az NTSC szabvány színmérőrendszere}
+\renewcommand*{\arraystretch}{1}
+\label{tab:ntsc_colorimetry}
+\begin{center}
+\small\addtolength{\tabcolsep}{15pt}
+    \begin{tabular}[h!]{ @{}c | | l | l @{} }%\toprule
+		&   x  	&    y \\ \hline
+    R   &  0.67 &	0.33 \\
+    G   &  0.21 &   0.71  \\
+    B   & 0.14   &	0.08\\
+    C fehér     &  0.310 &	0.316  \\
+    \end{tabular}
+\end{center}
+\end{table}
+Az alapszínekből és a fehérpontból meghatározható az $RGB_{\mathrm{NTSC}} \rightarrow XYZ$ transzformációs mátrix, amely alakja általánosan
+\begin{equation}
+\begin{bmatrix}[c]
+       X \\[0.3em]
+       Y \\[0.3em]
+       Z \end{bmatrix}
+       = 
+  \begin{bmatrix}[c c c]
+   0.60 & 0.17 & 0.2  \\
+   0.30 & 0.59 & 0.11 \\
+   0 & 0.07 & 1.11
+\end{bmatrix}
+\cdot
+\begin{bmatrix}[c]
+       R \\[0.3em]
+       G \\[0.3em]
+       B \end{bmatrix}_{\mathrm{NTSC}}
+\label{Eq:NTSC_transform}
+\end{equation}
+Az egyenlet második sora kitüntetett szereppel bír: meghatározza, hogy az NTSC színtérben hogyan számítható adott $RGB$ színpont világossága:
+\begin{equation}Y_{\mathrm{NTSC}} = 
+   0.30R + 0.59G + 0.11 B. 
+\label{Eq:NTSC_luminance}
+\end{equation}
+A világosságjel számítása egészen a HD formátum megjelenése (azaz közel 50 éven keresztül) a fenti egyenlet szerint történt.
+
+\vspace{3mm}
+Az foszfortechnológia fejlődésével az újabb megjelenítők egyre inkább feláldozták a széles gamutot (azaz a minél telítettebb alapszínek használatát) a minél nagyobb fényerő érdekében: 
+Az alkalmazott foszforok a nagyobb érzékelt világosság (fénysűrűség) érdekében egyre nagyobb sávszélességben sugároztak, így az alapszínek egyre kevésbé telítettek lettek, a gamut tehát csökkent (más szóval: az alapszínek spektruma a Dirac-impulzus helyett---amely teljesen telített spektrálszín lenne---szélesebb görbe lett, így a görbe alatti terület---és ezzel a szín világossága nőtt---de telítettsége csökkent).
+Mivel így a megjelenítő gamutja jelentősen eltért az NTSC szabványtól, ezért ez a képernyőn látható színek torzulását eredményezte.
+Ennek megoldásául a TV vevőkbe analóg színtérkonverziós áramköröket ültettek, amelyek az NTSC és a megjelenítő saját színtere közti konverziót valósította meg\footnote{Ahogy látni fogjuk a későbbiekben: a vevőkbe már csak a nem-lineárisan Gamma-előtorzított $RGB$ jelek jutottak, ahol az inverz torzítást maga a kijelző hajtotta végre. Emiatt a színtérkonverziót csak Gamma-torzított $R'G'B'$ jeleken tudták végrehajtani, ami azonban a telített színeknél ismét látható színezet és fénysűrűség-hibát okozott.}
+Ettől a ponttól tehát a műsorszórás szabványos színtere és a megjelenítők színtere különválnak.
+
+Az európai színes műsorszórásra az EBU (European Broadcasting Union) a PAL (Phase Alternating Line) rendszert vezette be 1963-ban, újradefiniálva a színmérőrendszert, új alapszínekre és D65 fehéret alkalmazva:
+\begin{table}[h!]
+\caption{A PAL szabvány színmérőrendszere}
+\renewcommand*{\arraystretch}{1}
+\label{tab:pal_colorimetry}
+\begin{center}
+\small\addtolength{\tabcolsep}{15pt}
+    \begin{tabular}[h!]{ @{}c | | l | l @{} }%\toprule
+		&   x  	&    y \\ \hline
+    R   &  0.64 &  0.33 \\
+    G   &  0.29 &  0.60  \\
+    B   & 0.15 & 0.06\\
+    D65 fehér     &  0.3127 & 0.3290 	  \\
+    \end{tabular}
+\end{center}
+\end{table}
+%
+Ez matematikailag helyesen a transzformációs mátrix és a világosságjel számításának módjának megváltozását jelentené.
+Praktikussági szempontokból azonban a PAL rendszer az NTSC-vel azonos módon, \eqref{Eq:NTSC_luminance} alapján állítja elő a világosságjelet, mivel a gyakorlatban a különbség alig volt látható \footnote{Ennek oka, hogy a világosságjel átviteltechnológia szempontjából fontos: a kamera és a kijelző is $RGB$ jeleket használ, a világosságjelet, ahogy a következőekben látjuk csak a képanyag átviteléhez számítjuk ki.}.
+Az PAL alapszíneit és a világosságjel számításának módját átvette az első digitális videóformátum, az ITU-601-es SD formátum is 1982-ben.
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.7\columnwidth ]{figures/gamuts.png}
+	\end{overpic}
+	\caption{Az NTSC, PAL/SD/HD/sRGB és UHD szabványok gamutja az $xy$-színpatkóban.
+	Az NTSC jóval nagyobb gamuttal dolgozott, mint a ma is használt HD és sRGB formátumok. Ennek oka, hogy a korai CRT megjelenítők ugyan telítettebb, de ugyanakkor kisebb fénysűrűségű és nagy időállandójú foszforokkal dolgoztak, amivel bár nagy színtartományt tudtak megjeleníteni, de kis fényerővel, és mozgó objektumoknál a képernyőn akaratlanul is nyomokat hagyva.}
+	\label{Fig:gamut}
+\end{figure}
+
+A HD formátumot az 1990-ben szabványosították az ITU-709-es ajánlás formájában.
+Ez ugyanúgy átvette az PAL rendszer alapszíneit, azonban immáron matematikailag precízen, újraszámította a transzformációs mátrixot és a világosságjel együtthatókat, amely tehát HD esetén
+\begin{equation}Y_{\mathrm{ITU}-709} = 
+   0.2126\,R + 0.7152\,G + 0.0722\,B. 
+\label{Eq:NTSC_luminance}
+\end{equation}
+alapján számítható.
+Fontos megjegyezni, hogy az ITU-709 szabvány színmérőrendszerét átvette az sRGB szabvány is, ami a mai napig a számítógépes alkalmazások (és operációs rendszerek) alapértelmezett színteréül szolgál.
+
+Az alkalmazott alapszíneket végül számottevően csak az UHD formátum változtatta meg az ITU-2020 számú ajánlásában 2012-ben.
+Az UHD alkalmazásokra a szabvány egy széles gamutú, spektrál-alapszíneket alkalmazó színteret ajánl a \ref{tab:UHDTV_colorimetry} táblázatban látható paraméterekkel. 
+\begin{table}[h!]
+\caption{Az ITU-2020 szabvány színmérőrendszere}
+\renewcommand*{\arraystretch}{1}
+\label{tab:UHDTV_colorimetry}
+\begin{center}
+\small\addtolength{\tabcolsep}{15pt}
+    \begin{tabular}[h!]{ @{}c | | l | l @{} }%\toprule
+		&   x  	&    y \\ \hline
+    R   &  0.708 &	0.292  \\
+    G   &  0.17 &	0.797  \\
+    B   & 0.131 &	0.046 \\
+    D65 fehér     &  0.3127 & 0.3290 	  \\
+    \end{tabular}
+\end{center}
+\end{table}
+A szabvány természetesen újradefiniálta a világosság komponens számításának a módját is, amely tehát UHD esetben
+\begin{equation}Y_{\mathrm{ITU}-2020} = 
+   0.2627\,R + 0.678 \,G + 0.0593\,B 
+\label{Eq:UHD_luminance}
+\end{equation}
+alapján számítható.
+A szabvány természetesen nem igényli, hogy az UHD megjelenítők spektrálszíneket legyenek képesek alapszínekként realizálni, a minél szélesebb gamut inkább a jövőbeli technológiák szempontjából ad ajánlást.
+A mai konzumer megjelenítők az UHD képanyagot megjelenítés előtt a saját színterükben konvertálják, amely jellegzetesen jóval kisebb a szabvány színterénél.
+
+\paragraph{Példa CRT kijelző eszközfüggő színterére:\\}
+
+A ténylegesen tárolt és továbbított videójelek vizsgálata előtt az eddig leírtakra egyszerű példaként vizsgáljuk, hogyan jeleníthető meg egy konkrét kijelző által megjelenített színek tartománya, röviden rávilágítva a CRT technológia működési elvére.
+Bár a CRT technológia kezd egyre inkább eltűnni, néhány évvel ezelőttig a stúdiómonitorok jelentős része még mindig CRT alapon működött köszönhetően a színhű megjelenítésüknek, és a mai LCD megjelenítőkhöz képest is jóval nagyobb statikus kontrasztjuknak.
+
+\begin{figure}[]
+
+	\centering
+	\begin{overpic}[width = 0.5\columnwidth ]{figures/1024px-CRT_color_enhanced.png}
+	\end{overpic}
+	\caption{CRT megjelenítő felépítése.}
+	\label{Fig:crt}
+\end{figure}
+
+A katódsugárcsöves (CRT) kijelzők sematikus ábrája az \ref{Fig:crt} ábrán látható.
+A CRT-k kijelzők működésének alapja három ún. elektronágyú volt, amelyek egy fűtőtt katódból (1) és egy nagyfeszültségre helyezett anódból állt.
+A melegítés hatására a katód környezetébe szabad elektronok léptek ki, így egy elektronfelhőt képezve a katód körül.
+A katód közelébe helyezett nagyfeszültségű (néhány száz Volt) gyorsítóanód hatására a szabad elektronok az anód felé kezdtek mozogni, egy szabad elektronáramot (2) indítva a vákuumban (ugyanezen az elven működtek a vákuum-diódák, triódák, pentódák, stb. is).
+Elegendően nagy anódfeszültség (és további anódok jelenléte) esetén az elektronok jelentős része nem csapódott be a gyorsítóanódra, hanem továbbhaladt.
+Ezt az elektronnyalábot elektrosztatikusan és mágnesesen (3) fókuszálták, majd egy vezérelt mágneses eltérítő (4) sorról sorra végigfuttatta azt egy anódfeszültségű-ernyőn (5), azaz a képernyőn.
+Színes kijelző esetén természetesen három elektronágyú üzemelt párhuzamosan.
+A képernyő felszínét pixelekre bontva képpontonként három különböző foszforral borították (7-8), amely gerjesztés (becsapódó elektronok) hatására bizonyos ideig adott spektrális sűrűségfüggvényű fényt bocsájtott ki\footnote{Ellentétben a fluoreszkáló anyagok csak a gerjesztés fennállásának idején bocsájtanak ki fényt. 
+A foszforeszkálás időállandója előnyös, hiszen megfelelően megválasztott foszforok épp egy képidőig bocsájtanak ki fényt, így a kijelzett kép nem fog villogni.
+Ugyanakkor a korai kijelzők ezen időállandója túl nagy volt, ezért a gyors mozgások elmosódtak a kijelzett képen.}, realizálva ezzel az $RGB$ alapszíneket.
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.54\columnwidth]{figures/sony.png}
+	\small
+	\put(0,0){(a)}
+	\end{overpic}
+	\begin{overpic}[width = 0.39\columnwidth]{figures/sony_gamut.png}
+	\small
+	\put(0,0){(b)}
+	\end{overpic}
+	\begin{overpic}[width = 0.02\columnwidth]{figures/sony_gamut_2.png}
+	\end{overpic}
+	\caption{CRT megjelenítő foszforai által kibocsájtott sugárzás spektrális sűrűségfüggvénye (a) a megjelenítő gamutja és az adott spektrumok/alapszínek által keltett színérzet, valamint a színtér fehérpontja (b).}
+	\label{Fig:sony}
+\end{figure}
+
+Tekintsünk példaként egy Sony F520 CRT kijelzőt: 
+A kijelző $RGB$ foszforjai gerjesztés hatására a \ref{Fig:sony} (a) ábrán látható spektrális sűrűségfüggvényű (sugársűrűségű) fényt bocsájtanak ki magukban egységnyi felületről, egységnyi térszögbe, azaz rendelkezésre állnak a $L_{e}^R(\lambda)$, $L_{e}^G(\lambda)$ és $L_{e}^B(\lambda)$ függvények.
+Ekkor a $\overline{x}(\lambda)$, $\overline{y}(\lambda)$, $\overline{z}(\lambda)$ szabványos $XYZ$ spektrális színösszetevő függvények alkalmazásával a piros alapszín színkoordinátái rendre
+\begin{eqnarray}
+X_R = \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{x}(\lambda) \mathrm{d} \lambda, \\
+Y_R = \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{y}(\lambda) \mathrm{d} \lambda, \\
+Z_R = \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{z}(\lambda) \mathrm{d} \lambda, \\
+\end{eqnarray}
+és persze hasonlóan számíthatóak az zöld és kék alapszínek $XYZ$-koordinátái, az integrálok numerikus kiértékelésével.
+A színtér fehérpontja definíció szerint az alapszínvektorok egyenlő súlyú összegeként áll elő, azaz
+\begin{equation}
+X_W = X_R + X_G + X_B, \hspace{6mm} Y_W = Y_R + Y_G + Y_B, \hspace{6mm} Z_W = Z_R + Z_G+ Z_B,
+\end{equation}
+amelyből az alapszínvektorok pontos hossza meghatározható, hiszen definíció szerint $Y_W = 1$ érvényes.
+Az alapszínek és a fehérpont színezete ezután
+\begin{equation}
+x_R = \frac{X_R}{X_R + Y_R + Z_R}, \hspace{1cm} y_R = \frac{Y_R}{X_R + Y_R + Z_R}
+\end{equation}
+alapján számolható.
+Az így meghatározott színtér gamutja a \ref{Fig:sony} ábrán látható.
+
+A színtér alapszíneinek ábrázolásához az $XYZ$ térben adott alapszíneket az $RGB$ térbe kell konvertálni.
+Jelen dokumentum az sRGB 
 
 \section{A TV-technika luma és chroma komponensei}
 
