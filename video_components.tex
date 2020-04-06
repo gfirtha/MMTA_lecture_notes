@@ -82,15 +82,14 @@ tetszőleges $\mathbf{c}_{XYZ}$ színvektor koordinátái meghatározhatóak az 
 \begin{equation} 
 \underbrace{\begin{bmatrix}[c]
        R_c \\[0.3em]
-       B_c \\[0.3em]
-       G_c \end{bmatrix}}_{\mathbf{c}_{RGB}}
+       G_c \\[0.3em]
+       B_c \end{bmatrix}}_{\mathbf{c}_{RGB}}
        =
      \mathbf{M}_{X\!Y\!Z \rightarrow R\!G\!B}
       \underbrace{\begin{bmatrix}[c]
        X_c \\[0.3em]
        Y_c \\[0.3em]
        Z_c \end{bmatrix}}_{\mathbf{c}_{X\!Y\!Z}},
-\hspace{3mm}
 \end{equation}
 ahol $ \mathbf{M}_{X\!Y\!Z \rightarrow R\!G\!B}$ egy bázistranszformációs mátrix. 
 Vice versa, az $RGB$ színtérben adott szín $XYZ$ koordinátái meghatározhatóak 
@@ -102,8 +101,8 @@ Vice versa, az $RGB$ színtérben adott szín $XYZ$ koordinátái meghatározhat
      \mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z}
 \underbrace{\begin{bmatrix}[c]
        R_c \\[0.3em]
-       B_c \\[0.3em]
-       G_c \end{bmatrix}}_{\mathbf{c}_{RGB}}
+       G_c \\[0.3em]
+       B_c \end{bmatrix}}_{\mathbf{c}_{RGB}}
 \end{equation}
 egyenletből.
 Természetesen fennáll a $\mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z} = \mathbf{M}_{X\!Y\!Z \rightarrow R\!G\!B}^{-1}$ összefüggés.
@@ -249,15 +248,15 @@ Ez a konverzió a kamerajelek $XYZ$ térbe, majd innen az ITU-709 színtérbe va
 \begin{equation} 
 \begin{bmatrix}[c]
        R_{\mathrm{ITU}-709} \\[0.3em]
-       B_{\mathrm{ITU}-709} \\[0.3em]
-       G_{\mathrm{ITU}-709} \end{bmatrix}
+       G_{\mathrm{ITU}-709} \\[0.3em]
+       B_{\mathrm{ITU}-709} \end{bmatrix}
        =
        \mathbf{M}_{ X\!Y\!Z \rightarrow R\!G\!B_{709} } \cdot 
 \left(     \mathbf{M}_{R\!G\!B_{\mathrm{cam}} \rightarrow X\!Y\!Z } \cdot
 \begin{bmatrix}[c]
        R_{\mathrm{cam}} \\[0.3em]
-       B_{\mathrm{cam}} \\[0.3em]
-       G_{\mathrm{cam}} \end{bmatrix} \right)
+       G_{\mathrm{cam}} \\[0.3em]
+       B_{\mathrm{cam}} \end{bmatrix} \right)
 \end{equation}
 Természetesen az egymás utáni két mátrixszorzás összevonható, így a két $RGB$ színtér között közvetlen lineáris leképzés határozható meg.
 Ez a transzformáció jellegzetesen már a kamerán belül megvalósul.
@@ -266,15 +265,15 @@ Hasonlóképp, megjelenítőoldalon a
 \begin{equation} 
 \begin{bmatrix}[c]
        R_{\mathrm{cam}} \\[0.3em]
-       B_{\mathrm{cam}} \\[0.3em]
-       G_{\mathrm{cam}} \end{bmatrix}
+       G_{\mathrm{cam}} \\[0.3em]
+       B_{\mathrm{cam}} \end{bmatrix}
        =
        \mathbf{M}_{ X\!Y\!Z \rightarrow R\!G\!B_{\mathrm{TV}} } \cdot 
 \left(     \mathbf{M}_{R\!G\!B_{709}  \rightarrow X\!Y\!Z } \cdot
 \begin{bmatrix}[c]
        R_{\mathrm{ITU}-709} \\[0.3em]
-       B_{\mathrm{ITU}-709} \\[0.3em]
-       G_{\mathrm{ITU}-709} \end{bmatrix}
+       G_{\mathrm{ITU}-709} \\[0.3em]
+       B_{\mathrm{ITU}-709} \end{bmatrix}
  \right)
 \end{equation}
 transzformációt kell elvégezni.
@@ -409,7 +408,7 @@ A mai konzumer megjelenítők az UHD képanyagot megjelenítés előtt a saját 
 
 \paragraph{Példa CRT kijelző eszközfüggő színterére:\\}
 
-A ténylegesen tárolt és továbbított videójelek vizsgálata előtt az eddig leírtakra egyszerű példaként vizsgáljuk, hogyan jeleníthető meg egy konkrét kijelző által megjelenített színek tartománya, röviden rávilágítva a CRT technológia működési elvére.
+Egyszerű példaként az eddig leírtakra vizsgáljuk, hogyan számítható és illusztrálható egy CRT kijelző által megjelenített színek tartománya, röviden rávilágítva a CRT technológia működési elvére is \footnote{Természetesen az itt leírtak változtatás nélkül alkalmazhatók más technológia alapján működő kijelzőkre is, pl. LCD.}.
 Bár a CRT technológia kezd egyre inkább eltűnni, néhány évvel ezelőttig a stúdiómonitorok jelentős része még mindig CRT alapon működött köszönhetően a színhű megjelenítésüknek, és a mai LCD megjelenítőkhöz képest is jóval nagyobb statikus kontrasztjuknak.
 
 \begin{figure}[]
@@ -442,26 +441,50 @@ Ugyanakkor a korai kijelzők ezen időállandója túl nagy volt, ezért a gyors
 	\small
 	\put(0,0){(b)}
 	\end{overpic}
-	\begin{overpic}[width = 0.02\columnwidth]{figures/sony_gamut_2.png}
+	\begin{overpic}[width = 0.014\columnwidth]{figures/sony_gamut_2.png}
 	\end{overpic}
-	\caption{CRT megjelenítő foszforai által kibocsájtott sugárzás spektrális sűrűségfüggvénye (a) a megjelenítő gamutja és az adott spektrumok/alapszínek által keltett színérzet, valamint a színtér fehérpontja (b).}
+	\caption{CRT megjelenítő foszforai által kibocsájtott sugárzás spektrális sűrűségfüggvénye (a) a megjelenítő gamutja és az adott spektrumok/alapszínek által keltett színérzet, valamint a színtér fehérpontja (b).
+	A jobb oldali oszlop bal fele a Sony monitor alapszíneit és fehérpontját, a jobb fele az sRGB színtér alapszíneit és fehérpontját szemlélteti.}
 	\label{Fig:sony}
 \end{figure}
 
 Tekintsünk példaként egy Sony F520 CRT kijelzőt: 
 A kijelző $RGB$ foszforjai gerjesztés hatására a \ref{Fig:sony} (a) ábrán látható spektrális sűrűségfüggvényű (sugársűrűségű) fényt bocsájtanak ki magukban egységnyi felületről, egységnyi térszögbe, azaz rendelkezésre állnak a $L_{e}^R(\lambda)$, $L_{e}^G(\lambda)$ és $L_{e}^B(\lambda)$ függvények.
 Ekkor a $\overline{x}(\lambda)$, $\overline{y}(\lambda)$, $\overline{z}(\lambda)$ szabványos $XYZ$ spektrális színösszetevő függvények alkalmazásával a piros alapszín színkoordinátái rendre
-\begin{eqnarray}
-X_R = \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{x}(\lambda) \mathrm{d} \lambda, \\
-Y_R = \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{y}(\lambda) \mathrm{d} \lambda, \\
-Z_R = \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{z}(\lambda) \mathrm{d} \lambda, \\
-\end{eqnarray}
+\begin{align}
+\begin{split}
+\overline{X}_R &= \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{x}(\lambda) \mathrm{d} \lambda = 0.0633 \\
+\overline{Y}_R &= \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{y}(\lambda) \mathrm{d} \lambda = 0.0373\\
+\overline{Z}_R &= \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{z}(\lambda) \mathrm{d} \lambda  = 0.0035 \\
+\end{split}
+\end{align}
 és persze hasonlóan számíthatóak az zöld és kék alapszínek $XYZ$-koordinátái, az integrálok numerikus kiértékelésével.
 A színtér fehérpontja definíció szerint az alapszínvektorok egyenlő súlyú összegeként áll elő, azaz
 \begin{equation}
-X_W = X_R + X_G + X_B, \hspace{6mm} Y_W = Y_R + Y_G + Y_B, \hspace{6mm} Z_W = Z_R + Z_G+ Z_B,
+\overline{X}_W = \overline{X}_R + \overline{X}_G + \overline{X}_B, \hspace{6mm} 
+\overline{Y}_W = \overline{Y}_R + \overline{Y}_G + \overline{Y}_B, \hspace{6mm} 
+\overline{Z}_W = \overline{Z}_R + \overline{Z}_G + \overline{Z}_B,
 \end{equation}
-amelyből az alapszínvektorok pontos hossza meghatározható, hiszen definíció szerint $Y_W = 1$ érvényes.
+amelyből az alapszínvektorok pontos hossza meghatározható, hiszen definíció szerint $Y_W = 1$ érvényes (az alapszínvektorok eszerint normálandók).
+Így az alapszín-vektorok, és így a színtér alkalmazásához szükséges transzformáció mátrixok a következők:
+\begin{align}
+\begin{split}
+\begin{bmatrix}[c]
+       X \\[0.3em]
+       Y \\[0.3em]
+       Z \end{bmatrix} &= 
+     \underbrace{ \begin{bmatrix}[c|c|c]
+       0.5646 &  0.2665 &  0.2068 \\[0.3em]
+       0.3174 &  0.5992 &  0.0834 \\[0.3em]
+       0.0302 &  0.1443 &  1.0539 \end{bmatrix} }_{\mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z}}
+\begin{bmatrix}[c]
+       R \\[0.3em]
+       G \\[0.3em]
+       B \end{bmatrix}_{\mathrm{F}520}
+\\ \vspace{1mm} \\
+&\mathbf{M}_{X\!Y\!Z \rightarrow   R\!G\!B} = \mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z}^{-1}
+\end{split}
+\end{align}
 Az alapszínek és a fehérpont színezete ezután
 \begin{equation}
 x_R = \frac{X_R}{X_R + Y_R + Z_R}, \hspace{1cm} y_R = \frac{Y_R}{X_R + Y_R + Z_R}
@@ -469,10 +492,274 @@ x_R = \frac{X_R}{X_R + Y_R + Z_R}, \hspace{1cm} y_R = \frac{Y_R}{X_R + Y_R + Z_R
 alapján számolható.
 Az így meghatározott színtér gamutja a \ref{Fig:sony} ábrán látható, az alapértelmezett számítógépes sRGB színtérrel együtt.
 
-A színtér alapszíneinek ábrázolásához az $XYZ$ térben adott alapszíneket az $RGB$ térbe kell konvertálni.
-Jelen dokumentum az sRGB 
+Természetesen jelen esetben a színtér a megjelenítő színterének alapszíneinek ábrázolásához az $XYZ$ térben adott alapszíneket az $RGB$ térbe kell konvertálni.
+Jelen dokumentum sRGB színtérben kerül tárolásra (és megjelenítéskor az sRGB színtér az olvasó kijelzőjének saját színterébe transzformálva), így jelen dokumentumban az $XYZ$ koordinátáival adott alapszínek az sRGB térbe való konverzió után kerülhetnek megjelenítésre, amely pl. a vörös alapszínre
+\begin{equation}
+\begin{bmatrix}[c]
+       R_R \\[0.3em]
+       G_R \\[0.3em]
+       B_R \end{bmatrix}_{\mathrm{sRGB}}
+       =
+     \mathbf{M}_{X\!Y\!Z \rightarrow R\!G\!B_{\mathrm{sRGB}}}
+      \begin{bmatrix}[c]
+       X_R \\[0.3em]
+       Y_R \\[0.3em]
+       Z_R \end{bmatrix} =      
+       \begin{bmatrix}[c]
+       1.13 \\[0.3em]
+       0.25 \\[0.3em]
+       -0.02 \end{bmatrix} 
+\end{equation}
+alakú.
+A Sony megjelenítő alapszíneinek sRGB koordinátáira negatív és 1-nél nagyobb $RGB$ értékek is adódnak.
+Ez a \ref{Fig:sony} ábrán is látható gamutok közti eltérést tükrözi.
 
-\section{A TV-technika luma és chroma komponensei}
+\section{A TV-technika színkülönbségi színtere}
+
+Az előző szakasz bemutatta egy színes képpont ábrázolásának módját adott $RGB$ eszközfüggő színtérben.
+A következő felmerülő kérdés, hogy ezekből az RGB jelekből---amelyek tehát egy pontja egy megjelenítendő képelem RGB koordinátáit írja le---hogyan hozhatóak létre a ténylegesen rögzített és továbbított videójelek.
+
+\paragraph{A világosság és színkülönbségi jelek:\\}
+A fő oka, hogy a videójeleket nem közvetlenül az RGB jeleknek választották (bár manapság már gyakori a közvetlen RGB ábrázolás) az NTSC bevezetésének idejében a visszafelé kompatibilitás biztosítása volt:
+A színes műsorszórás kezdetén a korabeli háztartásokban szinte kizárólag fekete-fehér TV-vevők voltak találhatók.
+Természetes volt az igény a már kiépített fekete-fehér műsorszóró rendszerrel visszafelé kompatibilitása színes kép-továbbításra.
+
+A fekete-fehér kép gyakorlatilag egy színes kép világosságinformációjának fogható fel, amely az $RGB$ koordinátákból azok lineáris kombinációjaként számítható.
+Az együtthatók az adott eszközfüggő színtértől függenek, az NTSC alapszínei esetén pl. \ref{Eq:NTSC_luminance} alapján adottak.
+Mivel a fekete-fehér TV vevők közvetlenül ezt a világosságjelet jelenítették meg, ezért a színes TV esetén is az egyik, változatlanul továbbítandó jelet a \textbf{világosságjelnek (luminance)} választották, amely tehát például NTSC esetén az $RGB$ jelekből
+\begin{equation}Y_{\mathrm{NTSC}} = 
+   0.30R + 0.59G + 0.11 B. 
+   \label{Eq:NTSC_luminance}
+\end{equation}
+alapján számítható \footnote{Fontos ismét kihangsúlyozni, hogy a világosság-számítás módja színtérfüggő, az alapszínektől és a fehérponttól függ a már bemutatott módon.}.
+
+Egy színes képpont leírásához 3 komponens szükséges, egy lehetséges és hatékony leírás pl. a képpont világossága, színezete és telítettsége.
+A világosságjel mellé tehát két független információ kell, amelyek egyértelműen meghatározzák az adott színpont színezetét és telítettségét\footnote{A visszafelé-kompatibilitás biztosításához ezt a két színezetet leíró jelet kellett az NTSC rendszerben a változatlan fekete-fehér jelhez úgy hozzáadni, hogy a meglévő fekete-fehér vevők a világosságjelet demodulálni tudják, és a hozzáadott többletinformáció minimális látható hatással legyen a megjelenített képre.}.
+Ugyanakkor fontos szempont volt ezen világosságinformáció-mentes, pusztán színinformációt leíró jelek könnyű számíthatósága az RGB komponensekből az egyszerű analóg áramköri megvalósíthatóság érdekében.
+
+A színinformáció/világosságinformáció-szétválasztás legegyszerűbb (de jól működő) megoldásaként egyszerűen vonjuk ki a világosságot az RGB jelekből.
+Mivel az $Y$ együtthatók összege definíció szerint (tetszőleges színtérben) egységnyi, így pl. NTSC esetén \eqref{Eq:NTSC_luminance} mindkét oldalából $Y$-t kivonva igaz a 
+\begin{equation} 
+   0.30 ( R - Y ) + 0.59 ( G - Y )  + 0.11 ( B - Y )  = 0 
+   \label{eq:chrominances}
+\end{equation}
+egyenlőség.
+Az $ ( R - Y ) $, $ ( G - Y ) $ és $ ( B - Y ) $ a TV-technika ún. \textbf{színkülönbségi jelei}, és a következő tulajdonságokkal bírnak:
+\begin{itemize}
+\item Nem függetlenek egymástól, kettőből számítható a harmadik.
+\item Előjeles mennyiségek.
+\item Ha két színkülönbségi jel zérus, akkor a harmadik is az.
+Ekkor $R = G = B = Y$, így tehát a színtér fehérpontjában vagyunk.
+A fehér színre kapott zérus színkülönbségi jelek azt mutatják, hogy a színinformációt valóban a színkülönbségi jelek jelzik, a fénysűrűség (világosság) pedig tőlük független mennyiség.
+\item Az adott színkülönbségi jel értéke maximális ha a hozzá tartozó alapszín maximális, és vice versa.
+NTSC rendszerben vörös színkülönbségi jelre $R = 1$, $G = B= 0$ esetén
+\begin{equation}
+Y = 0.30 \cdot 1 + 0.59 \cdot 0 + 0.11 \cdot 0 \hspace{3mm }\rightarrow \hspace{3mm } R - Y  = 0.7,
+\end{equation}
+és hasonlóan $R=0$, $G = B = 1$ esetén
+\begin{equation}
+Y = 0.30 \cdot 0+ 0.59 \cdot 1 + 0.11 \cdot 1 \hspace{3mm }\rightarrow \hspace{3mm } R - Y  = -0.7.
+\end{equation}
+\item A fenti megfontolások alapján a színkülönbségi jelek dinamikatartománya:
+\begin{align}
+\begin{split}
+-0.7 \leq R-Y \leq& 0.7 , \hspace{2cm} -0.89 \leq G-Y \leq 0.89, \\
+ &-0.41 \leq B-Y \leq 0.41
+\end{split}
+\end{align}
+\end{itemize}
+A három színkülönbségi jelből kettőt kell választani a színpont színinformációjának leírásához.
+Mivel jel/zaj-viszony szempontjából ökölszabályszerűen mindig a nagyobb dinamikatartományú jelet célszerű továbbítani, így a választás a vörös és zöld színkülönbségi jelekre esett.
+
+A videótechnikában tehát egy adott színpont ábrázolása a
+\begin{align*}
+Y&: \text{Luminance }\\
+ 	\left.\begin{array}{lr}
+        R-Y\\
+        B-Y
+        \end{array}\right\}&: \text{Chrominance}
+\end{align*}
+ún. \textbf{luminance-chrominance térben} történik, amely gyakorlatilag felfogható egy új színmérőrendszernek is az $RGB$ színtérhez képest.
+
+\paragraph{Az $Y,\,R-Y,\,B-Y$ színtér:\\}
+Vizsgáljuk most, hol helyezkednek el az adott $RGB$ eszközfüggő színtérben ábrázolható színek ebben az új, $Y,\, R-Y,\, B-Y$ térben!
+Az előzőekben láthattuk, hogy az $XYZ$ térben ez a színhalmaz egy paralelepipedont, az $RGB$ térben egy egységnyi oldalú kockát jelent (lásd \ref{Fig:device_dep} ábra).
+Vegyük észre, hogy a $Y,\, R-Y,\, B-Y$ koordinátákat akár az $XYZ$, akár az $RGB$ komponensekből egy lineáris transzformációval előállíthatjuk:
+Maradva az NTSC rendszer világosság-együtthatóinál (kiindulva abból, hogy $Y = 0.3R + 0.59G + 0.11B$) a transzformáció alakja
+\begin{align}
+\begin{bmatrix}[c]
+       R- Y \\[0.3em]
+       B - Y \\[0.3em]
+       Y \end{bmatrix} &= 
+\begin{bmatrix}[c c c]
+      0.7 &  -0.59&  -0.11  \\[0.3em]
+       -0.3 &  -0.59 & 0.89  \\[0.3em]
+      0.3 &  0.59&  0.11 \end{bmatrix} 
+\begin{bmatrix}[c]
+       R \\[0.3em]
+       G \\[0.3em]
+       B \end{bmatrix}_{\mathrm{NTSC}}.
+\end{align}
+A lineáris transzformációt az RGB kockán elvégezve megkaphatjuk az ábrázolható színek halmazát.
+Az így kapott test az \ref{Fig:YCbCr_space} (a) ábrán látható.
+Láthatjuk, hogy az $RGB$ egységkocka egy paralelepipedonba transzformálódott, ahol a paralelepipedon főátlója az $Y$ világosság tengely.
+Ennek mentén, az $R-Y = B-Y = 0$ tengelyen helyezkednek el a különböző szürke árnyalatok. 
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/YC_space_1.png}
+	\small
+	\put(0,0){(a)}
+	\put(45,90){$Y$}
+	\put(48,2){$R\!-\!Y$}
+	\put(87,26){$B\!-\!Y$}
+	\end{overpic}
+	\hspace{6mm}
+	\begin{overpic}[width = 0.48\columnwidth ]{figures/YC_space_2.png}
+	\small
+	\put(0,0){(b)}
+	\scriptsize
+	\put(39,82){$R$}
+	\put(25,24){$G$}
+	\put(89,44){$B$}
+	\put(12,58){$Y\!e$}
+	\put(65,19){$C\!y$}
+	\put(78,77){$M\!g$}
+	\end{overpic}
+	\caption{Az $Y, R-Y, B-Y$ színtér ábrázolható színeinek halmaza oldalnézetből (a) és felülnézetből (b).}
+	\label{Fig:YCbCr_space}
+\end{figure}
+
+Az eredeti RGB kockához hasonlóan, paralelepipedon főátlón kívüli csúcsaiban (amelyben az $Y=0$ fekete és az $R=G=B=Y=1$ fehér található) az eszközfüggő színtér egy, vagy két $100~\%$-os intenzitású alapszínnel kikeverhető
+\begin{equation}
+R = \begin{bmatrix}[c] 1\\[0.3em] 0\\[0.3em] 0\end{bmatrix} \hspace{2mm}
+G = \begin{bmatrix}[c] 0\\[0.3em] 1\\[0.3em] 0\end{bmatrix}\hspace{2mm}
+B = \begin{bmatrix}[c] 0\\[0.3em] 0\\[0.3em] 1\end{bmatrix}\hspace{2mm}
+Cy = \begin{bmatrix}[c] 0\\[0.3em] 1\\[0.3em] 1\end{bmatrix}\hspace{2mm}
+Mg = \begin{bmatrix}[c] 1\\[0.3em] 1\\[0.3em] 0\end{bmatrix}\hspace{2mm}
+Ye = \begin{bmatrix}[c] 1\\[0.3em] 1\\[0.3em] 0\end{bmatrix}
+\end{equation}
+vörös, zöld, kék alap- és cián, magenta, sárga ún. komplementer színek találhatóak.
+
+Ezen komplementer színek tulajdonsága, hogy az egyes RGB alapszínekkel RGB kockában átlósan helyezkednek el, így a színtérben a lehető legmesszebb elhelyezkedő színpárokat alkotják.
+Ennek megfelelően egymás mellé vetítve a komplementer színpárok (vörös-cián, sárga-kék, zöld-magenta) váltják ki a legnagyobb érzékelt kontrasztot.
+
+A paralelepipedonra az $Y$-tengely irányából ránézve (\ref{Fig:YCbCr_space} (b) ábra) láthatjuk a világosságjeltől függetlenül, adott színtérben kikeverhető színek összességét.
+Az $R-Y, B-Y, Y$ térben gyakori adott $Y$ világosság mellett a színek ezen $R-Y, B-Y$ síkon való ábrázolása.
+Minthogy az $R-Y, B-Y$ jelek meghatározzák adott színpont színezetét és telítettségét, így az ábra azt jelzi, hogy a különböző színezetű és telítettségű színek egy szabályos hatszöget töltenek ki.
+A hatszög csúcsai a színtér alap- és komplementerszínei.
+Természetesen adott $Y$ érték mellett az ábrázolható színek nem tölti ki teljesen ezt a hatszöget:
+adott világosságérték mellett az ábrázolható színek halmaza a $Y, R-Y, B-Y$ paralelepipedon egy adott $Y$ magasságban húzott síkkal vett metszeteként képzelhető el, azaz tetszőleges $0 \leq Y \leq1$ esetén rajzolható egy $R-Y, B-Y$ diagram.
+Az így rajzolható diagramokra példákat a \ref{Fig:YCbCr_sect} ábra mutat.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/YCbCr_2_11.png}
+	\small
+	\put(0,3){(a)}
+	\put(0,37){$Y = 0.11$}
+	\end{overpic}
+	\vspace{2mm}
+	\begin{overpic}[width = 1\columnwidth]{figures/YCbCr_2_30.png}
+	\small
+	\put(0,37){$Y = 0.3$}
+	\put(0,3){(b)}
+	\end{overpic}
+	\vspace{2mm}
+	\begin{overpic}[width = 1\columnwidth]{figures/YCbCr_2_59.png}
+	\small
+	\put(0,37){$Y = 0.59$}
+	\put(0,3){(c)}
+	\end{overpic}
+	\caption{Különböző $Y$ értékek mellett rajzolható $B-Y, R-Y$ diagramok.}
+	\label{Fig:YCbCr_sect}
+\end{figure}
+Nyilván rögzített $Y$ mellett nem biztos, hogy minden szín $100~\%$-os telítettséggel van jelen a $B-Y,R-Y$ diagramon. 
+Például: teljesen telített kékre ($\begin{bmatrix}[c] 0\\[0.3em] 0\\[0.3em] 1\end{bmatrix}$) $Y=0.11$, azaz a $100~\%$ intenzitású kék alapszín ezen magasságban vett diagramon található.
+Más magasságban vett  $B-Y, R-Y$ diagramon csak fehérrel higított kék található, azaz nem teljesen telített kék található.
+
+A vizsgált diagramokból leszűrhető, hogy valóban, a világosságjel független a színinformációtól, adott színpont színezetét és telítettségét pusztán az $R-Y$ és $B-Y$ diagramokon vett helye meghatározza.
+Vizsgáljuk most, hogyan definiálhatóak ezen érzeti jellemzők, azaz a színezet és telítettség a TV technika $Y, R-Y, B-Y$ színterében!
+
+A könnyebb elképzelhetőség kedvéért ábrázoljuk az $R-Y, B-Y$ koordinátákhoz tartozó színeket, az adott színponthoz tartozó olyan világosságérték mellett, amely esetén minden pontra teljesül, hogy $X+Y+Z = 1$, azaz ezzel gyakorlatilag az adott $RGB$ színtér $xy$-színpatkón vett színét képezzük le az $R-Y, B-Y$ diagramra.
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.6\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{figures/YCbCr_gamut.png}
+	\small
+	\put(56,46){$\alpha$}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.4\textwidth}
+	\caption{Adott $Y, R-Y, B-Y$ térben ábrázolható színek gamutja.}
+	\label{Fig:ycbcr_gamut}  \end{minipage}
+\end{figure}
+Az így kapott színhalmaz, amely felfogható az adott alapszínek mellett a luminance-chrominance tér gamutjának is, a \ref{Fig:ycbcr_gamut} ábrán látható.
+
+Megfigyelhető, hogy a diagramon az origóból kiinduló félegyenesen azok a színek vannak, amelyek egymásból kinyerhetők fehér szín hozzáadásával.
+Tehát az origóból kiinduló félegyenesen az azonos színezetű, de eltérő telítettségű színek vannak. 
+Azaz tetszőleges színpontot vizsgálva, a $B-Y,R-Y$ diagramon a színpontba mutató helyvektor iránya egyértelműen meghatározza az adott pont színezetét.
+Ennek megfelelően a TV technikában a színezetet a $B-Y, R-Y$ diagramon a színpont helyvektorának irányszögeként definiáljuk:
+\begin{equation}
+\text{színezet}_{\mathrm{TV}} = \alpha  = \arctan \frac{R-Y}{B-Y}
+\end{equation}
+
+A telítettség kifejezése már kevésbé egyértelmű, több definíció bevezethető rá.
+Mindkét esetben a telítettség természetesen azt fejezi ki, mennyi fehér hozzáadásával keverhető ki egy adott szín a színezetét meghatározó teljesen telített alapszínből.
+Az $XYZ$-térben bevezettük a telítettségre a színtartalmat, illetve színsűrűséget.
+Mindkét telítettségdefiníció zérus értékű volt a $C$-fehérre, és egységnyi a színpatkót határoló spektrálszínekre.
+Felmerül a kérdés, hogyan terjeszthető ki a telítettség fogalma eszközfüggő $RGB$-színterekre.
+
+Ehhez bevezethetjük az \textbf{kávzi-spektrálszínek} fogalmát, amelyek adott $RGB$ színtérben előállítható legtelítettebb színek (a legközelebb vannak az azonos színezetű valódi spektrálszínhez).
+Ennek megfelelően a kvázi-spektrálszínek az $xy$-diagramon az adott $RGB$ színtér gamutjának határán helyezkednek el, tehát kikeverhetőek legfeljebb két alapszínből.
+Hasonlóképp, \ref{Fig:ycbcr_gamut} diagramon a színteret határoló hatszög csúcsaiban és oldalin találhatóak.
+
+A telítettség ezek után a következő módokon definiálható.
+\begin{itemize}
+\item  Minthogy egy tetszőleges színnek a fehér színtől, azaz az origótól vett távolsága arányos a szín fehér-tartalmával, így legegyszerűbb módon a telítettség közelíthető a
+\begin{equation}
+\text{telítettség}_{\mathrm{TV},1} = \sqrt{ (R-Y)^2 +(B-Y)^2}
+\label{eq:saturation_1}
+\end{equation}
+távolsággal.
+Később tárgyalt okok miatt az analóg időkben TV technikusok körében ez a definíció volt érvényben.
+Az így számolt telítettség valóban $0$ a fehér színre, azonban a kvázi-spektrálszínek telítettsége így nem egységnyi.
+%
+\item A matematikailag korrekt telítettség-definíció bevezetéséhez kiterjeszthetjük a korábban megismert színsűrűséget eszközfüggő színterekre \footnote{Ismétlésként: az $XYZ$ térben adott pont színsűrűsége $p_c = \frac{Y_d}{Y}$, ahol $Y_d$ az adott színhez tartozó domináns hullámhosszú szín fénysűrűsége, $Y$ a vizsgált szín saját fénysűrűsége.}.
+Ennek egyszerűbb értelmezéséhez ábrázoljuk adott színpont paramétereit ún. területdiagramon!
+%
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.6\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{figures/area_chart.png}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.4\textwidth}
+	\caption{Tetszőlegesen választott $R,G,B$ koordináták esetén rajzolható területdiagram.}
+	\label{Fig:area_diagram}  \end{minipage}
+\end{figure}
+%
+A területdiagram a következő módon rajzolható fel egy tetszőleges $RGB$ koordinátáival adott szín esetén: 
+A vízszintes tengelyt osszuk fel az $Y$ fénysűrűség $RGB$ együtthatóinak megfelelően, majd az egyes $RGB$ komponenseket ábrázoljuk az intenzitásuknak megfelelő magasságú oszlopokkal.
+Ekkor egy $Y$ magasságban húzott vonal alatt és fölött a színkülönbségi jeleknek megfelelő magasságú oszlopok alakulnak ki, amely oszlopok előjelesen vett területeinek összege \eqref{eq:chrominances} alapján zérus.
+
+Válasszuk ki ezután a legkisebb $RGB$ komponenst (a \ref{Fig:area_diagram} ábrán látható példában az $R$) és húzzunk egy vízszintes vonalat ennek magasságában!
+Ekkor a vizsgált színt két részre osztottuk: egy fehér színre (amelyre $R=G=B$) és egy kvázi-spektrálszínre, amelynek az egyik $RGB$ komponense zérus, és amelynek fénysűrűsége $Y_d = \min (R,G,B) - Y$.
+A domináns hullámhosszú spektrálszín szerepét erre a kvázi-spektrálszínre cserélve kiterjeszthetjük a színsűrűséget az adott eszközfüggő színtérre, amely alapján a telítettség definíciója
+\begin{equation}
+\text{telítettség}_{\mathrm{TV},2} = \frac{| \min(R,G,B) - Y |}{Y}.
+\label{eq:saturation_2}
+\end{equation}
+Könnyen belátható, hogy az $R = G=B=Y$ fehérpontokra a telítettség definíció szerint 0, míg kvázi-spektrálszínekre ($\min(R,G,B) = 0$) a telítettség azonosan 1.
+\end{itemize}
+A fent tárgylat két telítettség-definíció alkalmazásával a \ref{Fig:ycbcr_gamut} ábrán látható színek telítettségét az xy ábra szemlélteti, megerősítve az eddig elmondottakat.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/YCbCr_saturation.png}
+	\small
+	\put(0,0){(a)}
+	\put(50,0){(b)}
+	\end{overpic}
+	\caption{Az $R-Y,B-Y$ térben ábrázolt színek telítettsége \eqref{eq:saturation_1} (a) és \eqref{eq:saturation_2} (b) alapján számolva}
+	\label{Fig:area_diagram}  
+\end{figure}
+%
 
 \section{Videójel komponensek}
 
