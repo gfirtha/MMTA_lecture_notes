@@ -14,6 +14,7 @@
 \usepackage{mathtools}
 \usepackage{movie15}
 \usepackage{makecell}
+\usepackage[makeroom]{cancel}
 \makeatletter
 \renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
   \hskip -\arraycolsep
@@ -72,23 +73,27 @@
 
 \pagenumbering{arabic}			% arabic page numbering
 \setcounter{page}{1}			% set page counter 
-\chapter{Az emberi látás tulajdonságai}
-\label{sec:HVS}
-\input{HVS} 
-
-\chapter{Fény- és színmérés}
-\label{sec:colorimetry}
-\input{colorimetry}
+%\chapter{Az emberi látás tulajdonságai}
+%\label{sec:HVS}
+%\input{HVS} 
+%
+%\chapter{Fény- és színmérés}
+%\label{sec:colorimetry}
+%\input{colorimetry}
 
 \chapter{Videókomponensek}
 \label{sec:video_components}
 \input{video_components} 
-%
+
+\chapter{A digitális videójel}
+\label{sec:digital_video}
+\input{digital_video}
+
 %
 %\chapter{Videóformátumok}
 %\label{sec:video_formats}
 %\input{video_formats} 
-%
+
 %\chapter{A videótömörítés alapjai}
 %\label{sec:compression}
 %\input{compression} 
