@@ -957,8 +957,9 @@ Az egyes sorok és képek kijelzése között az elektron-ágyú kikapcsolt áll
 \end{figure}
 %
 Ezekben a kioltási időkben a kijelzés vertikális és horizontális szinkronizációjához szükséges sor- és képszinkronjelek kerülnek továbbításra. 
-Egy sor felépítése az xy. ábrán látható, ahol az aktív soridő a ténylegesen megjelenített világosságjelet tartalmazza, a sorkioltási idő pedig az az időtartam, amíg a CRT kijelző elektronsugara visszafut az adott sor végéről a következő elejére.
-Az egyes videósorok felépítését részletesebben a következő fejezetben láthatjuk.
+Egy sor felépítése az \ref{Fig:PAL_line} ábrán látható, ahol az aktív soridő a ténylegesen megjelenített világosságjelet tartalmazza, a sorkioltási idő pedig az az időtartam, amíg a CRT kijelző elektronsugara visszafut az adott sor végéről a következő elejére.
+Az egyes videósorok felépítését részletesebben a következő fejezetben tárgyaljuk.
+
 A valós idejű átvitel/kijelzés elvéből látható, hogy a színinformáció átvitele időosztásban sem lehetséges, tehát a chroma jeleket a luma jelekkel azonos frekvenciasávban és időben szükséges átvinni.
 A megoldás tárgyalása előtt vizsgáljuk külön a chroma jelek továbbításának módját.
 
@@ -984,7 +985,7 @@ A színjelek demodulációja koherens (fázishelyes) vevővel egyszerű alapsáv
 \end{align}
 trigonometrikus azonosságok alapján $U'(t)$ demodulációja
 \begin{multline}
-c^{\mathrm{PAL}}(t)\cdot \sin \omega_c t = U'(t)\cdot \sin \omega_c t\cdot \sin \omega_c t + V'(t) \cdot \cos \omega_c t  \cdot	\sin \omega_c t = \\
+c^{\mathrm{PAL}}_{\mathrm{QAM}}(t)\cdot \sin \omega_c t = U'(t)\cdot \sin \omega_c t\cdot \sin \omega_c t + V'(t) \cdot \cos \omega_c t  \cdot	\sin \omega_c t = \\
 \frac{1}{2} U'(t) -
 \underbrace{ \xcancel{ \frac{1}{2} U'(t)\cos 2 \omega_c t  + V'(t) \cdot \frac{1}{2}\sin 2 \omega_c t }}_{\text{aluláteresztő szűrés}}
 \end{multline}
@@ -1001,7 +1002,7 @@ A megfelelő demodulációhoz tehát a vevőben a színsegédvivő fázishelye, 
 
 Az NTSC rendszerben a PAL-hoz hasonlóan a színjelek
 \begin{equation}
-c^{\mathrm{NTSC}}(t) = I'(t) \cdot \sin \omega_c t + Q'(t) \cdot \cos \omega_c t
+c^{\mathrm{NTSC}}_{\mathrm{QAM}}(t) = I'(t) \cdot \sin \omega_c t + Q'(t) \cdot \cos \omega_c t
 \end{equation}
 alakban kerültek átvitelre, ahol az in-phase és kvadratúra komponensek rendre
 \begin{align}
@@ -1020,7 +1021,7 @@ A PAL rendszer bevezetésének idejére azonban kiderült, hogy ez rendszer fele
 Vizsgáljuk végül a modulált színjel fizikai jelentését, az egyszerűség kedvéért $c^{\mathrm{PAL}}(t)$ esetére (PAL rendszerben)!
 Az \eqref{Eq:PAL_cr} egyenlet egyszerű trigonometrikus azonosságok alapján átírható a 
 \begin{equation}
-c^{\mathrm{PAL}}(t) = \sqrt{U'(t)^2 + V'(t)^2} \, \sin \left( \omega_c t + \arctan \frac{V'(t)}{U'(t)} \right)
+c^{\mathrm{PAL}}_{\mathrm{QAM}}(t) = \sqrt{U'(t)^2 + V'(t)^2} \, \sin \left( \omega_c t + \arctan \frac{V'(t)}{U'(t)} \right)
 \end{equation}
 polár alakra.
 Minthogy a moduláló $U',V'$ jelek a színkülönbségi jelekkel arányosak, így a fenti kifejezést \eqref{eq:saturation_1} és \eqref{eq:hue}-val összehasonlítva megállapítható, hogy a QAM modulált jel egy olyan szinuszos vivő, amelynek pillanatnyi amplitúdója a továbbított színpont telítettségét, pillanatnyi fázisa a színpont színezetét adja meg.
@@ -1050,7 +1051,141 @@ Megjegyezhető, hogy a mai digitális videojeleket is gyakran ábrázolják szof
 \paragraph{A színsegédvivő frekvencia:}
 Vizsgáljuk most, hogyan választható meg a színsegédvivő $\omega_c$ vivőfrekvenciája úgy, hogy a QAM modulált $c^{\mathrm{PAL}}(t)$ jelet a luma jelhez hozzáadva a vevő oldalon lehetséges legyen a vett $c^{\mathrm{PAL}}(t) + Y'(t)$ jelből az eredeti chroma és luma jelek szétválasztása!
 
+A jelek vevőoldali szétválasztására a luma és chroma jelek spektruma ad lehetőséget:
+Láthattuk, hogy a videójel az egyes TV sorokban megjelenítendő világosság és színinformáció sorfolytonos időtörténeteként fogható fel.
+Természetes képeken a képtartalom sorról sorra csak lassan változik (természetesen a képtartalomban jelenlévő vízszintes éleket leszámítva), így mind a luma, mind a chroma jelek ún. kvázi-periodikusak, azaz közel periodikusak.
+Jel- és rendszerelméleti ismereteink alapján tudjuk, hogy egy periodikus jel spektruma vonalas, a jelfrekvencia egész számú többszörösein tartalmaz csak komponenseket.
+Ennek megfelelően mind a luma, mind a chroma jelek spektruma közel vonalas: az energiájuk a sorfrekvencia egész számú többszörösein csomósodik.
+Természetesen a luma jel az alapsávban helyezkedik el ($0~\mathrm{Hz}$ környezetében), kb. $6~\mathrm{MHz}$ sávszélességben.
+A QAM modulált chroma jel spektruma a sávkorlátozás miatt keskenyebb ($1~\mathrm{MHz}$), és középpontját $\omega_c$ vivőfrekvencia határozza meg.
+\begin{figure}[]
+	\centering
+	\hspace{4mm}
+	\begin{overpic}[width = 0.80\columnwidth ]{figures/LC_interlace.png}
+	\end{overpic} \hfill
+	\caption{A luma és chroma jelek spektrális közbeszövésének alapelve a teljes spektrumokat ábrázolva (a) és a spektrális csomókat felnagyítva (b)}
+	\label{Fig:YC_interlace}
+\end{figure}
+
+A luma-chroma jel összegzése ennek ismeretében egyszerű: 
+Az $\omega_c$ vivőfrekvencia megfelelő megválasztásával elérhető, hogy a chroma jel spektrumvonalai (spektrumcsomói) éppen a luma jel spektrumvonalai közé essen, azaz a spektrumukat átlapolódás nélkül közbeszőhetjük.
+Az eljárás alapötletét \ref{Fig:YC_interlace} ábra illusztrálja $f_{\mathrm{H}}$-val a sorfrekvenciát jelölve.
+A szétválaszthatóság feltétele ekkor 
+\begin{equation}
+f_c = f_{\mathrm{H}} \cdot \left( \mathrm{n} + \frac{1}{2}\right), \hspace{1.5cm} \mathrm{n} \in \mathcal{N} 
+\end{equation}
+azaz a színsegédvivő frekvenciája a sorfrekvencia felének egész szűmú többszörösének kell, hogy legyen \footnote{Megjegyezhető, hogy PAL esetében az előre adott sorfrekvenciához egyszerű volt a színsegédvivő-frekvencia megválasztása, míg NTSC esetén bizonyos okok miatt a sorfrekvencia és ebből következően a képfrekvencia megváltoztatására volt szükség. 
+Innen származnak a ma is használatos $59.94$ és $29.97~\mathrm{Hz}$ képfrekvenciák, amelyeket a következő fejezet tárgyal részletesen.}.
+
+\paragraph{A CVBS kompozit videójel és luma-chroma szétválasztás:}
+Ennek ismeretében végül a teljes kompozitjel a 
+\begin{equation}
+\text{CVBS}(t) = \mathrm{Sy}(t) + Y'(t) + c_{\mathrm{QAM}}(t)
+\end{equation}
+alakban áll elő, ahol $Y'$ a luma jel, $c_{\mathrm{QAM}}$ a QAM modulált chroma jelek és $\mathrm{S\!y}(t)$ a kioltási időben jelen lévő sorszinkron és képszinkron jelek.
+A CVBS elnevezés gyakori szinoníma a kompozit videójelre, jelentése C: color, V: video (luma), B: blanking (azaz kioltás) és S: sync (azaz szinkronjelek).
+
+Az így létrehozott videójel a fekete-fehér képhez képest csak a modulált színsegédvivőt tartalmazza többletinformációnak.
+Egyszerű fekete-fehér vevőn a CVBS jelet megjelenítve a színinformáció nagyfrekvenciás zajként, pontozódásként (ún. \href{http://www.techmind.org/colrec/}{chroma dots}) jelenik csak meg a kijelzőn, így a visszafelé kompatibilitás biztosítva volt.
+Színes vevőkben a CVBS jelből a chromajel elméletileg fésűszűréssel szeparálható, amely egy soridejű késleltetést igényel.
+Minthogy ez a PAL megjelenése előtt nem állt rendelkezésre, ezért a korai NTSC vevők egyszerű alul/felüláteresztő szűrőkkel, vagy egyszerű chroma jelre állított lyukszűrőkkel szeparálták a luma-chroma jeleket.
+Ennek eredményeképp még a színes vevőkben is a chroma jelen kisfrekvenciás tartalomként jelen lehetett a világosságinformáció látható hatással a megjelenített képre.
+A megfelelő analóg PAL fésűszűrő-tervezés még a 90-es években is aktív \href{https://www.renesas.com/in/en/www/doc/application-note/an9644.pdf}{K+F} alatt álló terület volt.
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/ntsc_color_line.png}
+	\end{overpic} \hfill
+	\begin{overpic}[width = 0.48\columnwidth ]{figures/Waveform_monitor.jpg}
+	\end{overpic} \hfill
+	\caption{Az SMPTE color bar vizsgáló ábrának egy, illetve két sorának hullámformája sematikusan (a), és egy hulláforma monitoron (b) vizsgálva}
+	\label{Fig:NTSC_line}
+\end{figure}
+
+Az elmondottak alapján az NTSC rendszerben a \ref{Fig:bar_pattern_vscope} ábrán látható vizsgálóábrának egy sorának kompozit ábrázolását a \ref{Fig:NTSC_line} mutatja be jellegre helyesen, és egy konkrét hullámforma monitoron mérve.
+Az ábrán megfigyelhető az egyes oszlopokhoz tartozó hullámalak: látható, hogy a csökkenő világosságú oszlopokra (amelyek világosságát szaggatott vonal jelzi) hogyan ültették rá a QAM modulált chroma jeleket.
+Az első és utolsó fehér, illetve fekete oszlop esetén a chroma jelek amplitúdója zérus (fehérpont), egyéb esetekben a szinuszos színsegédvivő amplitúdója az oszlopok színének telítettségével, fázisa a színezetükkel arányos.
+Megjegyezzük, hogy a tényleges hullámforma már átskálázott chroma jeleket ábrázol, amely átskálázás épp azért történik, hogy a teljes CVBS jel beleférjen a fizikai interface dinamikatartományába (ez természetesen a nagy telítettségű színek esetén okozna problémát).
+Ez magyarázza tehát az eddig figyelmen kívül hagyott 2.03 és 1.14 skálafaktorokat pl. \eqref{Eq:PAL_cr} esetében.
 
 
+Az NTSC jel felépítése alapján egyértelmű, hogy a megfelelő színek helyreállításához a vevőben a színsegédvivő fázisának nagyon pontos ismerete szükséges.
+Ahhoz, hogy ez biztosítva legyen a sorkioltási időben az ún. hátsó vállra (ld. \ref{Fig:PAL_line} ábra) beültetésre került néhány periódusnyi (9) képtartalom nélküli referenciavivő, az ún. color burst, vagy burst jel.
+Ez a burst jel megfigyelhető a \ref{Fig:NTSC_line} ábrán is.
+
+Ennek ellenére az NTSC rendszer továbbra is fázisérzékeny volt, hiszen fázishibát a vevőben is bármelyik alkatrész okozhatott.
+A QAM moduláció jelege miatt már a legkisebb fázishiba is látható színezetváltozást okozott a megjelenített képen.
+A PAL rendszer tervezésének egyik fő célja épp ezért a rendszer fázishibára vett érzékenységének csökkentése volt
+
+\paragraph{A PAL rendszer:}
+Míg az egyszerű NTSC rendszer már 1953-ban bevezetésre került Amerikában, addig Európában egészen az 1960-as éveikg vártak a színes műsorszórás bevezetésére.
+Ennek oka, hogy az eltérő hálózati frekvencia miatt az NTSC-t nem lehetett egy az egyben átemelni Európába (ld. később).
+Mire az európai rendszert kifejlesztették, az NTSC rendszer jó néhány gyengeségére fény derült, így az újonnan kifejlesztett PAL (Phase Alternate Lines) ezek kijavítását célozta főként meg.
+Ennek eredményeképp a PAL rendszer más QAM modulációval dolgozik (a chroma jelek közvetlenül a modulálójelek), eltérő a színsegédvivő frekvencia, és legfontosabb újításként: egy egyszerű megoldással szinte érzéketlen a fázishibára.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/PAL1.png}
+	\end{overpic} \hfill
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/PAL2.png}
+	\end{overpic} \hfill
+	\caption{Az SMPTE color bar vizsgáló ábrának egy, illetve két sorának hullámformája sematikusan (a), és egy hulláforma monitoron (b) vizsgálva}
+	\label{Fig:PAL1}
+\end{figure}
+
+Láthattuk, hogy a vevő oldalán bármilyen fázishiba a színezet jól látható torzulását okozza.
+Mivel a fázishiba gyakran elkerülhetetlen, ezért hatásának kiküszöbölésére a PAL rendszer a következő egyszerű megoldást alkalmazza:
+\begin{itemize}
+\item Az adó oldalon (a PAL jel létrehozása során) képezzük QAM moduláció során a V' chromajel előjelét minden második TV-sorban negáljuk meg, azaz sorról sorra fordított előjellel vigyük át (ez ekvivalens a sorról sorra változó $\pm \cos \omega_c t$ vivővel való modulációval)!
+Az eljárás szemléltetésére tegyük fel, hogy két egymás utána sorban minden horizontális pozícióban a színinformáció azonos.
+Ekkor egy adott pontra az n. és (n+1). sorban átvitt $U',V'$ jeleket a \ref{Fig:PAL1} (a) ábra szemlélteti pl egy lila képpont átvitele esetén.
+\item Tegyük fel, hogy a vevő oldalon a vett jelhez $\Delta \alpha$ fázishiba adódik az átvitel és demoduláció során.
+Természetesen a fázishiba hatására az így vett színvektor mind az n., mind az (n+1). sorban azonos irányba fordul az $U'-V'$ konstellációs diagramon (azaz a $R'-Y', B'-Y'$ síkon), ahogy az a \ref{Fig:PAL1} (b) ábrán látható.
+\item A vevő oldalán forgassuk vissza minden második sorban a vett $V'$ komponens előjelét és képezzük az (n+1). sor és az n. sor átlagát.
+Ezzel természetesen a színjelek vertikális felbontását csökkentjük (az átlagképzés az apró részleteket elsimítja), azonban ennek eredménye az emberi szem színezetre vett felbontása eredményeképp az információveszteség nem látható (a horizontális felbontás már egyébként is jelentősen lecsökkent az egyszerű sávkorlátozás hatására).
+Könnyen belátható, hogy a két vektor átlagát képezve éppen az eredeti, hibamentes színvektort kapjuk eredményül.
+Két sor esetén azonos sortartalom esetén tehát ezzel az egyszerű trükkel a fázishiba hatása teljesen kiküszöbölhető, míg levezethető, hogy változó sortartalom esetén a fázishiba az átlagvektor hosszának csökkenését okozza, tehát színezetváltozás helyett csak telítettségváltozást okoz.
+\end{itemize}
+A bemutatott módosított modulációs módszerrel még aránylag nagy fázishibák hatása is minimális hatással van a megjelenített képre.
+Az ok, hogy mégis több, mint egy évtizedet kellett várni a PAL rendszer bevezetésére az volt, hogy a módszer alkalmazásához (az átlagolás elvégzéséhez) a videójel soridejű késleltetésére volt szükség.
+Ez az 50-es években analóg módon nem megoldható probléma volt amely a PAL implementálását hátráltatta.
+
+A PAL bevezetését végül az olcsón tömeggyártható ún akusztikus művonalak megjelenése tette lehetővé.
+Ez az akusztikus művonal, vagy \href{https://www.google.com/search?q=PAL+delay+line&client=firefox-b-d&sxsrf=ALeKk03EUTzVwc7dkYJFnEK-nlEI_p3hng:1586379019108&source=lnms&tbm=isch&sa=X&ved=2ahUKEwi90Kav2tnoAhXJ-ioKHWz6AJcQ_AUoAXoECA0QAw&biw=1407&bih=675}{PAL delay line} egy egyszerű üvegtömb, amelyre egy piezo aktuátor és piezo vevő csatlakozik.
+Az adó a TV chroma jelével arányos mechanikai rezgéseket (ultrahang) \href{https://www.youtube.com/watch?v=-qerYLM-eEg}{hoz létre}, amely többszörös visszaverődések után épp egy soridőnyi késleltetést szenvedve ér a vevő elektródához.
+Az ultrahang alapú késleltetővonalak egészen a 90-es évek végéig a PAL dekóderek részét képezték.
+
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.82\columnwidth ]{figures/PAL_coder.png}
+	\end{overpic} \hfill
+	\caption{A PAL kódoló felépítése}
+	\label{Fig:PAL_coder}
+\end{figure}
+Az egyszerű PAL kódoló felépítése az eddig elmondottak alapján a \ref{Fig:PAL_coder} ábrán látható.
+Röviden összefoglalva, mind a PAL, mind NTSC esetén a kompozitjel létrehozása során a feladat a Gamma-torzított $R',G',B'$ jelekből az $Y',U',V$ (PAL) és $Y',I',Q'$ (NTSC) jelek létrehozása, majd az $U',V'$ és $I'Q'$ jelek megfelelő QAM modulációja. 
+Az így létrehozott jeleket összeadva és a kioltási időben továbbított szinkronjelekkel ellátva előáll a CVBS kompozit jel.
+
+\vspace{3mm}
+A kompozit videójel fizikai interface megvalósítása szabványról szabványra változó.
+Konzumer felhasználás (pl. kézikamerák, videólejátszók, DVD lejátszók) szempontjából a legelterjedtebb csatlakozó a sárga jelölésű RCA végződés, amely az esetleges kísérő hangtól szigetelve, külön érpáron továbbítja a kompozit videójelet.
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.6\textwidth}
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/Composite-video-cable.jpg}
+	\end{overpic} 
+		\begin{overpic}[width = 0.45\columnwidth ]{figures/s_video.jpg}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.4\textwidth}
+	\caption{Konzumer alkalmazásokhoz használt sárga jelölésű RCA csatlakozó (a) és a luma-QAM chroma jeleket külön érpáron átvivő S-videó csatlakozó (b)}
+	\label{Fig:composite_video}  \end{minipage}
+\end{figure}
+
+\paragraph{Az S-video interface}
+A kompozit és komponens jelek közti kompromisszumként az S-video formátum a luma és chroma jeleket külön érpáron viszi át.
+Ezt leszámítva az interface jele teljesen a kompozit videóval azonosak, továbbíthat akár NTSC, akár PAL (akár SECAM) videókomponenseket:
+A luma tehát változatlanul alapsávban, míg a chroma a színsegédvivővel modulálva kerül átvitelre.
+A chroma jelek modulációja elkerülhetetlen, hiszen a két független színkülönbségi jel egy érpárra való ültetéséhez azokat legalább a sávszélességükkel megegyező frekvenciájú vivőjellel való moduláció szükséges az átlapolódás elkerüléséhez.
+Az S-video szabvány csatlakozója a \ref{Fig:composite_video} (b) ábrán látható.
 
 \subsection{A komponens videójel}
