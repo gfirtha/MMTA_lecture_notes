@@ -21,7 +21,13 @@
   \let\@ifnextchar\new@ifnextchar
   \array{#1}}
 \makeatother
+\usepackage{mathtools, nccmath}
 
+\DeclarePairedDelimiter{\nint}\lfloor\rceil
+
+\DeclarePairedDelimiter{\abs}\lvert\rvert
+\newcommand{\ycbcr}{$Y'C'_{\mathrm{B}}C'_{\mathrm{R}}$}
+\newcommand{\ypbpr}{$Y'P'_{\mathrm{B}}P'_{\mathrm{R}}$}
 \renewcommand\theadalign{bc}
 \renewcommand\theadfont{\bfseries}
 \renewcommand\theadgape{\Gape[4pt]}
@@ -85,14 +91,13 @@
 \label{sec:video_components}
 \input{video_components} 
 
-\chapter{A digitális videójel}
+\chapter{A színpontok digitális reprezentációja}
 \label{sec:digital_video}
 \input{digital_video}
 
-%
-%\chapter{Videóformátumok}
-%\label{sec:video_formats}
-%\input{video_formats} 
+\chapter{Videóformátumok}
+\label{sec:video_formats}
+\input{video_formats} 
 
 %\chapter{A videótömörítés alapjai}
 %\label{sec:compression}

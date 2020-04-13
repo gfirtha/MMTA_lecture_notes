@@ -151,7 +151,7 @@ Itt jegyezzük meg, hogy az $XYZ$ térben vizsgálva adott $RGB$ bázisvektorokk
 	\begin{overpic}[width = 0.45\columnwidth ]{figures/The-RGB-colour-cube.png}
 	\end{overpic}
 	\caption{Egy adott $RGB$ színtér ábrázolása az $XYZ$ térben (a) és az RGB kockában (b). Az (a) ábrán szereplő vektorok színe a végpontjukban található szín határozza meg.}
-	\label{Fig:device_dep}
+	\label{Fig:device_dep_2}
 \end{figure}
 Az $RGB$ együtthatók definíció szerint 0 és 1 között vehetnek fel értékeket.
 Ennek megfelelően egy adott $RGB$ térben az ebben a színtérben reprodukálható színek egy kockában helyezkednek el, ahol a kocka 3 origóból induló éle mentén az alkalmazott $RGB$ alapszínek helyezkednek el.
@@ -160,7 +160,7 @@ A transzformációs mátrixok tehát gyakorlatilag olyan lineáris transzformác
 
 \vspace{3mm}
 Egy $RGB$ színtér tehát teljes egészében adott, amennyiben az alapszín-vektorok $XYZ$ koordinátái ismertek (ez tehát 9 koordináta ismeretét jelenti).
-A gyakorlatban az ilyen definíció helyett az alkalmazott alapszínek színezetét, azaz $xy$ színkoordinátáit adják meg.
+A gyakorlatban az ilyen definíció helyett az alkalmazott alapszínek színezetét, azaz $xy$ színkoordinátáit adják meg, valamint a fehérnek tekintett szín színezetét.
 Ez egyrészt lehetővé teszi a színtér gamutjának egyszerű ábrázolását (lásd \ref{Fig:gamut} ábra).
 Másrészt, ami még fontosabb: a gyakorlatban nem szempont egy adott eszközfüggő színtér alapszíneinek---pl. egy RGB kijelző LCD alapszíneinek---fénysűrűségeinek pontos ismerete (azaz pl. hány nit fénysűrűséget hoz létre az R, G, vagy B pixel-elem).
 Ennek oka, hogy képi reprodukció során---beleértve a fotográfiát, mozit, videót, nyomtatott reprodukciót---a tényleges, fotometriai szempontból mért abszolút fénysűrűséget szinte soha nem célunk mérni, vagy visszaállítani.
@@ -169,7 +169,7 @@ Ennek megfelelően az eszközfüggő színterek következő módon való definí
 
 Definíció szerint egy adott színtér ún. \textbf{fehérpontja} az adott térben elérhető legvilágosabb (legnagyobb fénysűrűségű) pontja, amelyet az alapszínek egyenlő arányú keverékével érhetünk el.
 Mivel adott térben a 100\%-os fehér a legvilágosabb elérhető szín, ezért definíció szerint a relatív fénysűrűsége ($Y$ koordinátája) egységnyi.
-Az adott eszközfüggő színtérben a 100\%-os fehér tehát hasonlóan az $XYZ$-hez, definíció szerint 
+Az adott eszközfüggő színtérben a 100\%-os fehér tehát (hasonlóan az $XYZ$-beli fehérhez), definíció szerint 
 \begin{equation}
 \mathbf{w}_{RGB} = \begin{bmatrix}[c]
        1 \\[0.3em]
@@ -177,7 +177,7 @@ Az adott eszközfüggő színtérben a 100\%-os fehér tehát hasonlóan az $XYZ
        1 \end{bmatrix}, \hspace{5mm} \text{és} \hspace{5mm} 
 Y_w = 1.
 \end{equation}
-Míg az $XYZ$ térben tehát általánosan az $Y$-koordináta adott szín abszolút fénysűrűségét adja meg (ami egy alapvető, mérhető fotometriai mennyiség), addig egy eszközfüggő $RGB$ színtérben az $Y$ komponens 0 és 1 között vehet fel értékeket, és az adott színtérben létrehozható "legvilágosabb" színre egységnyi:
+Míg az $XYZ$ térben tehát általánosan az $Y$-koordináta adott szín abszolút fénysűrűségével (ami egy alapvető, mérhető fotometriai mennyiség) pontosan nem definiált módon arányos mennyiség, addig egy eszközfüggő $RGB$ színtérben az $Y$ komponens 0 és 1 között vehet fel értékeket, és az adott színtérben létrehozható "legvilágosabb" színre egységnyi:
 Eszközfüggő $RGB$ színtér $Y$ komponense tehát az adott színpont \textbf{relatív fénysűrűségét} határozza meg.
  
 A \ref{Fig:device_dep} ábrán látható példában a fehér szín vektora a paralelepipedon szürkével jelölt főátlója, ezen vonal mentén helyezkednek el a különböző világosságértékű (árnyalatú) fehér színek.
@@ -185,7 +185,7 @@ A fehér szín színezete, azaz $x_w$ és $y_w$ koordinátái ezen vektor egysé
 Általánosan tehát, definiáltuk az adott $RGB$ tér fehérpontját, amelynek érzékelt színezetét az adott alapszínek határozzák meg.
 Ez más szóval a szín akromatikus pontja, amely kijelzőről kijelzőre változhat, az alkalmazott pl. LCD elemek függvényében.
 
-A három alapszín $xy$-koordinátái mellett a fehérpont $x_w$ és $y_w$ koordinátái és $Y_w = 1$ fénysűrűsége már elegendő információ szükség esetén a transzformációs mátrixok meghatározásához.
+A három alapszín $xy$-koordinátái mellett a fehérpont $x_w$ és $y_w$ koordinátái és $Y_w = 1$ relatív fénysűrűsége már elegendő információ szükség esetén a transzformációs mátrixok meghatározásához.
 
 \paragraph{A fehér színről általában:\\}
 Látható tehát, hogy a fehér szín önmagában szubjektív fogalom: adott környezetben a leginkább akromatikus fényingert nevezzük fehérnek, amelynek spektrális sűrűségfüggvénye minél inkább egységnyi (azaz minél több spektrális komponenst tartalmaz), és ezzel analóg módon $RGB$ színtér esetén a színvektora minél közelebb van a csupa-egy vektorhoz.
@@ -456,24 +456,31 @@ Ugyanakkor a korai kijelzők ezen időállandója túl nagy volt, ezért a gyors
 \end{figure}
 
 Tekintsünk példaként egy Sony F520 CRT kijelzőt: 
-A kijelző $RGB$ foszforjai gerjesztés hatására a \ref{Fig:sony} (a) ábrán látható spektrális sűrűségfüggvényű (sugársűrűségű) fényt bocsájtanak ki magukban egységnyi felületről, egységnyi térszögbe, azaz rendelkezésre állnak a $L_{e}^R(\lambda)$, $L_{e}^G(\lambda)$ és $L_{e}^B(\lambda)$ függvények.
-Ekkor a $\overline{x}(\lambda)$, $\overline{y}(\lambda)$, $\overline{z}(\lambda)$ szabványos $XYZ$ spektrális színösszetevő függvények alkalmazásával a piros alapszín színkoordinátái rendre
+A kijelző $RGB$ foszforjai gerjesztés hatására a \ref{Fig:sony} (a) ábrán látható spektrális sűrűségfüggvényű (sugársűrűségű) fényt bocsájtanak ki magukban egységnyi felületről, egységnyi térszögbe, azaz rendelkezésre állnak a mért $L_{e}^R(\lambda)$, $L_{e}^G(\lambda)$ és $L_{e}^B(\lambda)$ függvények.
+Fejezzük ki ezek segítségével a kijelző működéséhez szükséges $RGB$ vezérlőjeleket, illetve vizsgáljuk a megjeleníthető színek tartományát!
+
+A $\overline{x}(\lambda)$, $\overline{y}(\lambda)$, $\overline{z}(\lambda)$ szabványos $XYZ$ spektrális színösszetevő függvények alkalmazásával a piros (és persze a zöld és kék) alapszín abszolút $XYZ$ színkoordinátái rendre a
 \begin{align}
 \begin{split}
-\overline{X}_R &= \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{x}(\lambda) \mathrm{d} \lambda = 0.0633 \\
-\overline{Y}_R &= \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{y}(\lambda) \mathrm{d} \lambda = 0.0373\\
-\overline{Z}_R &= \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{z}(\lambda) \mathrm{d} \lambda  = 0.0035 \\
+\overline{X}_R &= K_m \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{x}(\lambda) \mathrm{d} \lambda = 45.3, \hspace{5mm} \overline{X}_G = 21.4,\hspace{5mm}  \overline{X}_B = 16.6 \\
+\overline{Y}_R &= K_m \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{y}(\lambda) \mathrm{d} \lambda = 25.5
+, \hspace{5mm} \overline{Y}_G = 48,\hspace{5mm}  \overline{Y}_B = 6.7 \\
+\overline{Z}_R &= K_m \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{z}(\lambda) \mathrm{d} \lambda  = 2.4, \hspace{5mm} \overline{Z}_G = 11.6,\hspace{5mm}  \overline{Z}_B =84.6\\
 \end{split}
 \end{align}
-és persze hasonlóan számíthatóak az zöld és kék alapszínek $XYZ$-koordinátái, az integrálok numerikus kiértékelésével.
-A színtér fehérpontja definíció szerint az alapszínvektorok egyenlő súlyú összegeként áll elő, azaz
+integrálok numerikus kiértékelésével számítható, ahol $K_m = 683~\mathrm{lm/W}$ fényhasznosítási tényező.
+A színtérben előállítható fehér szín definíció szerint az alapszínvektorok egyenlő súlyú összegeként áll elő, azaz
 \begin{equation}
 \overline{X}_W = \overline{X}_R + \overline{X}_G + \overline{X}_B, \hspace{6mm} 
 \overline{Y}_W = \overline{Y}_R + \overline{Y}_G + \overline{Y}_B, \hspace{6mm} 
 \overline{Z}_W = \overline{Z}_R + \overline{Z}_G + \overline{Z}_B,
 \end{equation}
-amelyből az alapszínvektorok pontos hossza meghatározható, hiszen definíció szerint $Y_W = 1$ érvényes (az alapszínvektorok eszerint normálandók).
-Így az alapszín-vektorok, és így a színtér alkalmazásához szükséges transzformáció mátrixok a következők:
+azaz pl. a fehér szín abszolút fénysűrűsége $80.2~\mathrm{cd/m^2}$.
+Ez egészen pontosan megegyezik az sRGB szabvány által előírt referenciamonitor fénysűrűségével ($80~\mathrm{cd/m^2}$).
+
+Természetesen az alapszíneknek nem az abszolút XYZ koordinátái a fontosak, hanem a relatív koordináták, amelyekre teljesül, hogy $Y_W=1$, és így $Y$ a relatív fénysűrűség.
+A fenti alapszínvektorok tehát $\overline{Y}_W$ értékével normálandók.
+Az így kapott relatív alapszínvektorokból már összeállíthatók a színtér alkalmazásához szükséges transzformáció mátrixok:
 \begin{align}
 \begin{split}
 \begin{bmatrix}[c]
@@ -824,18 +831,6 @@ B' = B^{\frac{1}{\gamma}}
 \end{align*}
 a Gamma-előtorzított $RGB$ összetevőket jelölik, ahol $\frac{1}{\gamma} \approx 0.4-0.6$.
 
-\paragraph{Megjelenítési körülmények kompenzációja:\\}
-Az előző gondolatmenet alapján (A CRT kijelzők esetén $\gamma = 2.4$) a Gamma-korrekció exponensére 0.4 adódik.
-Mégis, a gyakorlatban ennél gyakran magasabb hatványkitevőket alkalmaznak.
-Ennek oka a megjelenítési körülményekre vezethető vissza: \ref{Fig:gamma} ábrán látható, hogy az RGB jelek 1-nél nagyobb hatványkitevőjű torzítása a kontraszt növekedéséhez és a színek telítéséhez vezet.
-Ismert tény, hogy a Stevens (Bartelson-Breneman) és a Hunt hatás alapján sötét környezetben a sötét árnyalatok megkülönböztetési képessége romlik, a kép észlelt kontrasztja csökken, a színek színezettsége csökken.
-Ha tehát a képi reprodukció helyszínén a környezeti fénysűrűség kicsi (pl. mozi) a megfelelő kontraszt és telítettség eléréséhez a kép előtorzítása szükséges.
-Ennek módja olyan Gamma-korrekciós tényező előírása, amely a megjelenítő Gamma-torzítása után egy nem-lineáris, 1-nél kicsivel nagyobb kitevőjű eredő átvitelt valósít meg, így növelve a kontrasztot és a telítettséget.
-A megfelelő Gamma-korrekcióval tehát a megjelenítési körülmények hatása kompenzálható.
-Ez alapján pl. TV képernyőn való megjelenítéshez az ITU-709-es HD szabvány $\frac{1}{\gamma} = 0.5$ Gamma-korrekciót definiál, ami a 2.4-es CRT torzítással 1.2 eredő torzítást eredményez, míg pl. a mozis célra szánt DCI-P3 szabvány a mozivásznon megjelenített kép 1.5-ös nem-lineáris torzítását írja elő \footnote{Valójában pl. HD esetén a teljes produkciós lánc minden eleme jól definiált, szabványosított.
-A képi tartalmat úgy állítják elő, hogy az a kívánt (szubjektíve esztétikus) módon jelenjen meg egy szabványos átlagos megjelenítési környezetben, amelyet a ITU-R BT.2035 szabvány definiál, szabványos ITU-R BT.1886 szabvány szerinti referencia képernyőn megjelenítve.}.
-A gyakorlatban természetesen a jelenlegi LCD kijelzők esetében a Gamma-torzítás (vagy éppen az eredő Gamma) szabadon állítható.
-
 \hspace{3mm}
 Fontos leszögezni, hogy ugyan a Gamma-korrekciót a CRT képernyők nemlinearitásának kompenzációjára vezették be, manapság a Gamma-korrekció rendszertechnikája a mai napig változatlan (ugyanúgy az $RGB$ jelek kerülnek Gamma-torzításra) annak ellenére, hogy a CRT kijelzők alkalmazását szinte teljesen felváltotta az LCD és LED technológia.
 A Gamma-korrekció fennmaradásának oka, hogy a videójel digitalizálása során perceptuális kvantálást valósít meg, ahogyan az a következő fejezetben láthatjuk.
@@ -927,7 +922,7 @@ A következőekben láthatjuk, hogyan vihető át a három egymástól függetle
 \end{figure}
 A következőekben bemutatott kompozit és komponens videójelek előállításának folyamatábrája a \ref{Fig:video_components} ábrán látható (kompozit esetben a PAL rendszer példáján).
 
-Az előző fejezetben láthattuk, hogy az emberi szem színezetre vett térbeli felbontóképessége jóval kisebb (kevesebb, mint fele) a világosságéhoz képest.
+Korábban láthattuk, hogy az emberi szem színezetre vett térbeli felbontóképessége jóval kisebb (kevesebb, mint fele) a világosságéhoz képest.
 Ezt kihasználva a különböző videójel formátumokban közös, hogy a színkülönbségi (chroma) jeleket sávkorlátozva, azaz csökkentett felbontással reprezentálják.
 Ez analóg formátumok esetén sávszélességet takarít meg, míg digitális esetben már hatékony kompressziós módszerként is felfogható, mint a következőekben látható lesz.
 
@@ -994,7 +989,7 @@ A megfelelő demodulációhoz tehát a vevőben a színsegédvivő fázishelye, 
 \begin{figure}[]
 	\centering
 	\hspace{4mm}
-	\begin{overpic}[width = 0.90\columnwidth ]{figures/QAM_mod_demod.png}
+	\begin{overpic}[width = 0.80\columnwidth ]{figures/QAM_mod_demod.png}
 	\end{overpic}
 	\caption{QAM moduláció és demoduláció folyamatábrája}
 	\label{Fig:QAM_mod_demod}
@@ -1056,7 +1051,7 @@ Láthattuk, hogy a videójel az egyes TV sorokban megjelenítendő világosság 
 Természetes képeken a képtartalom sorról sorra csak lassan változik (természetesen a képtartalomban jelenlévő vízszintes éleket leszámítva), így mind a luma, mind a chroma jelek ún. kvázi-periodikusak, azaz közel periodikusak.
 Jel- és rendszerelméleti ismereteink alapján tudjuk, hogy egy periodikus jel spektruma vonalas, a jelfrekvencia egész számú többszörösein tartalmaz csak komponenseket.
 Ennek megfelelően mind a luma, mind a chroma jelek spektruma közel vonalas: az energiájuk a sorfrekvencia egész számú többszörösein csomósodik.
-Természetesen a luma jel az alapsávban helyezkedik el ($0~\mathrm{Hz}$ környezetében), kb. $6~\mathrm{MHz}$ sávszélességben.
+Természetesen a luma jel az alapsávban helyezkedik el ($0~\mathrm{Hz}$ környezetében), kb. $5.6~\mathrm{MHz}$ sávszélességben\footnote{Ez a sávszélesség eredményezi az azonos horizontális és vertikális képfelbontást.}.
 A QAM modulált chroma jel spektruma a sávkorlátozás miatt keskenyebb ($1~\mathrm{MHz}$), és középpontját $\omega_c$ vivőfrekvencia határozza meg.
 \begin{figure}[]
 	\centering
@@ -1087,9 +1082,10 @@ A CVBS elnevezés gyakori szinoníma a kompozit videójelre, jelentése C: color
 
 Az így létrehozott videójel a fekete-fehér képhez képest csak a modulált színsegédvivőt tartalmazza többletinformációnak.
 Egyszerű fekete-fehér vevőn a CVBS jelet megjelenítve a színinformáció nagyfrekvenciás zajként, pontozódásként (ún. \href{http://www.techmind.org/colrec/}{chroma dots}) jelenik csak meg a kijelzőn, így a visszafelé kompatibilitás biztosítva volt.
-Színes vevőkben a CVBS jelből a chromajel elméletileg fésűszűréssel szeparálható, amely egy soridejű késleltetést igényel.
-Minthogy ez a PAL megjelenése előtt nem állt rendelkezésre, ezért a korai NTSC vevők egyszerű alul/felüláteresztő szűrőkkel, vagy egyszerű chroma jelre állított lyukszűrőkkel szeparálták a luma-chroma jeleket.
-Ennek eredményeképp még a színes vevőkben is a chroma jelen kisfrekvenciás tartalomként jelen lehetett a világosságinformáció látható hatással a megjelenített képre.
+Színes vevőkben a CVBS jelből a luma és chromajel elméletileg fésűszűréssel szeparálható a sorfrekvencia felének egész számú többszöröseit elnyomva.
+Ez ideálisan egy soridejű késleltetést igényel \footnote{A bizonyításhoz vizsgáljuk $h(t) = \delta(t) + \delta(t-t_{\mathrm{H}})$ szűrő átviteli karakterisztikáját, amely szűrő a jelből kivonja $t_H$-val késleltetett önmagát!}.
+A fésűszűrős luma-chroma szeparáció lehetősége már az NTSC fejlesztésének idején ismert volt, azonban a szükséges soridejű késleltető nem állt rendelkezésre, ezért a korai NTSC vevők egyszerű alul/felüláteresztő szűrőkkel, vagy egyszerű chroma jelre állított lyukszűrőkkel szeparálták a luma-chroma jeleket.
+Ennek eredményeképp még a színes vevőkben is a chroma jelen kisfrekvenciás tartalomként jelen lehetett a világosságinformáció látható \href{https://en.wikipedia.org/wiki/Dot_crawl}{hatással a megjelenített képre}.
 A megfelelő analóg PAL fésűszűrő-tervezés még a 90-es években is aktív \href{https://www.renesas.com/in/en/www/doc/application-note/an9644.pdf}{K+F} alatt álló terület volt.
 
 \begin{figure}[]
@@ -1188,4 +1184,59 @@ A luma tehát változatlanul alapsávban, míg a chroma a színsegédvivővel mo
 A chroma jelek modulációja elkerülhetetlen, hiszen a két független színkülönbségi jel egy érpárra való ültetéséhez azokat legalább a sávszélességükkel megegyező frekvenciájú vivőjellel való moduláció szükséges az átlapolódás elkerüléséhez.
 Az S-video szabvány csatlakozója a \ref{Fig:composite_video} (b) ábrán látható.
 
-\subsection{A komponens videójel}
+\subsection{Az analóg komponens videójel}
+
+A videójel komponensenkét való tárolásának és továbbításának az ötlete kézenfekvő, annak ellenére, hogy a technológia ezt csak a kompozit formátum megjelenésénél jóval később tette lehetővé.
+Komponens videó esetén a luma és chroma (legritkább esetben az $RGB$ komponenseket) egymástól függetlenül, külön tároljuk és külön érpáron továbbítjuk.
+Az ábrázolás neve analóg videójelek esetén: \ypbpr.
+
+Az \ypbpr  ábrázolás esetén tehát a három átvitt jel a következő:
+\begin{itemize}
+\item $Y'$: az adott eszközfüggő színtérben ábrázolt luma komponens.
+Megjegyezhető, hogy a szükséges szinkron impulzusok az \ypbpr rendszerben ugyanúgy jelen vannak az $Y'$ jelen.
+Épp ezért pl. egy \ypbpr komponens bemenettel rendelkező megjelenítő $Y'$ bemenetére kompozit videójel szabadon ráköthető.
+Ez esetben a fekete-fehér TV vevőhöz hasonlóan a TV képen a fekete-fehér képre zajként-pontozódásként (,,chroma dots'') érzékelve a megjelenített modulált színsegédvivőt.
+\item $P'_{\mathrm{B}},P'_{\mathrm{R}}$: az aktuális analóg interface dinamikatartományához átskálázott (erősített) $B'-Y', R'-Y'$ chroma jelek.
+Az interface-ek általában $\pm 0.5~\mathrm{V}$ feszültségszinteket definiálnak.
+A $P$-rövidítés a kompozit videóból származik, ahol a színinformációt a színsegédvivő fázisa hordozza.
+\end{itemize}
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/1280px-Component-cables.jpg}
+	\end{overpic} \hfill
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/YPBPR_signals.png}
+	\end{overpic} \hfill
+	\caption{A leggyakrabban alkalmazott $YP_bP_r$ komponens videójel továbbítására alkalmazott csatlakozó (a) és a komponens videójelek a korábbi színsáv-tesztábra esetén (b)}
+	\label{Fig:comp_video}
+\end{figure}
+A külön kezelt luma-chroma információra egy példa a \ref{Fig:comp_video} (b) ábrán látható a már korábban is bemutatott SMPTE color bars tesztábra esetében.
+A komponens videójel interface leggyakrabban a \ref{Fig:comp_video} (a) ábrán látható RCA csatlakozóhármas alkalmazásával került megvalósításra.
+
+\hspace{3mm}
+Az analóg interface-ek közül említést érdemel még elterjedtségük miatt két további videóinterface:
+\begin{itemize}
+\item A SCART (vagy EuroSCART, Syndicat des Constructeurs d'Appareils Radiorécepteurs et Téléviseurs rövidítése) interface mind kompozit videójelek, mind S-video, mind $RGB$ jelkomponensek kétirányú átvitelét lehetővé teszik sztereó hang és digitális jelzések továbbítása mellet.
+A SCART csatlakozó jelentőségét az jelentette, hogy megjelenése előtt a TV vevők videó bemenetére nem létezett szabványos interface.
+Gyakran a külső videójel-források jobb híján a TV vevő rádiófrekvenciás bemenetére csatlakoztak a kompozit videójelet valamilyen az adott jelforrásra előírt vivőfrekvenciára modulálva.
+A SCART interface 1080p HD jel átvitelére is képes volt $YP_bPr$ formátumra a HDMI szabvány elterjedése előtt.
+A tipikus 21-érintkezős SCART csatlakozó a \ref{Fig:scart_vga} (a) ábrán látható
+\item A VGA (Video Graphics Array) a mai napig széles körben elterjedt interface videókártyák és megjelenítők (monitor, projektor, stb) közti analóg komponens videójel-átvitelre.
+A VGA interface alapvetően az analóg megjelenítendő (legalábbis az adott videókártya színterében ábrázolt) $RGB$ komponenseket továbbítják a megjelenítő felé, külön ereken továbbítva a vertikális és horizontális (kép- és sor-) szinkronjeleket.
+A VGA portot az utóbbi években már szinte teljesen leváltották a DVI, HDMI és DisplayPort digitális interface-ek.
+\end{itemize}
+
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.63\textwidth}
+	\begin{overpic}[width = 0.47\columnwidth ]{figures/scart.jpg}
+	\end{overpic} \hfill
+		\begin{overpic}[width = 0.4\columnwidth ]{figures/vga.jpg}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.35\textwidth}
+	\caption{Analóg videótovábbításra alkalmazott SCART (a) és VGA (b) csatlakozók}
+	\label{Fig:scart_vga}  \end{minipage}
+\end{figure}
+
+Az $Y'P'_B P'_R$ komponensjelek közvetlen digitalizálásával kapjuk az $Y'C'_BC'_r$ digitális komponens videójelek.
+A következő fejezet ennek a digitalizációs lépésnek különböző megfontolásaival foglalkozik.
