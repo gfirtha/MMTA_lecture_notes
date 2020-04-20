@@ -1,0 +1,1562 @@
+Az előző fejezet bemutatta az emberi látás képi reprodukció szempontjából legfontosabb tulajdonságait és részletesen tárgyalta a fény- és színmérés alapjait, bevezetve a világosság fogalmát és a CIE XYZ színteret.
+Ez a fejezet ezekre az ismeretekre építve bemutatja a színes képpontok videótechnikában alkalmazott analóg és digitális reprezentációs módját.
+
+\vspace{3mm}
+Videótechnika szempontjából az XYZ színteret ritkán alkalmazzák képpontok színkoordinátáinak tárolására, kivétel ez alól a \href{https://en.wikipedia.org/wiki/Digital_Cinema_Package}{digitális mozi} és mozifilm-archiválási alkalmazások\footnote{Ennek oka, hogy egyrészt reprodukcióra közvetlenül nem használható, hiszen az XYZ alapszínek nem valós színek (az X,Y,Z bázisvektorok helyén nem található látható szín), másrészt a teljes látható színek tartománya igen nagy bitmélységet igényel, ráadásul feleslegesen:
+Az XYZ tér pozitív térnyolcadát a látható színek csak részben töltik ki (sok olyan kód lenne, amihez nem tartozik látható szín), ráadásul a ezen belül is a megjelenítők a látható színeknek csak egy részét képesek reprodukálni.}.
+Ugyanakkor az XYZ tér lehetővé teszi a különböző megjelenítők és kamerák által reprodukálható színek halmazának egyszerű vizsgálatát, valamint az ezen eszközök színterei közti átjárást.
+A következő szakasz ezeket a konkrét videóeszközökre jellemző, ún. \textbf{eszközfüggő színtereket} mutatja be.
+
+\section{Device-dependent color spaces}
+
+Az előző fejezetben láthattuk, hogy az emberi látás trikromatikus jellegének, valamint linearitásának (illetve az egyszerű lineáris modelljének) köszönhetően a látható színek egy lineáris 3D vektortérben ábrázolhatóak, amelyben a vektorok összegzési szabálya érvényes: 
+Két tetszőleges szín keverékéből származó eredő színinger meghatározható a két színbe mutató helyvektorok összegeként (függetlenül az eredeti színingereket létrehozó fény spektrumától).
+Az $xy$-színpatkón ennek megfelelően két szín összege a két színpontot összekötő szakasz mentén fog elhelyezkedni.
+
+Ebből következik, hogy az emberi látás metamerizmusát kihasználva a látható színek nagy része előállítható mesterségesen, megfelelően megválasztott \textbf{alapszínek} (\textbf{primary}) összegeként.
+Ez általánosan véve a színes képreprodukció alapja.
+Természetesen nem lehet célunk az összes látható szín visszaállítása: 
+Minthogy a színpatkón a látható színek határa---amely mentén a spektrálszínek találhatók---folytonos, nem nulla görbületű (azaz végtelen számú infinitezimálisan rövid egyenes szakaszból állítható össze), így elvben végtelen számú spektrálszínt kéne alapszínként alkalmazni az összes látható szín kikeveréséhez.
+Felmerül tehát a kérdés, hány alapszín szükséges a színpatkó megfelelő lefedéséhez.
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth]{figures/Video_colorspaces/color_space_gamut.png}
+	\small
+	\put(0,0){(a)}
+	\put(50,0){(b)}
+	\put(22,22){Gamut}	
+	\end{overpic}
+	\caption{Az azonos alapszínekkel dolgozó SD, HD és a sRGB színtér gamutja $xy$ (a) és $u^*v^*$ (b) diagramon ábrázolva.}
+	\label{Fig:gamut}
+\end{figure}
+
+A színdiagramban könnyen felvehető 4 színpont úgy, hogy a négy szín keverékeit lefedő négyszög (azaz a reprodukálható színek területe) közel azonos területű legyen a színpatkó területével.
+Ugyanakkor az $L^*u^*v^*$ színtér színpatkójából láthattuk, hogy az emberi felbontás zöld árnyalatokra vonatkozó felbontása rossz, és az perceptuálisan egyenletes színdiagram inkább háromszög alakú.
+Ez azt jelenti, hogy három megfelelően megválasztott alapszínnel---amelynek különböző arányú keverékeinek színezete egy háromszögön belül helyezkedik el---az egyenletes színezetű ($u^*v^*$) színpatkó jelentős része lefedhető.
+Ebből kifolyólag az additív színkeverésen alapuló képreprodukciós eszközök szinte kizárólag három megfelelően megválasztott piros, zöld és kék alapszínnel dolgozik.
+
+Az ezekből a színekből pozitív együtthatókkal (RGB intenzitásokkal) kikeverhető színek összességét egy adott \textbf{eszközfüggő színtérnek} nevezzük, míg ezzel ellentétben a kolorimetrikus, abszolút színterek (mint pl. a CIE XYZ, $L^*u^*v^*$, $L^*a^*b^*$) közösen ún. \textbf{eszközfüggetlen színterek}.
+Az adott eszközfüggő színtérben reprodukálható különböző színezetű színek az $xy$-színpatkóban egy háromszög mentén és belsejében helyezkednek el.
+Ezt a háromszögét a színtér \textbf{gamutjának} nevezzük.
+Egy egyszerű példa adott RGB színtér gamutjára a \ref{Fig:gamut} ábrán látható\footnote{Természetesen nem csak RGB színterek léteznek, nyomdatechnikában pl a CMYK eszközfüggő színterek elterjedtek, amelyek esetében a négy alapszín a nyomdában alkalmazott tinták színét jelzi.
+A következőekben a vizsgálatunkat kizárólag RGB színterekre végezzük el.}.
+A színtér gamutjának határán (a háromszög csúcsaiban és oldalain) az adott RGB alapszínekkel elérhető legtelítettebb, a spektrál színekhez legközelebb elhelyezkedő színek találhatóak.
+Ezek az ún. \textbf{kvázi-spektrál színek}, amelyek közös tulajdonsága, hogy legfeljebb két alapszínből kikeverhetők.
+
+\vspace{3mm}
+Ha egy RGB színtér megfelelően definiált, tetszőleges $C$ színre meghatározhatóak azok az RGB intenzitások, amelyekkel az RGB alapszíneket súlyozva a $C$ szín kikeverhető (amennyiben az RGB értékek pozitívak).
+Ezek az adott $C$ szín $\mathbf{c}_{RGB} = \begin{bmatrix}
+       R_c \\[0.3em] G_c \\[0.3em] B_c \end{bmatrix}$ \textbf{RGB koordinátái} és a színpont adott RGB térbeli pozícióját írják le.
+A színkoordináták definíció szerint 0 és 1 között vehetnek fel értékeket, így a
+\begin{equation}
+\mathbf{r}_{R\!G\!B} = \begin{bmatrix}
+       1 \\[0.3em]
+       0 \\[0.3em]
+       0 \end{bmatrix}, \hspace{4mm}
+\mathbf{g}_{R\!G\!B} = \begin{bmatrix}
+       0 \\[0.3em]
+       1 \\[0.3em]
+       0 \end{bmatrix}, \hspace{4mm}
+\mathbf{b}_{R\!G\!B} = \begin{bmatrix}
+       0 \\[0.3em]
+       0 \\[0.3em]
+       1 \end{bmatrix}.
+\end{equation}
+vektorok rendre a $100~\%$-os intenzitású vörös, zöld és kék alapszínvektort jelölik.
+
+A következő szakasz bemutatja, hogyan definiálnak egy adott eszközfüggő RGB színteret a gyakorlatban, azaz hogy hogyan kell megadni a színtér alapvető jellemzőit ahhoz, hogy ezután tetszőleges szín RGB koordinátái számíthatók legyenek.
+
+\subsection{Definition of device-dependent color spaces}
+
+Vizsgáljunk egy három alapszínt alkalmazó RGB színteret!
+Az R, G és B alapszínek természetesen egy-egy vektort határoznak meg az $XYZ$ koordináta-rendszerben, és az egységsíkon vett vetületük/metszéspontjuk adja meg a színpatkón vett $xy$ koordinátáikat.
+Ezt illusztrálja a \ref{Fig:device_dep} ábra.
+Az alapszín-vektorok $XYZ$ koordinátáit jelölje rendre 
+\begin{equation}
+\mathbf{r}_{X\!Y\!Z} = \begin{bmatrix}
+       X_r \\[0.3em]
+       Y_r \\[0.3em]
+       Z_r \end{bmatrix}, \hspace{4mm}
+\mathbf{g}_{X\!Y\!Z} = \begin{bmatrix}
+       X_g \\[0.3em]
+       Y_g \\[0.3em]
+       Z_g \end{bmatrix}, \hspace{4mm}
+\mathbf{b}_{X\!Y\!Z} = \begin{bmatrix}
+       X_b \\[0.3em]
+       Y_b \\[0.3em]
+       Z_b \end{bmatrix}.
+\end{equation}
+%
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.65\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{figures/device_dep.png}
+	\small
+	\put(89,19){$X$}
+	\put(12,96){$Y$}
+	\put(0,4){$Z$}
+	\put(36,64){$(X_g,Y_g,Z_g)$}
+	\put(10,8){$(X_b,Y_b,Z_b)$}
+	\put(39,33){$(X_r,Y_r,Z_r)$}
+	\end{overpic}\end{minipage}\hfill
+	\begin{minipage}[c]{0.35\textwidth}
+	\caption{RGB színtér alapszíneinek helye, és metszéspontja az egységsíkkal az XYZ színtérben.}
+	\label{Fig:device_dep}  \end{minipage}
+\end{figure}
+Amennyiben a három alapszín $XYZ$ koordinátái ismertek, úgy a színtér teljesen definiálva van:
+tetszőleges $\mathbf{c}_{X\!Y\!Z}$ színvektor koordinátái meghatározhatóak az adott eszközfüggő $RGB$ térben, amely $\mathbf{c}_{RGB}$ vektor tehát azt írja le, milyen súlyozással keverhető ki az adott $\mathbf{c}$ szín az RGB alapszínekből:
+\begin{equation} 
+\underbrace{\begin{bmatrix}[c]
+       R_c \\[0.3em]
+       G_c \\[0.3em]
+       B_c \end{bmatrix}}_{\mathbf{c}_{RGB}}
+       =
+     \mathbf{M}_{X\!Y\!Z \rightarrow R\!G\!B}
+      \underbrace{\begin{bmatrix}[c]
+       X_c \\[0.3em]
+       Y_c \\[0.3em]
+       Z_c \end{bmatrix}}_{\mathbf{c}_{X\!Y\!Z}},
+\end{equation}
+ahol $ \mathbf{M}_{X\!Y\!Z \rightarrow R\!G\!B}$ egy bázistranszformációs mátrix. 
+Vice versa, az $RGB$ színtérben adott szín $XYZ$ koordinátái meghatározhatók a 
+\begin{equation}
+      \underbrace{\begin{bmatrix}[c]
+       X_c \\[0.3em]
+       Y_c \\[0.3em]
+       Z_c \end{bmatrix}}_{\mathbf{c}_{X\!Y\!Z}} = 
+     \mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z}
+\underbrace{\begin{bmatrix}[c]
+       R_c \\[0.3em]
+       G_c \\[0.3em]
+       B_c \end{bmatrix}}_{\mathbf{c}_{RGB}}
+\end{equation}
+egyenletből.
+Természetesen fennáll a $\mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z} = \mathbf{M}_{X\!Y\!Z \rightarrow R\!G\!B}^{-1}$ összefüggés.
+
+Utóbbi transzformációs mátrix egyszerűen meghatározható elemi lineáris algebra ismeretek alapján:
+Az $\mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z}$  mátrix oszlopai egyszerűen az $RGB$ színtér bázisainak $XYZ$-ben vett reprezentációja, azaz általánosan igaz a
+\begin{equation}
+\begin{bmatrix}[c]
+       X_c \\[0.3em]
+       Y_c \\[0.3em]
+       Z_c \end{bmatrix}
+       = 
+       \underbrace{
+  \begin{bmatrix}[c|c|c]
+   X_r & X_g & X_b  \\
+   Y_r & Y_g & Y_b \\
+   Z_r & Z_g & Z_b  \\
+\end{bmatrix}}_{\mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z}}
+\cdot
+\begin{bmatrix}[c]
+       R_c \\[0.3em]
+       G_c \\[0.3em]
+       B_c \end{bmatrix}
+\label{Eq:CS_transform}
+\end{equation}
+összefüggés\footnote{Az összefüggés érvényessége könnyen belátható pl. $\mathbf{c}_{RGB} = \begin{bmatrix}[c]
+       1 \\[0.3em]
+       0 \\[0.3em]
+       0 \end{bmatrix}$ helyettesítéssel, amely vektor az $R$ alapszín RGB-ben vett reprezentációja, és \eqref{Eq:CS_transform} egyenletben a transzformációs mátrix első oszlopát választja ki.}.
+% POynoton 250.oldal
+A transzformációs mátrixok több szempontból fontosak: 
+Egyrészt lehetővé teszik a különböző RGB terek közti színtérkonverziókat (ld. következő bekezdés).
+Másrészt egy $\mathbf{c}$ színpont $Y_c$ koordinátája a színinger fénysűrűségével arányos, amely az érzékelt világosságot határozza meg.
+\emph{A $\mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z}$ transzformációs második sora tehát meghatározza, hogyan számítható ki egy RGB térben megadott színpont (relatív) fénysűrűsége, azaz világossága.}
+
+\vspace{3mm}
+Felmerül a kérdés, milyen teret testet feszítenek ki az $R$,$G$, $B$ alapszínekkel kikeverhető színek összessége, azaz az RGB eszközfüggő színtér az $XYZ$ térben.
+Könnyen belátható, hogy a három alapszínvektor pozitív együtthatókkal képzett összes lineáris kombinációja egy paralelepipedont feszít ki, azaz adott eszközfüggő RGB színtér az $XYZ$ térben egy paralelepipedonként ábrázolható.
+\begin{figure}[]
+	\centering	
+	\small
+	(a)
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/Video_colorspaces/device_dep_2.png}
+	\small
+	\put(-2,5){$Z$}
+	\put(89,17){$X$}
+	\put(11,97){$Y$}
+	\end{overpic}
+	(b)
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/Video_colorspaces/The-RGB-colour-cube.png}
+	\end{overpic}
+	\caption{Egy adott RGB színtér ábrázolása az $XYZ$ térben (a) és az RGB kockában (b). Az (a) ábrán szereplő vektorok színe a végpontjukban található színt jelzi.}
+	\label{Fig:device_dep_2}
+\end{figure}
+
+Tekintve, hogy az RGB együtthatók definíció szerint 0 és 1 között vehetnek fel értékeket, ennek megfelelően egy adott RGB térben az ebben a színtérben reprodukálható színek egy kockában helyezkednek el\footnote{Emiatt az RGB színtereket gyakran RGB kockaként említik.}, ahol a kocka origóból induló három éle mentén az alkalmazott RGB alapszínek helyezkednek el.
+A transzformációs mátrixok tehát gyakorlatilag olyan lineáris transzformációt valósítanak meg, amelyek a paralelepipedont kockába, és a kockát paralelepipedonba viszik.
+
+\paragraph{A relatív fénysűrűség bevezetése:\\}
+Egy RGB színtér tehát teljes egészében adott, amennyiben az alapszín-vektorok $XYZ$ koordinátái ismertek.
+A gyakorlatban azonban egy RGB színtér definiálása során az $XYZ$ koordináták helyett az RGB alapszínek és a fehérpontjának színezetét, azaz $xy$ színkoordinátáit adják meg.
+Definíció szerint egy adott színtér \textbf{fehérpontja} az adott térben elérhető legvilágosabb pont, amelyet az alapszínek egyenlő arányú keverékével érhetünk el.
+Az adott eszközfüggő színtérben a 100\%-os ez alapján (hasonlóan az $XYZ$-beli fehérhez), definíció szerint 
+\begin{equation}
+\mathbf{w}_{RGB} = \begin{bmatrix}[c]
+       1 \\[0.3em]
+       1 \\[0.3em]
+       1 \end{bmatrix}, \hspace{5mm} \text{és} \hspace{5mm} 
+Y_w = 1,
+\end{equation}
+ahol $Y_w$ a színpont \textbf{relatív fénysűrűsége}, amely tehát 0 és 1 között vehet fel értékeket.
+ A \ref{Fig:device_dep} ábrán látható példában a fehér szín vektora a paralelepipedon szürkével jelölt főátlója, ezen vonal mentén helyezkednek el a különböző világosságértékű (árnyalatú) fehér színek.
+A fehér szín színezete, azaz $x_w$ és $y_w$ koordinátái ezen vektor az egységsíkkal vett döféspontja határozza meg.
+
+A színteret tehát úgy definiáljuk, hogy a három alapszínvektor $xy$ koordinátája (azaz az iránya) mellett megadjuk az alapszínek egyenlő energiájú keverékének a színezetét, (azaz a három bázisvektor összegének irányát), és rögzítjük, hogy az összegvektor $Y$ koordinátája egységnyi.
+Ebből a 9 adatból meghatározhatók az RGB bázisvektorok tényleges hossza, és így a szükséges transzformációs mátrixok felírhatók.
+
+\vspace{3mm}
+Az RGB színterek ilyen módú definíciója mögött a motíváció a következő:
+Láthattuk, hogy az $XYZ$ koordináták a színérzetet létrehozó spektrummal szorosan összefüggnek, az $Y$ koordináta pl. a fényinger fénysűrűségét adja meg ([$\mathrm{cd}/\mathrm{m}^2$]-ben, vagy nit-ben).
+A gyakorlati alkalmazások során azonban nem szempont egy RGB színtér alapszíneinek---pl. egy RGB kijelző LCD alapszíneinek---fizikai jellemzőinek pontos ismerete (azaz pl. hány nit fénysűrűséget hoz létre az R, G, vagy B pixel-elem).
+Ennek oka, hogy képi reprodukció során a tényleges, fotometriai abszolút fénysűrűséget szinte soha nem célunk visszaállítani (nem is tudnánk, ha a képernyő maximális létrehozható fénysűrűsége kisebb, mint az eredeti mért fénysűrűség).
+Ehelyett az adott megjelenítő eszköz által létrehozható legvilágosabb színhez képest reprodukáljuk az adott képpontok relatív fénysűrűségét.
+Az, hogy ez a legvilágosabb pont ténylegesen hány nit fénysűrűséget hoz létre eszközről eszközre változhat, és a megjelenítők fontos paramétere (ez az általában [$\mathrm{cd}/\mathrm{m}^2$]-ben megadott maximális fényerő paraméter).
+Az eszközfüggő színterek fenti definíciója tehát azt biztosítja, hogy az $Y$ koordináta az RGB alapszínek fizikai jellemzőitől függetlenül a relatív fénysűrűséget írja le.
+
+\paragraph{A fehér színről általában:\\}
+Látható tehát, hogy a fehér szín önmagában szubjektív fogalom: adott környezetben a leginkább akromatikus fényingert nevezzük fehérnek, amelynek spektrális sűrűségfüggvénye minél inkább egységnyi (azaz minél több spektrális komponenst tartalmaz), és ezzel analóg módon RGB színtérben ábrázolva minél közelebb van a csupa-egy vektorhoz.
+A fehér fogalom egységesítéséhez bevezettek ún. szabványos megvilágításokat (standard illuminants), amelyet szabványosított RGB  színterek esetén előírnak, mint fehérpont.
+Ezeknek a szabványos megvilágításoknak a spektrális sűrűségfüggvénye (és persze az általa keltett színinger $xy$-koordinátái) adott, jól-definiált.
+Ilyen szabványos megvilágítások a következők:
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.6\textwidth}
+	\begin{overpic}[width = 0.9\columnwidth ]{figures/Video_colorspaces/PlanckianLocus.png}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.4\textwidth}
+	\caption{Különböző hőmérsékletű feketetest sugárzók által keltett színek összessége, azaz a Planck görbe.}
+	\label{Fig:planck}  \end{minipage}
+\end{figure}
+\begin{itemize}
+\item E fehér: egyenlő energiájú fehér, a CIE XYZ színtér fehérpontja. Kolorimetria szempontjából jelentős, videótechnikában kevésbé fontos a szerepe, mivel a gyakorlatban nem fordul elő olyan fényforrás, amely minden hullámhosszon azonos energiával sugároz.
+\item A fehér: a CIE által szabványosított, egyszerű háztartási wolfram-szálas izzó fényét (azzal azonos színérzetet keltő) fényforrás spektruma és színe, $T_{\mathrm{C}} = 2856~\mathrm{K}$ korrelált színhőmérséklettel \footnote{A korrelált színhőmérséklet (correlated color temperature, CCT, $T_{\mathrm{C}}$) azon feketetest sugárzó hőmérsékletét jelzi, amely az emberi szemben a minősítendő fényforrással azonos színérzetet kelt.
+A feketetest (hőmérsékleti) sugárzó által keltett színingerek az $xy$ színdiagramon az ún. Planck-görbét járják be, amely a \ref{Fig:planck} ábrán látható.}.
+\item B és C fehér: Az A fehérből egyszerű szűréssel nyerhető, napfényt szimuláló megvilágítások.
+A B fehér a déli napsütést modellezi $4874~\mathrm{K}$ színhőmérséklettel, míg a C fehér a teljes napra vett átlagos fény színét (spektrumát) modellezi $6774~\mathrm{K}$ színhőmérséklettel.
+\item D fehér: szintén a napfény közelítésére alkalmazott megvilágítások sora.
+Videótechnika szempontjából a legfontosabb a D65 fehér, amely jelenleg is az UHD formátumok színterének szabványos fehérpontja.
+\end{itemize}
+
+\subsection{Color space conversions}
+Az eddigiekben látható volt, hogyan definiálható egy eszközfüggő színtér az alapszíneivel.
+Ahogy az elnevezés is mutatja, ezek a színterek jellegzetesen adott eszközre érvényesek, pl. egy kamera a beépített RGB szenzorok, egy kijelző az alkalmazott RGB kristályok által meghatározott RGB színtérben dolgoznak.
+Emellett léteznek szabványos RGB színterek amelyek a képi tartalom tárolására, továbbítására szolgálnak egységesített, szabványos módon.
+A következő szakasz ezeket a szabványos videószíntereket tárgyalja részletesebben.
+%TODO Lab, luv spaces: conversion
+Felmerül tehát a természetes igény az egyes színterek közti átjárásra, amelyet \textbf{színtér konverziónak} nevezünk.
+
+A színtérkonverziót az $XYZ$ színtér teszi lehetővé, amely egy eszközfüggetlen, abszolút színtér:
+egyes színterek közti konverzió a forrás által létrehozott jelek $XYZ$ színtérbe való transzformációjával, majd ezen reprezentáció a nyelő színterébe való transzformációval történik.
+Az $XYZ$ színtér így tehát színterek közti átjárást biztosít, ún. Profile Connection Space-ként működik (hasonlóan pl. a gyakran azonos célra alkalmazott $Lab$ színtérhez).
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth]{figures/Video_colorspaces/cs_conversion.png}
+	\small
+	\put(1,37){$RGB_{\mathrm{cam}}$}
+	\put(35,37.5){$XYZ$}
+	\put(67,39){$RGB_{\mathrm{ITU}-709}$}
+	\put(13,18){$RGB_{\mathrm{ITU}-709}$}
+	\scriptsize
+	\put(15,29.25){$\mathbf{M}_{\!R\!G\!B_{\mathrm{c\!a\!m}} \!\!\rightarrow \!\!X\!Y\!Z}$}
+	\scriptsize
+	\put(49,29.25){$\mathbf{M}_{\!X\!Y\!Z \!\rightarrow \!R\!G\!B_{7\!0\!9}} $}
+	\small
+	\put(87,29){\parbox{.86in}{MPEG kódolás, műsorszórás, tárolás}}
+	\put(52,18){$XYZ$}
+	\put(87,17){$RGB_{\mathrm{TV}}$}
+	\scriptsize
+	\put(32.5,9.5){$\mathbf{M}_{\!R\!G\!B_{\mathrm{7\!0\!9}} \!\!\rightarrow \!\!X\!Y\!Z}$}
+	\scriptsize
+	\put(66.5,9.6){$\mathbf{M}_{\!X\!Y\!Z \!\rightarrow \!R\!G\!B_{7\!0\!9}} $}	
+	\end{overpic} 	
+	\caption{Színtér-konverzió folyamatábrája.}
+	\label{Fig:cs_conversion}
+\end{figure}
+Egy tipikus színtér konverziós folyamatot az \ref{Fig:cs_conversion} ábra mutat.
+Tegyük fel, hogy adott egy HD kamera által rögzített képanyag, ahol a kamera színterét $RGB_{\mathrm{cam}}$ jelöli.
+A HD formátum szabványos színteret alkalmaz, amelyet az ITU-709 ajánlásban rögzítettek (lásd később).
+A kamera RGB jeleit tehát az esetleges kódolás és tárolás előtt ebbe a HD színtérbe kell konvertálni.
+Ez a konverzió a kamerajelek $XYZ$ térbe, majd innen az ITU-709 színtérbe való transzformációval oldható meg, amely a megfelelő transzformációs-mátrixszal való szorzással valósítható meg:
+\begin{equation} 
+\begin{bmatrix}[c]
+       R_{\mathrm{ITU}-709} \\[0.3em]
+       G_{\mathrm{ITU}-709} \\[0.3em]
+       B_{\mathrm{ITU}-709} \end{bmatrix}
+       =
+       \mathbf{M}_{ X\!Y\!Z \rightarrow R\!G\!B_{709} } \cdot 
+\left(     \mathbf{M}_{R\!G\!B_{\mathrm{cam}} \rightarrow X\!Y\!Z } \cdot
+\begin{bmatrix}[c]
+       R_{\mathrm{cam}} \\[0.3em]
+       G_{\mathrm{cam}} \\[0.3em]
+       B_{\mathrm{cam}} \end{bmatrix} \right)
+\end{equation}
+Természetesen az egymás utáni két mátrixszorzás összevonható, így a két $RGB$ színtér között közvetlen lineáris leképzés határozható meg.
+Ez a transzformáció jellegzetesen már a kamerán belül megvalósul.
+%
+Hasonlóképp, megjelenítőoldalon a
+\begin{equation} 
+\begin{bmatrix}[c]
+       R_{\mathrm{cam}} \\[0.3em]
+       G_{\mathrm{cam}} \\[0.3em]
+       B_{\mathrm{cam}} \end{bmatrix}
+       =
+       \mathbf{M}_{ X\!Y\!Z \rightarrow R\!G\!B_{\mathrm{TV}} } \cdot 
+\left(     \mathbf{M}_{R\!G\!B_{709}  \rightarrow X\!Y\!Z } \cdot
+\begin{bmatrix}[c]
+       R_{\mathrm{ITU}-709} \\[0.3em]
+       G_{\mathrm{ITU}-709} \\[0.3em]
+       B_{\mathrm{ITU}-709} \end{bmatrix}
+ \right)
+\end{equation}
+transzformációt kell elvégezni.
+
+Ez az egyszerű transzformációs módszer lehetővé teszi egy adott színtérben mért színpontok másik színtérben való ábrázolását.
+Ugyanakkor felmerül a probléma, hogy a nagyobb gamuttal rendelkező színtérből kisebbe való áttérés esetén az új színtérben nem ábrázolható, gamuton kívüli színek negatív és egynél nagyobb RGB koordinátákkal jelennek meg, míg a kisebb gamutú térből való áttérés esetén a nagyobb gamutú tér egy része kihasználatlan marad.
+A probléma megoldására a fenti transzformációk mellett az egyes színterek gamutját valamilyen nemlineáris leképzés segítségével lehet egymásra illeszteni (expandálással, kompresszálással).
+Ezek az ún. gamut-mapping technikák.
+
+A következőekben az egyes SD, HD és UHD videóformátumok tárolására és továbbítására alkalmazott eszközfüggő színtereket tárgyaljuk.
+
+\subsection{Color spaces of video technology}
+
+% http://www.displaymate.com/crtvslcd.html
+\paragraph{Az NTSC színmérőrendszere:\\}
+Az első kodifikált színmérő rendszer az NTSC (National Television System Committee) által 1953-ban szabványosított színes-televíziós műsorszóráshoz alkalmazott NTSC szabvány volt.
+A színteret a korabeli foszfortechnológiával létrehozható CRT kijelzők (TV vevők) alapszíneik megfelelően írták elő, így színtérkorrekció vevő oldalon nem volt szükség.
+A színmérő rendszer C fehérponttal dolgozott, alapszíneit pedig a \ref{tab:ntsc_colorimetry} táblázat mutatja.
+Az így kapott gamut az \ref{Fig:gamut} ábrán látható.
+\begin{table}[h!]
+\caption{Az NTSC szabvány színmérőrendszere}
+\renewcommand*{\arraystretch}{1}
+\label{tab:ntsc_colorimetry}
+\begin{center}
+\small\addtolength{\tabcolsep}{15pt}
+    \begin{tabular}[h!]{ @{}c | | l | l @{} }%\toprule
+		&   x  	&    y \\ \hline
+    R   &  0.67 &	0.33 \\
+    G   &  0.21 &   0.71  \\
+    B   & 0.14   &	0.08\\
+    C fehér     &  0.310 &	0.316  \\
+    \end{tabular}
+\end{center}
+\end{table}
+Az alapszínekből és a fehérpontból meghatározható az $RGB_{\mathrm{NTSC}} \rightarrow XYZ$ transzformációs mátrix, amely alakja általánosan
+\begin{equation}
+\begin{bmatrix}[c]
+       X \\[0.3em]
+       Y \\[0.3em]
+       Z \end{bmatrix}
+       = 
+  \begin{bmatrix}[c c c]
+   0.60 & 0.17 & 0.2  \\
+   0.30 & 0.59 & 0.11 \\
+   0 & 0.07 & 1.11
+\end{bmatrix}
+\cdot
+\begin{bmatrix}[c]
+       R \\[0.3em]
+       G \\[0.3em]
+       B \end{bmatrix}_{\mathrm{NTSC}}
+\label{Eq:NTSC_transform}
+\end{equation}
+Az egyenlet második sora kitüntetett szereppel bír: meghatározza, hogy az NTSC színtérben hogyan számítható adott $RGB$ színpont relatív fénysűrűsége (világossága):
+\begin{equation}Y_{\mathrm{NTSC}} = 
+   0.30R + 0.59G + 0.11 B. 
+\label{Eq:NTSC_luminance}
+\end{equation}
+A világosságjel számítása egészen a HD formátum megjelenése (azaz közel 50 éven keresztül) a fenti egyenlet szerint történt.
+
+\vspace{3mm}
+Az foszfortechnológia fejlődésével az újabb megjelenítők egyre inkább feláldozták a széles gamutot (azaz a minél telítettebb alapszínek használatát) a minél nagyobb fényerő érdekében: 
+Az alkalmazott foszforok a nagyobb érzékelt világosság (fénysűrűség) érdekében egyre nagyobb sávszélességben sugároztak, így az alapszínek egyre kevésbé telítettek lettek, a gamut tehát csökkent (más szóval: az alapszínek spektruma a Dirac-impulzus helyett---amely teljesen telített spektrálszín lenne---szélesebb görbe lett, így a görbe alatti terület---és ezzel a szín világossága nőtt---de telítettsége csökkent).
+
+Mivel így a megjelenítő gamutja jelentősen eltért az NTSC szabványtól, ezért ez a képernyőn látható színek torzulását eredményezte.
+Ennek megoldásául a TV vevőkbe analóg színtérkonverziós áramköröket ültettek, amelyek az NTSC és a megjelenítő saját színtere közti konverziót valósította meg\footnote{Ahogy látni fogjuk a későbbiekben: a vevőkbe már csak a nem-lineárisan Gamma-előtorzított $RGB$ jelek jutottak, ahol az inverz torzítást maga a kijelző hajtotta végre. Emiatt a színtérkonverziót csak Gamma-torzított $R'G'B'$ jeleken tudták végrehajtani, ami azonban a telített színeknél ismét látható színezet és fénysűrűség-hibát okozott.}.
+Ettől a ponttól tehát a műsorszórás szabványos színtere és a megjelenítők színtere különváltak.
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.7\columnwidth ]{figures/Video_colorspaces/gamuts.png}
+	\end{overpic}
+	\caption{Az NTSC, PAL/SD/HD/sRGB és UHD szabványok gamutja az $xy$-színpatkóban.
+	Az NTSC jóval nagyobb gamuttal dolgozott, mint a ma is használt HD és sRGB formátumok. Ennek oka, hogy a korai CRT megjelenítők ugyan telítettebb, de ugyanakkor kisebb fénysűrűségű és nagy időállandójú foszforokkal dolgoztak, amivel bár nagy színtartományt tudtak megjeleníteni, de kis fényerővel, és mozgó objektumoknál a képernyőn akaratlanul is nyomokat hagyva.}
+	\label{Fig:gamut}
+\end{figure}
+\paragraph{A PAL és az SD színmérőrendszere:\\}
+Az európai színes műsorszórás bevezetéséhez az EBU (European Broadcasting Union) 1963-ban szabványosította a PAL (Phase Alternating Line) rendszert, újradefiniálva a színmérőrendszert, új alapszíneket és D65 fehéret alkalmazva:
+\begin{table}[h!]
+\caption{A PAL szabvány színmérőrendszere}
+\renewcommand*{\arraystretch}{1}
+\label{tab:pal_colorimetry}
+\begin{center}
+\small\addtolength{\tabcolsep}{15pt}
+    \begin{tabular}[h!]{ @{}c | | l | l @{} }%\toprule
+		&   x  	&    y \\ \hline
+    R   &  0.64 &  0.33 \\
+    G   &  0.29 &  0.60  \\
+    B   & 0.15 & 0.06\\
+    D65 fehér     &  0.3127 & 0.3290 	  \\
+    \end{tabular}
+\end{center}
+\end{table}
+%
+Ez matematikailag helyesen a transzformációs mátrix és a világosságjel számításának módjának megváltozását jelentené.
+Praktikussági szempontokból azonban a PAL rendszer az NTSC-vel azonos módon, \eqref{Eq:NTSC_luminance} alapján állítja elő a világosságjelet, mivel a gyakorlatban a különbség alig volt látható \footnote{Ennek oka, hogy a világosságjel átviteltechnológia szempontjából fontos: a kamera és a kijelző is $RGB$ jeleket használ, a világosságjelet, ahogy a következőekben látjuk csak a képanyag átviteléhez számítjuk ki.}.
+Az PAL alapszíneit és a világosságjel számításának módját átvette az első digitális videóformátum, az ITU (International Telecommunication Union) által szabványosított ITU-601-es SD formátum is 1982-ben.
+
+\paragraph{A HD és UHD formátumok színmérőrendszere:\\}
+A HD formátumot az 1990-ben szabványosították az ITU-709-es ajánlás formájában.
+Az ajánlás átvette az PAL rendszer alapszíneit, azonban immáron matematikailag precízen, újraszámította a transzformációs mátrixot és a világosságjel együtthatókat, amely tehát HD esetén
+\begin{equation}Y_{\mathrm{ITU}-709} = 
+   0.2126\,R + 0.7152\,G + 0.0722\,B. 
+\label{Eq:NTSC_luminance}
+\end{equation}
+alapján számítható.
+Fontos megjegyezni, hogy az ITU-709 szabvány színmérőrendszerét átvette az sRGB szabvány is, ami a mai napig a számítógépes alkalmazások (és operációs rendszerek) alapértelmezett színteréül szolgál.
+
+Az alkalmazott alapszíneket végül számottevően csak az UHD formátum változtatta meg az ITU-2020 számú ajánlásában 2012-ben.
+Az UHD alkalmazásokra a szabvány egy széles gamutú, spektrál-alapszíneket alkalmazó színteret ajánl a \ref{tab:UHDTV_colorimetry} táblázatban látható paraméterekkel. 
+\begin{table}[h!]
+\caption{Az ITU-2020 szabvány színmérőrendszere}
+\renewcommand*{\arraystretch}{1}
+\label{tab:UHDTV_colorimetry}
+\begin{center}
+\small\addtolength{\tabcolsep}{15pt}
+    \begin{tabular}[h!]{ @{}c | | l | l @{} }%\toprule
+		&   x  	&    y \\ \hline
+    R   &  0.708 &	0.292  \\
+    G   &  0.17 &	0.797  \\
+    B   & 0.131 &	0.046 \\
+    D65 fehér     &  0.3127 & 0.3290 	  \\
+    \end{tabular}
+\end{center}
+\end{table}
+A szabvány természetesen újradefiniálta a világosság komponens számításának a módját is, amely tehát UHD esetben
+\begin{equation}Y_{\mathrm{ITU}-2020} = 
+   0.2627\,R + 0.678 \,G + 0.0593\,B 
+\label{Eq:UHD_luminance}
+\end{equation}
+alapján számítható.
+A szabvány természetesen nem igényli, hogy az UHD megjelenítők spektrálszíneket legyenek képesek alapszínekként realizálni, a minél szélesebb gamut inkább a jövőbeli technológiák szempontjából ad ajánlást.
+A mai konzumer megjelenítők az UHD képanyagot megjelenítés előtt a saját színterükben konvertálják, amely jellegzetesen jóval kisebb a szabvány színterénél.
+
+\subsection{Example for device-dependent color space}
+\label{sec:CRT}
+
+Egyszerű példaként az eddig leírtakra vizsgáljuk, hogyan számítható és illusztrálható egy CRT kijelző által megjelenített színek tartománya, röviden rávilágítva a CRT technológia működési elvére is \footnote{Természetesen az itt leírtak változtatás nélkül alkalmazhatók más technológia alapján működő kijelzőkre is, pl. LCD.}.
+Bár a CRT technológia kezd egyre inkább eltűnni, néhány évvel ezelőttig a stúdiómonitorok jelentős része még mindig CRT alapon működött köszönhetően a színhű megjelenítésüknek, és a mai LCD megjelenítőkhöz képest is jóval nagyobb statikus kontrasztjuknak.
+
+\begin{figure}[]
+
+	\centering
+	\begin{overpic}[width = 0.5\columnwidth ]{figures/Video_colorspaces/1024px-CRT_color_enhanced.png}
+	\end{overpic}
+	\caption{CRT megjelenítő felépítése.}
+	\label{Fig:crt}
+\end{figure}
+
+A katódsugárcsöves (CRT) kijelzők sematikus ábrája az \ref{Fig:crt} ábrán látható.
+A CRT-k kijelzők működésének alapja három ún. elektronágyú volt, amelyek egy fűtőtt katódból (1) és egy nagyfeszültségre helyezett anódból állt.
+A melegítés hatására a katód környezetébe szabad elektronok léptek ki, így egy elektronfelhőt képezve a katód körül.
+A katód közelébe helyezett nagyfeszültségű (néhány száz Volt) gyorsítóanód hatására a szabad elektronok az anód felé kezdtek mozogni, egy szabad elektronáramot (2) indítva a vákuumban (ugyanezen az elven működtek a vákuum-diódák, triódák, pentódák, stb. is).
+Elegendően nagy anódfeszültség (és további anódok jelenléte) esetén az elektronok jelentős része nem csapódott be a gyorsítóanódra, hanem továbbhaladt.
+Ezt az elektronnyalábot elektrosztatikusan és mágnesesen (3) fókuszálták, majd egy vezérelt mágneses eltérítő (4) sorról sorra végigfuttatta azt egy anódfeszültségű-ernyőn (5), azaz a képernyőn.
+Színes kijelző esetén természetesen három elektronágyú üzemelt párhuzamosan.
+A képernyő felszínét pixelekre bontva képpontonként három különböző foszforral borították (7-8), amely gerjesztés (becsapódó elektronok) hatására bizonyos ideig adott spektrális sűrűségfüggvényű fényt bocsájtott ki\footnote{Ellentétben a fluoreszkáló anyagok csak a gerjesztés fennállásának idején bocsájtanak ki fényt. 
+A foszforeszkálás időállandója előnyös, hiszen megfelelően megválasztott foszforok épp egy képidőig bocsájtanak ki fényt, így a kijelzett kép nem fog villogni.
+Ugyanakkor a korai kijelzők ezen időállandója túl nagy volt, ezért a gyors mozgások elmosódtak a kijelzett képen.}, realizálva ezzel az RGB alapszíneket.
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.54\columnwidth]{figures/Video_colorspaces/sony.png}
+	\small
+	\put(0,0){(a)}
+	\end{overpic}
+	\begin{overpic}[width = 0.39\columnwidth]{figures/Video_colorspaces/sony_gamut.png}
+	\small
+	\put(0,0){(b)}
+	\end{overpic}
+	\begin{overpic}[width = 0.014\columnwidth]{figures/Video_colorspaces/sony_gamut_2.png}
+	\end{overpic}
+	\caption{CRT megjelenítő foszforai által kibocsájtott sugárzás spektrális sűrűségfüggvénye (a) a megjelenítő gamutja és az adott spektrumok/alapszínek által keltett színérzet, valamint a színtér fehérpontja (b).
+	A jobb oldali oszlop bal fele a Sony monitor alapszíneit és fehérpontját, a jobb fele az sRGB színtér alapszíneit és fehérpontját szemlélteti.}
+	\label{Fig:sony}
+\end{figure}
+
+Tekintsünk példaként egy Sony F520 CRT kijelzőt: 
+A kijelző RGB foszforjai gerjesztés hatására a \ref{Fig:sony} (a) ábrán látható spektrális sűrűségfüggvényű (sugársűrűségű) fényt bocsájtanak ki egységnyi felületről, egységnyi térszögbe, azaz rendelkezésre állnak a mért $L_{e}^R(\lambda)$, $L_{e}^G(\lambda)$ és $L_{e}^B(\lambda)$ függvények.
+Fejezzük ki ezek segítségével a kijelző működéséhez szükséges RGB vezérlőjeleket, illetve vizsgáljuk a megjeleníthető színek tartományát!
+
+A $\overline{x}(\lambda)$, $\overline{y}(\lambda)$, $\overline{z}(\lambda)$ szabványos $XYZ$ spektrális színösszetevő függvények alkalmazásával a piros (és persze a zöld és kék) alapszín abszolút $XYZ$ színkoordinátái rendre a
+\begin{align}
+\begin{split}
+\overline{X}_R &= K_m \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{x}(\lambda) \mathrm{d} \lambda = 45.3, \hspace{5mm} \overline{X}_G = 21.4,\hspace{5mm}  \overline{X}_B = 16.6 \\
+\overline{Y}_R &= K_m \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{y}(\lambda) \mathrm{d} \lambda = 25.5
+, \hspace{5mm} \overline{Y}_G = 48,\hspace{5mm}  \overline{Y}_B = 6.7 \\
+\overline{Z}_R &= K_m \int_{380~\mathrm{nm}}^{780~\mathrm{nm}} L_{e}^R(\lambda) \cdot \overline{z}(\lambda) \mathrm{d} \lambda  = 2.4, \hspace{5mm} \overline{Z}_G = 11.6,\hspace{5mm}  \overline{Z}_B =84.6\\
+\end{split}
+\end{align}
+integrálok numerikus kiértékelésével számítható, ahol $K_m = 683~\mathrm{lm/W}$ fényhasznosítási tényező.
+A színtérben előállítható fehér szín definíció szerint az alapszínvektorok egyenlő súlyú összegeként áll elő, azaz
+\begin{equation}
+\overline{X}_W = \overline{X}_R + \overline{X}_G + \overline{X}_B, \hspace{6mm} 
+\overline{Y}_W = \overline{Y}_R + \overline{Y}_G + \overline{Y}_B, \hspace{6mm} 
+\overline{Z}_W = \overline{Z}_R + \overline{Z}_G + \overline{Z}_B,
+\end{equation}
+azaz pl. a fehér szín abszolút fénysűrűsége $80.2~\mathrm{cd/m^2}$.
+Ez egészen pontosan megegyezik az sRGB szabvány által előírt referenciamonitor fénysűrűségével ($80~\mathrm{cd/m^2}$).
+
+Természetesen az alapszíneknek nem az abszolút XYZ koordinátái a fontosak, hanem a relatív koordináták, amelyekre teljesül, hogy $Y_W=1$, és így $Y$ a relatív fénysűrűség.
+A fenti alapszínvektorok tehát $\overline{Y}_W$ értékével normálandók.
+Az így kapott relatív alapszínvektorokból már összeállíthatók a színtér alkalmazásához szükséges transzformáció mátrixok:
+\begin{align}
+\begin{split}
+\begin{bmatrix}[c]
+       X \\[0.3em]
+       Y \\[0.3em]
+       Z \end{bmatrix} &= 
+     \underbrace{ \begin{bmatrix}[c|c|c]
+       0.5646 &  0.2665 &  0.2068 \\[0.3em]
+       0.3174 &  0.5992 &  0.0834 \\[0.3em]
+       0.0302 &  0.1443 &  1.0539 \end{bmatrix} }_{\mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z}}
+\begin{bmatrix}[c]
+       R \\[0.3em]
+       G \\[0.3em]
+       B \end{bmatrix}_{\mathrm{F}520}
+\\ \vspace{1mm} \\
+&\mathbf{M}_{X\!Y\!Z \rightarrow   R\!G\!B} = \mathbf{M}_{R\!G\!B \rightarrow X\!Y\!Z}^{-1}
+\end{split}
+\end{align}
+Az alapszínek és a fehérpont színezete ezután
+\begin{equation}
+x_R = \frac{X_R}{X_R + Y_R + Z_R}, \hspace{1cm} y_R = \frac{Y_R}{X_R + Y_R + Z_R}
+\end{equation}
+alapján számolható.
+Az így meghatározott színtér gamutja a \ref{Fig:sony} ábrán látható, az alapértelmezett számítógépes sRGB színtérrel együtt.
+
+Jelen dokumentum sRGB színtérben kerül tárolásra (és megjelenítéskor az sRGB színtér az olvasó kijelzőjének saját színterébe transzformálva), így jelen dokumentumban az $XYZ$ koordinátáival adott alapszínek az sRGB térbe való konverzió után kerülhetnek megjelenítésre (ahogy \ref{Fig:sony} ábrán látható), amely pl. a vörös alapszínre
+\begin{equation}
+\begin{bmatrix}[c]
+       R_R \\[0.3em]
+       G_R \\[0.3em]
+       B_R \end{bmatrix}_{\mathrm{sRGB}}
+       =
+     \mathbf{M}_{X\!Y\!Z \rightarrow R\!G\!B_{\mathrm{sRGB}}}
+      \begin{bmatrix}[c]
+       X_R \\[0.3em]
+       Y_R \\[0.3em]
+       Z_R \end{bmatrix} =      
+       \begin{bmatrix}[c]
+       1.13 \\[0.3em]
+       0.25 \\[0.3em]
+       -0.02 \end{bmatrix} 
+\end{equation}
+alakú.
+A Sony megjelenítő alapszíneinek sRGB koordinátáira negatív és 1-nél nagyobb $RGB$ értékek is adódnak.
+Ez a \ref{Fig:sony} ábrán is látható gamutok közti eltérést tükrözi.
+
+\section{The $Y,\,R-Y,\,B-Y$ representation}
+
+Az előző szakasz bemutatta egy színes képpont ábrázolásának módját adott RGB eszközfüggő színtérben.
+Láthattuk, hogy egy színinger leírására a fő érzeti jellemzők a színpont világossága, színezete és telítettsége volt.
+Felmerül tehát a kérdés, hogy létezik-e hatékonyabb reprezentációja az egyes színpontoknak, ami jobban leírja a fent említett szubjektív jellemzőket, így kevesebb redundáns információt tartalmaz az RGB reprezentációnál.
+
+\subsection{The color difference signals}
+A fő oka, hogy a korai TV- és videójeleket nem közvetlenül az RGB jeleknek választották (bár manapság már gyakori a közvetlen RGB ábrázolás) az NTSC bevezetésének idejében a visszafelé kompatibilitás biztosítása volt:
+A színes műsorszórás kezdetén a korabeli háztartásokban szinte kizárólag fekete-fehér TV-vevők voltak találhatók.
+Természetes volt az igény a már kiépített fekete-fehér műsorszóró rendszerrel való visszafelé kompatibilitásra színes kép-továbbítás esetén, amelyet a fekete-fehér kép és a színinformáció külön kezelésével volt elérhető.
+Természetesen manapság már ez a tradicionális ok nem szempont videójelek megválasztása esetén.
+Azonban látni a színinformáció külön kezelése lehetővé teszi a színek csökkentett felbontással való tárolását, amely jelentős adattömörítést (analóg esetben sávszélesség-csökkentést) tesz lehetővé.
+
+A fekete-fehér kép egy színes kép világosságinformációjának fogható fel, amely a színpont relatív fénysűrűségével arányos, és így az $RGB$ koordináták lineáris kombinációjaként számítható.
+Az együtthatók az adott eszközfüggő színtértől függnek, az NTSC alapszínei esetén pl. \eqref{Eq:NTSC_luminance} alapján adottak.
+Ebből kifolyólag színes TV esetén is az változatlanul továbbítandó jelnek a \textbf{világosságjelet (luminance)} választották, amely tehát a relatív fénysűrűséggel megegyezik, és így pl. NTSC esetén az RGB jelekből
+\begin{equation}Y_{\mathrm{NTSC}} = 
+   0.30R + 0.59G + 0.11 B. 
+   \label{Eq:NTSC_luminance}
+\end{equation}
+alapján számítható \footnote{Fontos ismét kihangsúlyozni, hogy a világosság-számítás módja színtérfüggő, az alapszínektől és a fehérponttól függ a már bemutatott módon.}.
+
+Egy színes képpont leírásához 3 komponens szükséges, egy lehetséges és hatékony leírás pl. a képpont világossága, színezete és telítettsége.
+A világosságjel mellé tehát két független információ kell, amelyek egyértelműen meghatározzák az adott színpont színezetét és telítettségét\footnote{A visszafelé-kompatibilitás biztosításához ezt a két színezetet leíró jelet kellett az NTSC rendszerben a változatlan fekete-fehér jelhez úgy hozzáadni, hogy a meglévő fekete-fehér vevők a világosságjelet demodulálni tudják, és a hozzáadott többletinformáció minimális látható hatással legyen a megjelenített képre.}.
+Ugyanakkor fontos szempont volt ezen világosságinformáció-mentes, pusztán színinformációt leíró jelek könnyű számíthatósága az RGB komponensekből az egyszerű analóg áramköri megvalósíthatóság érdekében.
+
+A színinformáció/világosságinformáció-szétválasztás legegyszerűbb (de jól működő) megoldásaként egyszerűen vonjuk ki a világosságot az RGB jelekből!
+Mivel az $Y$ együtthatóinak összege definíció szerint (tetszőleges színtérben) egységnyi, így pl. NTSC esetén \eqref{Eq:NTSC_luminance} mindkét oldalából $Y$-t kivonva igaz a 
+\begin{equation} 
+   0.30 ( R - Y ) + 0.59 ( G - Y )  + 0.11 ( B - Y )  = 0 
+   \label{eq:chrominances}
+\end{equation}
+egyenlőség.
+Az $ ( R - Y ) $, $ ( G - Y ) $ és $ ( B - Y ) $ a TV-technika ún. \textbf{színkülönbségi jelei}, és a következő tulajdonságokkal bírnak:
+\begin{itemize}
+\item Nem függetlenek egymástól, kettőből számítható a harmadik.
+\item Előjeles mennyiségek.
+\item Ha két színkülönbségi jel zérus, akkor a harmadik is az.
+Ekkor $R = G = B = Y$, így tehát a színtér fehérpontjában vagyunk.
+A fehér színre kapott zérus színkülönbségi jelek azt mutatják, hogy a színinformációt valóban a színkülönbségi jelek jelzik, a fénysűrűség (világosság) pedig tőlük független mennyiség.
+\item Az adott színkülönbségi jel értéke maximális ha a hozzá tartozó alapszín maximális intenzitású, és vice versa.
+NTSC rendszerben vörös színkülönbségi jelre $R = 1$, $G = B= 0$ esetén
+\begin{equation}
+Y = 0.30 \cdot 1 + 0.59 \cdot 0 + 0.11 \cdot 0 \hspace{3mm }\rightarrow \hspace{3mm } R - Y  = 0.7,
+\end{equation}
+és hasonlóan $R=0$, $G = B = 1$ esetén
+\begin{equation}
+Y = 0.30 \cdot 0+ 0.59 \cdot 1 + 0.11 \cdot 1 \hspace{3mm }\rightarrow \hspace{3mm } R - Y  = -0.7.
+\end{equation}
+\item A fenti megfontolások alapján a színkülönbségi jelek dinamikatartománya:
+\begin{align}
+\begin{split}
+-0.7 \leq R-Y \leq& 0.7 , \hspace{2cm} -0.89 \leq G-Y \leq 0.89, \\
+ &-0.41 \leq B-Y \leq 0.41
+\end{split}
+\end{align}
+\end{itemize}
+A három színkülönbségi jelből kettő elegendő a színpont színinformációjának leírásához.
+Mivel jel/zaj-viszony szempontjából ökölszabályszerűen mindig a nagyobb dinamikatartományú jelet célszerű továbbítani, így a választás a vörös és zöld színkülönbségi jelekre esett.
+
+A videótechnikában tehát egy adott színpont ábrázolása a
+\begin{align*}
+Y&: \text{Luminance }\\
+ 	\left.\begin{array}{lr}
+        R-Y\\
+        B-Y
+        \end{array}\right\}&: \text{Chrominance}
+\end{align*}
+ún. \textbf{luminance-chrominance térben} történik, amely felfogható egy új színmérőrendszernek/színtérnek is az $RGB$ színtérhez képest.
+
+\subsection{The luminance-chrominance color space}
+Vizsgáljuk most, hol helyezkednek el az adott RGB eszközfüggő színtérben ábrázolható színek ebben az új, $Y,\, R-Y,\, B-Y$ térben!
+Az előzőekben láthattuk, hogy az $XYZ$ térben ez a színhalmaz egy paralelepipedont, az RGB térben egy egységnyi oldalú kockát jelent (lásd \ref{Fig:device_dep} ábra).
+Vegyük észre, hogy a $Y,\, R-Y,\, B-Y$ koordinátákat akár az $XYZ$, akár az RGB komponensekből egy lineáris transzformációval előállíthatjuk:
+Jelöljük adott RGB alapszínek esetén a relatív fénysűrűség RGB együtthatóit $k_r, k_g, k_b$-vel.
+Ekkor általánosan a színkülönbségi jelek a 
+\begin{align}
+\begin{bmatrix}[c]
+       Y \\[0.3em]
+       B - Y \\[0.3em]
+       R - Y\end{bmatrix} &= 
+\begin{bmatrix}[c c c]
+      k_r &  k_g&  k_b  \\[0.3em]
+      -k_r &  -k_g&  1-k_b  \\[0.3em]
+      1-k_r &  -k_g&  -k_b \end{bmatrix} 
+\begin{bmatrix}[c]
+       R \\[0.3em]
+       G \\[0.3em]
+       B \end{bmatrix}
+\end{align}
+transzformációval számíthatók.
+Példaképp maradva az NTSC rendszer világosság-együtthatóinál (kiindulva abból, hogy $Y = 0.3R + 0.59G + 0.11B$) a transzformáció alakja
+\begin{align}
+\begin{bmatrix}[c]
+       Y \\[0.3em]
+       B - Y \\[0.3em]
+       R - Y \end{bmatrix} &= 
+\begin{bmatrix}[c c c]
+      0.3 &  0.59&  0.11  \\[0.3em]
+       -0.3 &  -0.59 & 0.89  \\[0.3em]
+      0.7 &  -0.59&  -0.11  \end{bmatrix} 
+\begin{bmatrix}[c]
+       R \\[0.3em]
+       G \\[0.3em]
+       B \end{bmatrix}_{\mathrm{NTSC}}.
+\end{align}
+A lineáris transzformációt az RGB kockára végrehajtva megkaphatjuk az ábrázolható színek halmazát.
+Az így kapott test az \ref{Fig:YCbCr_space} (a) ábrán látható.
+Láthatjuk, hogy az RGB egységkocka egy paralelepipedonba transzformálódott, ahol a paralelepipedon főátlója az $Y$ világosság tengely.
+Ennek mentén, az $R-Y = B-Y = 0$ tengelyen helyezkednek el a különböző szürke árnyalatok. 
+\begin{figure}[htp]
+	\centering
+	\begin{overpic}[width = 0.45\columnwidth ]{figures/Video_colorspaces/LC_space_1.png}
+	\small
+	\put(0,0){(a)}
+	\put(45,90){$Y$}
+	\put(48,2){$R\!-\!Y$}
+	\put(87,26){$B\!-\!Y$}
+	\end{overpic}
+	\hspace{6mm}
+	\begin{overpic}[width = 0.48\columnwidth ]{figures/Video_colorspaces/LC_space_2.png}
+	\small
+	\put(0,0){(b)}
+	\scriptsize
+	\put(39,82){$R$}
+	\put(25,24){$G$}
+	\put(89,44){$B$}
+	\put(12,58){$Y\!e$}
+	\put(65,19){$C\!y$}
+	\put(78,77){$M\!g$}
+	\end{overpic}
+	\caption{Az $Y, R-Y, B-Y$ színtér ábrázolható színeinek halmaza oldalnézetből (a) és felülnézetből (b).}
+	\label{Fig:YCbCr_space}
+\end{figure}
+
+Az eredeti RGB kockához hasonlóan, paralelepipedon főátlón kívüli csúcsaiban (amelyben az $Y=0$ fekete és az $R=G=B=Y=1$ fehér található) az eszközfüggő színtér egy, vagy két $100~\%$-os intenzitású alapszínnel kikeverhető
+\begin{equation}
+R = \begin{bmatrix}[c] 1\\[0.3em] 0\\[0.3em] 0\end{bmatrix} \hspace{2mm}
+G = \begin{bmatrix}[c] 0\\[0.3em] 1\\[0.3em] 0\end{bmatrix}\hspace{2mm}
+B = \begin{bmatrix}[c] 0\\[0.3em] 0\\[0.3em] 1\end{bmatrix}\hspace{2mm}
+Cy = \begin{bmatrix}[c] 0\\[0.3em] 1\\[0.3em] 1\end{bmatrix}\hspace{2mm}
+Mg = \begin{bmatrix}[c] 1\\[0.3em] 1\\[0.3em] 0\end{bmatrix}\hspace{2mm}
+Ye = \begin{bmatrix}[c] 1\\[0.3em] 1\\[0.3em] 0\end{bmatrix}
+\end{equation}
+vörös, zöld, kék alap- és cián, magenta, sárga ún. komplementer színek találhatók \footnote{Ezen komplementer színek tulajdonsága, hogy az egyes RGB alapszínekkel RGB kockában átlósan helyezkednek el, így a színtérben a lehető legmesszebb elhelyezkedő színpárokat alkotják.
+Ennek megfelelően egymás mellé vetítve a komplementer színpárok (vörös-cián, sárga-kék, zöld-magenta) váltják ki a legnagyobb érzékelt kontrasztot.}.
+
+A paralelepipedonra az $Y$-tengely irányából ránézve (\ref{Fig:YCbCr_space} (b) ábra) láthatjuk a világosságjeltől függetlenül, adott színtérben kikeverhető színek összességét.
+Az $R-Y, B-Y, Y$ térben gyakori adott $Y$ világosság mellett a színek ezen $R-Y, B-Y$ síkon való ábrázolása.
+Minthogy az $R-Y, B-Y$ jelek meghatározzák adott színpont színezetét és telítettségét, így az ábra azt jelzi, hogy a különböző színezetű és telítettségű színek egy szabályos hatszöget töltenek ki.
+A hatszög csúcsai a színtér alap- és komplementerszínei.
+Természetesen adott $Y$ érték mellett az ábrázolható színek nem tölti ki teljesen ezt a hatszöget:
+adott világosságérték mellett az ábrázolható színek halmaza a $Y, R-Y, B-Y$ paralelepipedon egy adott $Y$ magasságban húzott síkkal vett metszeteként képzelhető el, azaz tetszőleges $0 \leq Y \leq1$ esetén rajzolható egy $R-Y, B-Y$ diagram.
+Az így rajzolható diagramokra példákat a \ref{Fig:YCbCr_sect} ábra mutat.
+\begin{figure}[htp]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/YCbCr_2_11.png}
+	\small
+	\put(0,3){(a)}
+	\put(0,37){$Y = 0.11$}
+	\end{overpic}
+	\vspace{2mm}
+	\begin{overpic}[width = 1\columnwidth]{figures/Video_colorspaces/YCbCr_2_30.png}
+	\small
+	\put(0,37){$Y = 0.3$}
+	\put(0,3){(b)}
+	\end{overpic}
+	\vspace{2mm}
+	\begin{overpic}[width = 1\columnwidth]{figures/Video_colorspaces/YCbCr_2_59.png}
+	\small
+	\put(0,37){$Y = 0.59$}
+	\put(0,3){(c)}
+	\end{overpic}
+	\caption{Különböző $Y$ értékek mellett rajzolható $B-Y, R-Y$ diagramok.}
+	\label{Fig:YCbCr_sect}
+\end{figure}
+Nyilván rögzített $Y$ mellett nem biztos, hogy minden szín $100~\%$-os telítettséggel van jelen a $B-Y,R-Y$ diagramon. 
+Például: teljesen telített kékre $Y=0.11$, azaz a $100~\%$ intenzitású kék alapszín ezen magasságban vett diagramon található.
+Más magasságban vett  $B-Y, R-Y$ diagramon csak fehérrel higított kék található, azaz nem teljesen telített kék található.
+
+A vizsgált diagramokból leszűrhető, hogy a világosságjel valóban független a színinformációtól, adott színpont színezetét és telítettségét pusztán az $R-Y$ és $B-Y$ diagramokon vett helye meghatározza.
+Vizsgáljuk most, hogyan definiálhatóak ezen érzeti jellemzők, azaz a színezet és telítettség a TV technika $Y, R-Y, B-Y$ színterében!
+
+\subsection{Hue and saturation in device-dependent color spaces}
+A könnyebb elképzelhetőség kedvéért ábrázoljuk az $R-Y, B-Y$ koordinátákhoz tartozó színeket, az adott színponthoz tartozó olyan világosságérték mellett, amely esetén pontonként teljesül, hogy $X \!+\!Y\!+\!Z = 1$: 
+ezzel gyakorlatilag az adott RGB színtér $xy$-színpatkón felvett színét képezzük le az $R-Y, B-Y$ diagramra.
+\begin{figure}[htp]
+	\centering
+	\begin{minipage}[c]{0.6\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/YCbCr_gamut.png}
+	\small
+	\put(56,46){$\alpha$}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.4\textwidth}
+	\caption{Adott $Y, R-Y, B-Y$ térben ábrázolható színek gamutja.}
+	\label{Fig:ycbcr_gamut}  \end{minipage}
+\end{figure}
+Az így kapott színhalmaz, amely felfogható az adott alapszínek mellett a luminance-chrominance tér gamutjának is, a \ref{Fig:ycbcr_gamut} ábrán látható.
+
+\paragraph{Színezet:}
+Megfigyelhető, hogy a diagramon az origóból kiinduló félegyenesen azok a színek vannak, amelyek egymásból kinyerhetők fehér szín hozzáadásával.
+Tehát az origóból kiinduló félegyenesen az azonos színezetű, de eltérő telítettségű színek vannak. 
+Azaz tetszőleges színpontot vizsgálva, a $B-Y,R-Y$ diagramon a színpontba mutató helyvektor iránya egyértelműen meghatározza az adott pont színezetét.
+Ennek megfelelően a TV technikában a színezetet a $B-Y, R-Y$ diagramon a színpont helyvektorának irányszögeként definiáljuk:
+\begin{equation}
+\text{színezet}_{\mathrm{TV}} = \alpha  = \arctan \frac{R-Y}{B-Y}
+\label{eq:hue}
+\end{equation}
+a \ref{Fig:ycbcr_gamut} ábrán látható jelölés alkalmazásával.
+
+\paragraph{Telítettség:}
+A telítettség kifejezése már kevésbé egyértelmű, több definíció bevezethető rá.
+Általánosan, a telítettség azt fejezi ki, mennyi fehér hozzáadásával keverhető ki egy adott szín a színezetét meghatározó teljesen telített alapszínből.
+Az $XYZ$-térben bevezettük a telítettségre a színtartalmat, illetve színsűrűséget.
+Felmerül a kérdés, hogyan terjeszthető ki a telítettség fogalma eszközfüggő RGB színterekre.
+Láthattuk, hogy az adott RGB színtérben előállítható legtelítettebb színek a gamut határán elhelyezkedő kvázi-spektrál színek, amelyek a legközelebb vannak az azonos színezetű valódi spektrálszínhez.
+A bevezetendő telítettség-mennyiség célszerűen a kvázi-spektrál színekre tehát maximális, egységnyi értékű.
+
+A telítettség ezek után a következő módokon definiálható.
+\begin{itemize}
+\item  Minthogy egy tetszőleges színnek a fehér színtől, azaz az origótól vett távolsága arányos a szín fehér-tartalmával, így legegyszerűbb módon a telítettség közelíthető a
+\begin{equation}
+\text{telítettség}_{\mathrm{TV},1} = \sqrt{ (R-Y)^2 +(B-Y)^2}
+\label{eq:saturation_1}
+\end{equation}
+távolsággal.
+Később tárgyalt okok miatt az analóg időkben TV technikusok körében ez a definíció volt érvényben.
+Az így számolt telítettség valóban $0$ a fehér színre, azonban a kvázi-spektrálszínek telítettsége így nem egységnyi.
+%
+\item A matematikailag korrekt telítettség-definíció bevezetéséhez kiterjeszthetjük a korábban megismert színsűrűséget eszközfüggő színterekre\footnote{Ismétlésként: az $XYZ$ térben adott pont színsűrűsége $p_c = \frac{Y_d}{Y}$, ahol $Y_d$ az adott színhez tartozó domináns hullámhosszú szín fénysűrűsége, $Y$ a vizsgált szín saját fénysűrűsége.}.
+Ennek egyszerűbb értelmezéséhez ábrázoljuk adott színpont paramétereit ún. területdiagramon!
+%
+\begin{figure}[htp]
+	\centering
+	\begin{minipage}[c]{0.6\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/area_chart.png}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.4\textwidth}
+	\caption{Tetszőlegesen választott $R,G,B$ koordináták esetén rajzolható területdiagram.}
+	\label{Fig:area_diagram}  \end{minipage}
+\end{figure}
+%
+A területdiagram a következő módon rajzolható fel egy tetszőleges RGB koordinátáival adott szín esetén: 
+A vízszintes tengelyt osszuk fel az $Y$ fénysűrűség RGB együtthatóinak megfelelően, majd az egyes RGB komponenseket ábrázoljuk az intenzitásuknak megfelelő magasságú oszlopokkal.
+Ekkor egy $Y$ magasságban húzott vonal alatt és fölött a színkülönbségi jeleknek megfelelő magasságú oszlopok alakulnak ki, amely oszlopok előjelesen vett területeinek összege \eqref{eq:chrominances} alapján zérus.
+\begin{figure}[b!]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/YCbCr_saturation.png}
+	\small
+	\put(0,0){(a)}
+	\put(50,0){(b)}
+	\end{overpic}
+	\caption{Az $R-Y,B-Y$ térben ábrázolt színek telítettsége \eqref{eq:saturation_1} (a) és \eqref{eq:saturation_2} (b) alapján számolva}
+	\label{Fig:saturations}  
+\end{figure}
+
+Válasszuk ki ezután a legkisebb $RGB$ komponenst (a \ref{Fig:area_diagram} ábrán látható példában az $R$) és húzzunk egy vízszintes vonalat ennek magasságában!
+Ekkor a vizsgált színt két részre osztottuk: egy fehér színre (amelyre $R=G=B$) és egy kvázi-spektrálszínre, amelynek az egyik $RGB$ komponense zérus, és amelynek fénysűrűsége $Y_d = \min (R,G,B) - Y$.
+A domináns hullámhosszú spektrálszín szerepét erre a kvázi-spektrálszínre cserélve kiterjeszthetjük a színsűrűséget az adott eszközfüggő színtérre, amely alapján a telítettség definíciója
+\begin{equation}
+\text{telítettség}_{\mathrm{TV},2} = \frac{| \min(R,G,B) - Y |}{Y}.
+\label{eq:saturation_2}
+\end{equation}
+Könnyen belátható, hogy az $R = G=B=Y$ fehérpontokra a telítettség definíció szerint 0, míg kvázi-spektrálszínekre ($\min(R,G,B) = 0$) a telítettség azonosan 1.
+\end{itemize}
+A fent tárgyalt két telítettség-definíció alkalmazásával a \ref{Fig:ycbcr_gamut} ábrán látható színek telítettségét az \ref{Fig:saturations} ábra szemlélteti, megerősítve az eddig elmondottakat.
+%
+\section{The $Y', R'-Y', B'-Y'$ components}
+
+Az előző szakasz bemutatta, hogyan választható legegyszerűbben szét a világosság és színezet/telítettség információ.
+A tényleges videójelek ezen $Y, R-Y, B-Y$ jelekkel rokonmennyiségek, azonban történelmi okokból a feldolgozási lánc egy nem-lineáris transzformációt is tartalmaz, az ún. \textbf{gamma-korrekciót}.
+
+\subsection{The role of Gamma-correction}
+A gamma-korrekció bevezetése történeti okokra vezethető vissza.
+A CRT megjelenítők elektron-ágyúja erős nem-lineáris karakterisztikával rendelkezik, azaz a képernyő pontjain létrehozott fénysűrűség az anódfeszültség nemlineáris függvénye\footnote{Ez a nemlinearitás az anód-katód feszültség-áram karakterisztikájából származik főleg.
+A megjelenítésért felelős foszforok már jó közelítéssel lineárisan viselkednek, azaz a gerjesztéssel egyenesen arányos a létrehozott fénysűrűségük.}.
+Ez a karakterisztika jól közelíthető egy 
+\begin{equation}
+L_{R,G,B} \sim U^{\gamma}
+\end{equation} 
+hatványfüggvénnyel, ahol a legtöbb korabeli kijelzőre az exponens $\gamma \approx 2.5$, $L_{R,G,B}$ az egyes RGB pixelek fénysűrűsége és $U$ a pixelek vezérlőfeszültsége.
+Ez a nemlineáris átvitel természetesen jól látható hatással lenne a megjelenített képre:
+Az alacsony RGB szintek kompresszálódnak, míg a világos árnyalatok expandálódnak, ennek hatására a telített színek túltelítődnek, illetve a sötét árnyalatok még sötétebbé válnak.
+A nem-kívánatos torzulás az \ref{Fig:gamma} ábrán figyelhető meg.
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/Gamma.png}
+	\small
+	\put(0,0){(a)}
+	\put(52,0){(b)}
+	\end{overpic}
+	\caption{RGB kép megjelenítése Gamma-korrekcióval (a) és Gamma-korrekció hiányában (b).
+	Utóbbi esetben az $R,G,B$ komponensek egy 2.4 exponensű hatványfüggvénnyel előtorzítottak.}
+	\label{Fig:gamma}  
+\end{figure}
+\vspace{3mm}
+A torzítás korrekciója kézenfekvő: 
+Az RGB komponensek megjelenítés előtti inverz hatványfüggvénnyel való előtorzítása esetén az előtorzítás és a CRT kijelző torzítása együttesen az $RGB$ jelek lineáris megjelenítését teszi lehetővé $\left(U^{\gamma}\right)^{\frac{1}{\gamma}} = U$ alapján.
+Ez a nemlineáris előtorzítás az ún. \textbf{gamma-korrekció}.
+\begin{figure}[b!]
+	\centering
+	\begin{minipage}[c]{0.65\textwidth}
+	\begin{overpic}[width = 0.95\columnwidth ]{figures/Video_colorspaces/gamma2.png}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.33\textwidth}
+	\caption{A Gamma-korrekció alapelve az RGB jelek előtorzításával.}
+	\label{Fig:gamma2}  \end{minipage} 
+\end{figure}
+
+A korrekció természetesen a megjelenítés előtt bárhol elvégezhető a videófeldolgozási lánc során, azonban a lehető legegyszerűbb felépítésű TV vevők érdekében az előtorzítást az RGB forrás-oldalon célszerű elvégezni\footnote{Természetesen ez a korai TV vevők esetén volt fontos szempont, amikor a gamma-korrekciót drága/komplex analóg áramkörökkel kellett megvalósítani}.
+Ennek megfelelően a gamma-korrekció már kamera oldalon megvalósul (akár analóg, akár digitális módon) az RGB jelek közvetlen gamma-korrigálásával.
+A következőkben tehát
+\begin{align*}
+\begin{split}
+R' = R^{\frac{1}{\gamma}}, \hspace{10mm} 
+G' = G^{\frac{1}{\gamma}}, \hspace{10mm}
+B' = B^{\frac{1}{\gamma}}
+\end{split}
+\end{align*}
+a Gamma-előtorzított RGB összetevőket jelölik, ahol $\frac{1}{\gamma} \approx 0.4-0.6$ szabványtól függően (ld. később).
+
+\hspace{3mm}
+Fontos leszögezni, hogy ugyan a Gamma-korrekciót a CRT képernyők nemlinearitásának kompenzációjára vezették be, a gamma-korrekció rendszertechnikája manapság is változatlan annak ellenére, hogy a CRT kijelzők alkalmazását szinte teljesen felváltotta az LCD és LED technológia.
+A gamma-korrekció fennmaradásának oka, hogy a videójel digitalizálása során perceptuális kvantálást valósít meg, ahogyan az a következő fejezetben láthatjuk.
+
+\subsection{The luma and chroma components}
+A Gamma-korrekció ismeretében bevezethetjük a mai videórendszerekben is alkalmazott tárolt és továbbított videójel-komponenseket:
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.53\columnwidth ]{figures/Video_colorspaces/video_signals.png}
+	\end{overpic}
+	\hspace{2mm}
+	\begin{overpic}[width = 0.44\columnwidth ]{figures/Video_colorspaces/video_signals_2.png}
+	\end{overpic}
+	\caption{A Gamma-korrekció rendszertechnikája és a videójel-komponensek.}
+	\label{Fig:gamma_system}  
+\end{figure}
+A videókomponensek előállításának rendszertechnikája a \ref{Fig:gamma_system} ábrán látható, az egyszerűség kedvéért most a kamerából ITU szabványba, ITU szabványból megjelenítő saját színterébe való színtérkonverziókat figyelmen kívül hagyva.
+\begin{itemize}
+\item A gamma-korrekció a kamera RGB-jelein hajtódik végre, SD, illetve HD esetében egy kb. 0.5 kitevőjű hatványfüggvény szerint.
+A pontos gamma-korrekciós görbéket a következőekben fogjuk tárgyalni.
+\item Az gamma-torzított $R',G',B'$ jelekből ezután az adott színtér előírt világosság-együtthatói alapján előállíthatók az $Y', R'-Y', B'-Y'$ jelek.
+Továbbra is példaként az NTSC rendszer együtthatóinál maradva ezek alakja
+\begin{align}
+\begin{split}
+Y' &= 0.3 \, R' + 0.59 \, G' + 0.11 \, B' \\
+R'-Y' &= 0.7 \, R' - 0.59 \, G' - 0.11 \, B' \\
+B'-Y' &= -0.3 \, R' - 0.59 \, G' - 0.89 \, B' \\
+\end{split}
+\end{align}
+Ezek tehát az alapvető videójel-komponensek, amelyek végül ténylegesen tárolásra, tömörítésre, továbbításra (pl. műsorszórás) kerülnek.
+\item Megjelenítő oldalon a fenti videójelekből a megfelelő inverz-mátrixolással az $R', G', B'$ jelek visszaszámíthatóak.
+Megjelenítés során a megjelenítő gamma-torzításának hatására a kameraoldalon mért RGB komponensekkel lineárisan arányos fénysűrűségű RGB pixelek jelennek meg a kijelzőn.
+\end{itemize}
+Az így létrehozott $Y', R'-Y', B'-Y'$ jelek kitüntetett szereppel bírnak a videótechnikában.
+Az eddigieket összegezve: ezek adják meg egy színes képpont ábrázolásának módját.
+A komponensek neve:
+\begin{itemize}
+\item $Y'$: \textbf{luma jel}
+\item $R'-Y'$, $B'-Y'$: \textbf{chroma jel}.
+\end{itemize}
+
+\paragraph{A luma és chroma jelek fizikai tartalma:\\}
+Fontos észrevenni, hogy a luma jel nem egyszerűen a gamma-korrigált relatív fénysűrűség, hanem a gamma-korrigált RGB jelekből az eredeti $Y$ együtthatókkal számított videójel, azaz
+\begin{equation}
+Y' = 0.3R^{\frac{1}{\gamma}} + 0.11G^{\frac{1}{\gamma}} + 0.59B^{\frac{1}{\gamma}} \neq Y^{\frac{1}{\gamma}} = \left( 0.3R + 0.59G + 0.11B\right)^{\frac{1}{\gamma}}
+\end{equation}
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.32\columnwidth ]{figures/Video_colorspaces/luma_chroma_0_11.png}
+\small
+\put(0,0){(a)}
+	\end{overpic}
+	\begin{overpic}[width = 0.32\columnwidth ]{figures/Video_colorspaces/luma_chroma_0_30.png}
+\small
+\put(0,0){(b)}
+	\end{overpic}
+	\begin{overpic}[width = 0.32\columnwidth ]{figures/Video_colorspaces/luma_chroma_0_59.png}
+\small
+\put(0,0){(c)}
+	\end{overpic}
+	\caption{A chroma térben ábrázolható színek halmaza fix $Y'$ értékek mellett vizsgálva.}
+	\label{Fig:luma_chroma_space}  
+\end{figure}
+A luma jel fizikai tartalma emiatt nehezen kezelhető: 
+Legszorosabban az adott színpont világosságával függ össze, fehér szín speciális esetén pl. ahol $R=G=B=Y_W$
+\begin{equation}
+Y'_W = \left( 0.3 + 0.59 +0.11 \right)Y_W^{\frac{1}{\gamma}} = Y_W^{\frac{1}{\gamma}}
+\end{equation}
+az egyenlőtlenség egyenlőségbe megy át, azaz a luma megegyezik a gamma-korrigált világosságjellel.
+Általánosan azonban a luma jel színinformációt is hordoz magában.
+Hasonlóan, a chroma jelek nem szimplán a gamma-korrigált színkülönbségi jelek (de hasonlóan, fehér esetében azonosan nullák), és így világosságinformációt is hordoznak magukban.
+	
+Adott luma értékek mellett az ábrázolható színek halmaza a \ref{Fig:luma_chroma_space} ábrán látható.
+Megfigyelhető, hogy a luminance-chrominance térrel azonosan az ábrázolható színek egy hatszöget feszítenek ki, és a 100\%-osan telített színek helye nem változik (hiszen a 0 és 1 értékeken nem változtat a gamma-korrekció), ennek megfelelően az egyes pontok színezete a chroma térben változatlan.
+Az ábrákon azonban egyértelműen látható, hogy adott $Y'$ értékek mellett is az ábrázolt színek világossága változik, tehát a chroma jelek világosságinformációt is tartalmaznak.
+Látható, hogy a gamma-torzítás hatására---ahogy \ref{Fig:gamma} ábrán is megfigyelhető---adott $Y'$ mellett a telítetlen (fehérhez közeli) színek sötétebbé válnak, míg a telítettebb színek még telítettebbé válnak. 
+
+%Ez az eddig elmondottak alapján nem kell, hogy problémát okozzon, hiszen pusztán annyit jelent, hogy a világosság és színinformációt nem teljesen szeparáltan kezeljük átvitel tárolás és átvitel során.
+%Ugyanakkor látni fogjuk, hogy az emberi látás tulajdonságait kihasználva a színjeleket---azaz a chroma jeleket---csökkentett sávszélességgel, vagy digitális esetben kisebb felbontással továbbítjuk.
+%Minthogy a fentiek alapján így kis részben a világosságjel sávszélessége/felbontása is csökken, amelynek már látható hatása lehet a megjelenített képen.-
+
+\section{The \ypbpr color space}
+
+A luma és chroma központi szerepet játszanak videótechnikában, a leggyakrabban ezek a jelek a színes képpont ábrázolásának alapja mind komponens, mind kompozit (több komponens kombinációjaként létrehozott videó) formátumok esetén.
+Utóbbi formátum létrehozásával a következő fejezet foglalkozik részletesen.
+Analóg, komponens videótechnikában egy színes képpont luma-chroma térben való leírását az \textbf{\ypbpr színtérben} való ábrázolásnak nevezzük (az ezekből képzett \ypbpr videójeleket a következő fejezet részletezi).
+
+Az \ypbpr színtér $Y'$ jele maga a luma komponens, míg a $P'_{\mathrm{B}}, P'_{\mathrm{R}}$ jelek szimplán az átskálázott chroma komponensek, a skálafaktort úgy megválasztva, hogy dinamikatartományuk $\pm 0.5$ legyen.
+
+Jelölje az adott RGB színtérben a relatív fénysűrűség együtthatóit $k_r, k_g$ és $k_b$.
+Minthogy az $R'-Y$ és $B'-Y'$ komponensek dinamikatartományra rendre $1 - k_r$ és $1 - k_b$, ezért általános az \ypbpr jelek az luma-chroma jelekből a
+\begin{align}
+\begin{split}
+Y' &= k_r \, R' + k_g \, G' + k_b \, B' ,\\
+P_R &= k_1 \, \left( R' - Y' \right) = \frac{1}{2} \frac{1}{1 - k_r} \, \left( R' - Y' \right)\\
+P_B &=  k_2 \, \left( B' - Y' \right) = \frac{1}{2} \frac{1}{1 - k_b} \, \left( B' - Y' \right)
+\end{split}
+\end{align}
+összefüggés alapján számítható.
+Az egyenletekben $R', G', B'  \in \lbrace 0, 1 \rbrace$ a Gamma-korrigált színkoordinátái az ábrázolt színpontnak adott eszközfüggő
+
+Hasonlóan meghatározhatjuk általános $R',G',B'$ komponensekre az \ypbpr jelek kiszámításához szükséges transzformációs mátrixot
+\begin{align}
+\begin{bmatrix}[c]
+       Y' \\[0.3em]
+       P_{\mathrm{B}} \\[0.3em]
+       P_{\mathrm{R}} \end{bmatrix}
+       =& 
+  \begin{bmatrix}[c c c]
+   k_r & k_g & k_b  \\
+   -\frac{1}{2}\frac{k_r}{1-k_b} & -\frac{1}{2}\frac{k_g}{1-k_b} & \frac{1}{2} \\
+   \frac{1}{2}& -\frac{1}{2}\frac{k_g}{1-k_r} & -\frac{1}{2}\frac{k_b}{1-k_r} \\
+\end{bmatrix}
+\cdot
+\begin{bmatrix}[c]
+       R' \\[0.3em]
+       G' \\[0.3em]
+       B' \end{bmatrix},
+\end{align}
+míg az inverz-transzformációt 
+\begin{align}
+\begin{bmatrix}[c]
+       R' \\[0.3em]
+       G' \\[0.3em]
+       B' \end{bmatrix}
+       =& 
+  \begin{bmatrix}[c c c]
+   1 & 0 & 2 - 2 \cdot k_r  \\
+   1 & -\frac{k_b}{k_g} \cdot (2-2k_b) &  -\frac{k_r}{k_g} \cdot (2-2k_r)  \\
+   1 & 2 - 2 \cdot k_b & 0 \\
+\end{bmatrix}
+\cdot       \begin{bmatrix}[c]
+       Y' \\[0.3em]
+       P_{\mathrm{B}} \\[0.3em]
+       P_{\mathrm{R}} \end{bmatrix}
+\end{align}
+írja le.
+
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.6\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/YPbPr.png}
+	\end{overpic} \end{minipage}\hfill
+	\begin{minipage}[c]{0.4\textwidth}
+	\caption{Az \ypbpr térben ábrázolható színek gamutja.}
+	\label{Fig:ypbpr_gamut}  \end{minipage}
+\end{figure}
+Egyszerű példaként a HD szabvány színterében 
+\begin{equation}
+k_r = 0.2126, \hspace{7mm}
+k_g = 0.7152, \hspace{7mm}
+k_b = 0.0722
+\end{equation}
+Az adott alapszínek mellett az ábrázolható színek tartománya a \ref{Fig:ypbpr_gamut} ábrán látható.
+
+\section{Digital representation of color information}
+
+So far, the current chapter has introduced the color representation of video technologies by assuming continuous RGB, luma and chroma values.
+The digital representation of color pixels can be obtained by the direct digitization of the $R'G'B'$, or more often the \ypbpr components.
+The digital representation of the \ypbpr signals have its own terminology: it is termed as the \ycbcr color space \footnote{
+The \ycbcr signals are sometimes incorrectly referred to as $Y'U'VI$ signals (e.g. in VLC player), which term was originally used for the components of the PAL composite video format.}.
+
+The \ycbcr digital color space can be obtained by the quantization of the \ypbpr components, with representing the originally continuous values at discrete levels.
+It is therefore obvious that \ycbcr is a device dependent representation, depending on the RGB primaries and its gamut coincides with the gamut of the color gamut of the \ypbpr color space, depicted in Figure \ref{Fig:ypbpr_gamut} (with of course only discrete number of the reproducible colors due to digitization).
+In the following the current chapter deals with the questions arising at the quantization of the \ypbpr color space.
+
+\subsection{Perceptual quantization and bit depth}
+First the optimal quantizer transfer characteristics is investigated, in order to achieve bit-efficient digital representation.
+As a result, the real role of gamma correction is highlighted.
+
+For the sake of simplicity first it is assumed that the signal-to-quantize is the $Y$ component, i.e. the linear relative luminance signal (without gamma correction).
+The starting point for defining an appropriate quantizer transfer characteristics is given by the perceptual properties of the human visual system:
+As a rule of thumb it can be stated that in case of image reproduction, the HVS can not discern luminance levels below $1~\%$ of the maximal luminance on the given scene.
+Loosely speaking relative luminances below $\frac{1}{100}$ just appear black for the human observer, therefore, the dynamic range of luminance levels to be reproduced is 100:1.
+
+Within this dynamic range the lightness perception of the HVS is approximately logarithmic function of luminance with the contrast sensitivity being $1~\%$.
+This means that two luminance levels can be distinguished only if their relative difference is larger than 1.01.
+Later the relative luminance-percepted lightness characteristics ($L(Y)$) was given more accurately by the CIE $L^*$ function, describing the lightness as the power function of luminance with the exponent being approximately 0.4.
+
+These properties of human vision establishes the following requirements for quantizing the luminance signal without visible quantization noise:
+\begin{itemize}
+\item The ratio of the largest and the smallest quantized luminance levels should be at least 100:1
+\item The ratio of the adjacent quantized luminance levels should be at most 1.01, i.e. their relative difference should be less than or equal to $1~\%$
+\end{itemize}
+
+In the following, as a counterexample for the appropriate quantization strategy the problem with linear quantization is investigated.
+In this case the digital signal levels are assigned to the relative luminance levels within the dynamic range of $Y \in \lbrace Y_0, 100 Y_0 \rbrace$ linearly. 
+The quantization can be, therefore, performed by simple rounding to the nearest integer.
+In case of representing the digital samples at $N$ bits the mapping is given by 
+\begin{equation}
+q =  \nint{ \left( 2^N - 1 \right) \cdot  \frac{Y - Y_0 }{Y_1 - Y_0 } },
+\end{equation}
+where $\nint{}$ is the rounding operation, and $Y_1 = 100Y_0$ is the maximal quantized luminance value.
+Similarly, the inverse mapping, i.e. the luminance levels of the $q$-th digital code is given by
+\begin{equation}
+Y^q = q \cdot \frac{Y_1 - Y_0}{2^N - 1} + Y_0.
+\end{equation}
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/linear_vs_perc_quant.png}
+	\end{overpic}
+	\caption{
+Relative difference of adjacent digital codes in case of linear (a) and perceptual (b) quantization.}
+	\label{Fig:linear_vs_perc_quant}
+\end{figure}
+
+The relative difference of the adjacent digital codes is then given as
+\begin{equation}
+\frac{Y^{q+1}-Y^q}{Y^q} = \frac{1 }{q + \frac{2^N - 1}{99}}.
+\label{Eq:rel_dif}
+\end{equation}
+As an example of quantization with $N = 8$ bits, the relative difference between the 101-st and 100-th code (with $q = 100$) the relative difference is
+\begin{equation*}
+\frac{Y^{101}-Y^{100}}{Y^{100}} \approx 0.01 = 1~\%,
+\end{equation*}
+meaning that the luminance levels of the adjacent codes are just noticeable.
+For smaller, or larger codes (e.g. 20 and 21, or 200 and 201) the relative difference is given by
+\begin{equation*}
+\frac{Y^{21}-Y^{20}}{Y^{20}} \approx 0.05 = 5~\%, \hspace{1cm} \frac{Y^{201}-Y^{200}}{Y^{200}} \approx 0.005 = 0.5~\%.
+\label{eq:code_100}
+\end{equation*}
+Obviously, the luminance levels of codes under 100 are easily distinguishable, meaning that quantization noise at these code levels is clearly visible.
+As a consequence, in case of the linear quantization of the luminance signal for dark shades the boundary of the different quantization levels would be easily noticeable, leading to so-called banding artifact.
+
+Straightforwardly, by increasing the bit depth ($N$) banding could be avoided:
+It is clear that the largest relative difference is between codes 0 and 1.
+%
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth ]{figures/linear_vs_perc_quant_2.png}
+	\end{overpic}
+	\caption{Quantized luminance ramp by applying linear (a) and perceptual (b) quantization with $N=7$ bits.
+	In case of linear quantization the just noticeable quantization is found at $q \approx 99$ (based on $1 / q + \frac{2^7 - 1}{99} = 0.01$).}
+	\label{Fig:linear_vs_perc_quant_2}
+\end{figure}
+%
+By setting $q = 0$ the smallest bit depth for which \eqref{Eq:rel_dif} is larger than $1~\%$, according to
+\begin{equation}
+\frac{99}{2^N - 1} \leq 0.01 \hspace{1cm} N \geq 13.27 
+\end{equation}
+is given by $N = 14~\mathrm{bits}$.
+This means that linear quantization ensures unnoticeable qunatization noise by applying the bit depth of 14\footnote{
+As a consequence digital cameras often digitize the pixel levels by using 14 bits linear quantization, which is requantized to the final bit depth after digital gamma correction.}.
+On the other hand \eqref{eq:code_100} reflects that codes above 100 have decreasing perceptual utility: luminance at these regimes is quantized with ineffectively fine resolution.
+
+\vspace{3mm}
+A straightforward strategy in order to avoid the problem with linear quantization would be to quantize the percepted lightness ($L$) instead of the luminance information, resulting in uniform perceptual difference between adjacent codes.
+By employing the lightness definition of the CIE ($L^*$) this \textbf{perceptual quantization} can be achieved by the distortion of the relative luminance with the power function of 0.4 before quantization.
+
+The quantization mapping and the inverse mapping in this perceptual case are given by
+\begin{equation}
+q =  \nint{ \left( 2^N - 1 \right) \cdot  \frac{Y^{0.4} - Y_0^{0.4} }{Y_1^{0.4} - Y_0^{0.4}} }
+\hspace{1cm}
+Y^q = \left( q \cdot \frac{Y_1^{0.4} - Y_0^{0.4}}{\left( 2^N - 1 \right) } + Y_0^{0.4} \right)^{\frac{1}{0.4}} .
+\end{equation}
+Based on these formulae the relative difference of adjacent codes can be expressed for perceptual quantization.
+The result is depicted in Figure \ref{Fig:linear_vs_perc_quant} (b).
+It is verified that the relative difference is approximately constant over the entire dynamic range, and even in case of $N = 10$ quantization, it is only slightly higher than $1~\%$.
+
+As a consequence, in the field of video technologies in studio standards the luminance is quantized perceptually, representing the luminance in 10 bits, while most consumer electronics (e.g. JPEG image compression, MPEG video compression and video broadcasting) representation with $N=8$ is satisfactory\footnote{
+As a third option logarithmic quantization could be performed by setting the ratio of the luminance levels of the adjacent codes to 1.01.
+In this case according to $1.01^q \geq 100$ the number of required codes is $q = 463$, which can be represented in $N = 9$ bits.
+Due to historical reasons (due to gamma correction) the presented, power function-based perceptual quantization was introduced in the video standards.}.
+Therefore, SD and HD studio standards (Recommendations ITU-601 and ITU-709) include the digital representation applying $N = 8$ or $N = 10$ bits, with a rigorous definition of the implementation of quantization and the non-linear pre-distortion curve.
+This curve is investigated in thew following section in details.
+
+\subsection{A gamma-korrekció célja és megvalósítása}
+
+Az előzőekben láthattuk, hogy digitalizálás előtt az $Y$ fénysűrűség kb. 0.4-es hatványfüggvénnyel való előtorzításával közelítően perceptuális kvantálás érhető el (azaz a szubjektív világosságérzet kvantálása).
+Ennek hatására a kvantálási zaj a teljes dinamikatartományban egyenletesen oszlik el, és nem okoz jól látható sávosodást a kis fénysűrűségű területeken, mint lineáris kvantálás esetén, ahogy az a \ref{Fig:linear_vs_perc_quant_2} ábrán megfigyelhető.
+
+Vizsgáljuk most, hogyan valósítható meg a perceptuális kvantálás a gyakorlatban a videó-rendszertechnikában!
+Az elmondottak alapján egyszerű RGB forrást feltételezve a perceptuális kvantálás az RGB jelekből képzett $Y$ relatív fénysűrűség nem-lineáris, kb. 0.4-es hatványfüggvénnyel való torzítás utáni (tehát az $L^*$ szubjektív világosságjel) kvantálásával oldható meg.
+Ekkor vevőoldalon (kijelző) digitális-analóg átalakítás után a megfelelő inverz-torzítás után az $Y$ összetevő visszanyerhető és a megfelelő inverz-transzformáció után az $RGB$ jelek kijelezhetők.
+
+A kvantálás kérdései során nem vettük eddig figyelembe eddig a gamma-korrekciót: 
+Gamma-korrigálás nélkül a kijelző nem-lineáris átvitele a megjelenített kép jól látható gamma-torzításához vezetne, amelyet tehát még a megjelenítés előtt egy kb. 0.4 hatványkitevőjű gamma-korrekciós görbével korrigálni kell.
+Ez egy újabb, második nem-lineáris torzítás alkalmazását igényelné a dekóderoldalon, amely az analóg időkben természetesen drága, és feleslegesen bonyolult megoldásnak számított.
+
+Vegyük észre azonban azt a szerencsés, de teljesen véletlen tényt, hogy a gamma-korrekciós hatványfüggvény kitevője pontosan megegyezik az emberi látás világosságérzékelést leíró $L^*$ hatványfüggvényével, azaz a perceptuális kvantálást megvalósító görbéjével.
+Az egyszerűsítés kedvéért szakadjunk el a szigorú perceptuális kvantálás elvétől és adó oldalon cseréljük meg a nem-lineáris torzítást és a $P$-vel jelölt $RGB \rightarrow Y, R-Y, B-Y$ lineáris transzformációt!
+Ennek hatására két dolog történik:
+%
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/gamma_flow_1.png}
+	\small	
+	\put(0,0){(a)}
+	 \vspace{5mm}
+ 	\end{overpic}
+	\begin{overpic}[width = 1\columnwidth ]{figures/gamma_flow_2.png}
+	\small	
+	\put(0,0){(b)}
+	\end{overpic} \vspace{5mm}
+	\begin{overpic}[width = 0.98\columnwidth ]{figures/gamma_flow_3.png}
+	\small	
+	\put(0,0){(c)}
+	\end{overpic}
+	\caption{A gamma-korrekció rendszertechnikája:
+	(a) a tényleges perceptuális kvantálás megvalósításának módja.
+	Ekkor azonban a CRT gamma-torzítása nem kerül még korrekcióra
+	(b) esetben megjelenítés előtt ez a CRT-korrekció is megvalósul, a megoldás azonban túlbonyolított.
+	Mérnöki közelítésként épp ezért a lineáris transzformáció és a nem-lineáris korrekció sorrendjét megfordítjuk, amely ugyan matematikailag nem precíz, azonban a rendszertechnikát jelentősen egyszerűsíti (c).}
+	\label{Fig:gamma_flow}
+\end{figure}
+%
+\begin{itemize}
+\item Az adó oldalon nem a $L^* = Y^{0.4}$ jelet kvantáljuk, hanem az $R^{0.4},G^{0.4},B^{0.4}$ jelekből képzett $Y'$ \textbf{luma} jelet.
+Mint láthattuk, fehér színekre ($R=G=B$) a luma jelre igaz, hogy $Y^{0.4} = Y'$, egyéb színekre a luma jel tartalmaz színinformációt is.
+Az így megvalósított kvantálás tehát fehér színekre valóban perceptuális kvantálást valósít meg, egyéb színekre ezt csak jól közelíti.
+\item A vevő oldalon a CRT korrekciós görbéje és az $L^* \rightarrow Y$ görbe eredőben épp lineáris átvitelt valósít meg (a görbék ,,kioltják egymást'').
+\end{itemize}
+Az így kapott rendszertechnika tehát egyetlen nem-lineáris átvitel alkalmazását igényli forrásoldalon és a teljes rendszer az eddig is tárgyalt Gamma-korrekciót valósítja meg.
+
+Ezzel tehát most már láthatjuk a Gamma-korrekció tényleges, jelenlegi szerepét:
+Habár manapság már a CRT kijelzőket szinte teljesen leváltották az LCD és LED alapon működő kijelzők, mégis a Gamma-korrekciót változatlanul alkalmazzák forrásoldalon.
+Jelentősége ma már \textbf{nem} a CRT képcsövek karakterisztikájának kompenzálása, hanem az érzékeléshez illeszkedő perceptuális kvantálás megvalósítása.
+
+\vspace{3mm}
+Manapság természetesen a nem-lineáris átvitel digitális megvalósítása nem számít költséges feladatnak.
+A jelenlegi megjelenítők vezérlőfeszültség-fénysűrűség karakterisztikája erősen nemlineáris, kijelzőről kijelzőre változik és jellemzően a CRT-k átvitelétől eltérő.
+Emiatt kijelző oldalon egyrészt a gamma-torzítást semlegesíteni kell, illetve a kijelző átvitelének megfelelően az $RGB$ jelek előtorzítása szükséges.
+Ezt a feladatot jellegzetesen közvetlenül kijelzés előtt megfelelő Look-up-Table alkalmazásával oldják meg.
+
+\vspace{3mm}
+A perceptuális kvantálás megvalósításához a különböző digitális formátumok a gamma-torzítást szabványos módon előírják.
+Ezen nem lineáris transzferkarakterisztikák a szabványban ún. \textbf{opto-elektronikus transzfer karakterisztika} néven szerepelnek.
+Pontos megválasztásuknak két fő szempontja van:
+\begin{itemize}
+\item A perceptuális kvantálás megvalósítása
+\item A megjelenítési körülmények kompenzációja
+\end{itemize}
+
+\paragraph{Megjelenítési körülmények kompenzációja:\\}
+Eddigi vizsgálatunk során az emberi látás jellemzői alapján a Gamma-korrekció exponensét 0.4-re választottuk.
+Mégis, a gyakorlatban ennél gyakran magasabb hatványkitevőket alkalmaznak.
+Ennek oka a megjelenítési körülményekre vezethető vissza: \ref{Fig:gamma} ábrán látható, hogy az RGB jelek 1-nél nagyobb hatványkitevőjű torzítása a kontraszt növekedéséhez és a színek telítéséhez vezet.
+Ismert tény, hogy a Stevens (Bartleson-Breneman) és a Hunt hatás alapján sötét környezetben a sötét árnyalatok megkülönböztetési képessége romlik, a kép észlelt kontrasztja csökken, a színek színezettsége csökken.
+%
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/stevens.png}
+	\end{overpic}
+	\caption{A Bartleson-Breneman hatás illusztrációja.}
+	\label{Fig:stevens_effect}
+\end{figure}
+A Bartleson-Breneman hatás pl. a \ref{Fig:stevens_effect} ábrán figyelhető meg.
+Látható, hogy az emberi látás világosságérzékelése már képen belül is jelentősen változik a háttérvilágítás függvényében:
+Egyrészt világos háttér előtt az érzékelt kontraszt (legvilágosabb és legsötétebb árnyalat aránya) nagyobb, a sötét háttérhez képest.
+Másrészt világos háttér előtt a világos árnyalatok által keltett világosságkülönbség nő, a sötét árnyalatok által keltett kontraszt csökken.
+Sötét háttér előtt a helyzet megfordul.
+Ez azt jelenti, hogy a világos háttér előtt a látás világosság-érzékelése 0.4-nél kicsit nagyobb, sötét háttér előtt 0.4-nél kisebb hatványfüggvénnyel közelíthető.
+
+Ha tehát a képi reprodukció helyszínén a környezeti fénysűrűség kicsi (pl. mozi) a megfelelő kontraszt és telítettség eléréséhez a kép előtorzítása szükséges.
+Ennek módja olyan Gamma-korrekciós tényező előírása, amely a megjelenítő Gamma-torzítása után egy nem-lineáris, 1-nél kicsivel nagyobb kitevőjű eredő átvitelt valósít meg, így növelve a kontrasztot és a telítettséget.
+A megfelelő Gamma-korrekcióval tehát a megjelenítési körülmények hatása kompenzálható.
+
+Ez alapján pl. TV képernyőn való megjelenítéshez az ITU-709-es HD szabvány által definiált opto-elektronikus átviteli függvény a
+\begin{equation}
+E = 
+\begin{cases}
+4.500 L, \hspace{20mm} \mathrm{ha}\, L < 0.018 \\
+1.099 L^{0.45} - 0.099, \hspace{3mm} \mathrm{ha}\, L \geq 0.018,
+\end{cases}
+\end{equation}
+alakú, ahol $L \in \{ R, G, B \}$.
+A görbe egy hatványfüggvényből és egy lineáris kezdeti szakaszból áll.
+Ez a lineáris szakasz megakadályozza, hogy a görbe meredeksége (azaz a sötét árnyalatok erősítése) végtelen nagy legyen, amely erősítés a kamera érzékelőjének zaját látható nagyságúra erősítené.
+Ahogy az ref{Fig:itu709} ábrán látható, a teljes görbe jól közelíthető egy $L^{0.5}$ függvénnyel.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.7\columnwidth ]{figures/itu709.png}
+	\end{overpic}
+	\caption{Az ITU-709 HD szabvány (és SD szabvány) és az NTSC ($1/2.2$-es) gamma-karakterisztikája.}
+	\label{Fig:itu709}
+\end{figure}
+A HD szabvány a kijelző oldalon minden esetben egy $\gamma_D \approx 2.5$-kitevőjű átvitelt feltételez.
+Ez a gamma-korrekcióval 1.25 eredő hatványkitevőjű torzítást eredményez, amely egy átlagos nappali megvilágítása mellett a készítők által elérni kívánt kontrasztot eredményezi.
+
+Ezzel szemben pl. a mozis célra szánt DCI-P3 szabvány a mozivásznon megjelenített kép 1.5-ös nem-lineáris torzítását írja elő \footnote{Valójában pl. HD esetén a teljes produkciós lánc minden eleme jól definiált, szabványosított.
+A képi tartalmat úgy állítják elő, hogy az a kívánt (szubjektíve esztétikus) módon jelenjen meg egy szabványos átlagos megjelenítési környezetben, amelyet a ITU-R BT.2035 szabvány definiál, szabványos ITU-R BT.1886 szabvány szerinti referencia képernyőn megjelenítve.}.
+A gyakorlatban természetesen a jelenlegi LCD kijelzők esetében a Gamma-torzítás (vagy éppen az eredő Gamma) szabadon állítható a néző számára optimális kontraszt beállítására.
+
+\subsection{A digitális ábrázolás dinamikatartománya}
+
+Az előzőekben láthattuk, hogy a perceptuális kvantálás lehetővé teszi az SD és HD tartalomra szánt színtér 10 biten való ábrázolását, valamint konzumer és műsorszórási célokra már 8 bites ábrázolás is kielégítő eredményt ad.
+Kézenfekvő lenne a rendelkezésre álló teljes dinamikatartomány kihasználása a digitális tartalom ábrázolására, azaz pl. a világosságjel 8 bites ábrázolása esetén a $\lbrace 0, 255 \rbrace$ tartomány kihasználása úgy, hogy 0 a feketéhez, 255 a fehérhez tartozó kódszó.
+Ezt az ún. full range hozzáállást alkalmazza pl. a JPEG kódoló, illetve számos közvetlenül RGB koordinátákkal dolgozó képszerkesztő szoftver.
+%https://books.google.hu/books?id=hOu5DQAAQBAJ&pg=PA427&lpg=PA427&dq=RGB+headroom+footroom&source=bl&ots=NsT6C3TiLr&sig=ACfU3U1HLa7oM0fxBZLHjs6PFfuyi2kflg&hl=en&sa=X&ved=2ahUKEwjSlf-Uw-PoAhWkw4sKHebNCl0Q6AEwC3oECA0QLw#v=onepage&q=RGB%20headroom%20footroom&f=false 
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.7\columnwidth ]{figures/ycbcr_dyn_range.png}
+	\end{overpic}
+	\caption{A digitális \ycbcr kódszavak dinamikatartománya.}
+	\label{Fig:ycbcr_dyn_range}
+\end{figure}
+Videótechnika szempontjából \ycbcr ábrázolás mellett gyakoribb az \textbf{narrow range} dinamika tartomány alkalmazása.
+Ebben az esetben a teljes dinamikatartomány csak egy részét töltik ki az érvényes \ycbcr (vagy éppen $RGB$) értékek, az érvényes kódszavak alatt és fölött ún. \textbf{footroom} és \textbf{headroom} található.
+Ezek a kódtartományok csak feldolgozás során (szűrések, mintavételi konverzió stb.) kihasználtak, a tárolás és továbbítás során nem tartalmaznak érvényes videóadatot.
+A headroom és a footroom célja a kép szűrése, feldolgozása során esetlegesen fellépő túl- és alullövések (Gibbs-jelenség) kezelése, tárolása adatvesztés (clipping) nélkül.
+
+8 bites reprezentáció esetén luma ($Y'$), illetve esetlegesen $R',G',B'$ jelekre a footroom 15 kódszónyi, míg a headroom 19 kód széles, így a luma jel 0 és 219 között vehet fel értékeket, tehát $16 \leq Y' \leq 235$ (A 0 és 255 kód szinkronizációs célokra foglalt).
+A headroom és footroom aszimmetriájának valódi nyomós oka nincsen.
+
+A $C'_\mathrm{B}$ és $C'_\mathrm{R}$ jelek esetén a nullszint a dinamikatartomány közepe, azaz a 128-as kód, míg headroom és footroom azonosan 15 kódnyi, azaz $16 \leq C'_\mathrm{B}, C'_\mathrm{R} \leq 240$.
+
+Magasabb bitszámon való ábrázolás esetén minden előbb leírt jelszint arányosan skálázódik.
+Az \ycbcr jelszintek tehát az \ypbpr analóg jelszintekből a 
+\begin{equation}
+\begin{bmatrix}[c]
+       Y' \\[0.3em]
+       C'_{\mathrm{B}} \\[0.3em]
+       C'_{\mathrm{R}} \end{bmatrix}
+       =
+D\cdot
+\begin{bmatrix}[c]
+       16 \\[0.3em]
+       128 \\[0.3em]
+       128 \end{bmatrix}
++
+D\cdot
+\begin{bmatrix}[c]
+       219 Y' \\[0.3em]
+       224 P'_\mathrm{B} \\[0.3em]
+       224 P'_{\mathrm{R}} \end{bmatrix}
+\end{equation}
+összefüggéssel számítható, ahol $D = 2^{N-8}$, $N$-el a bitszámot jelölve.
+
+\subsection{A színkülönbségi jelek alulmintavételezése}
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/umbrella.png}
+ 	\end{overpic}
+	\caption{Az \ycbcr komponensek tartalma egyszerű tesztkép esetén.
+	Megjegyezhető, hogy a $C_B$ és $C_R$ komponensek a színpont színezetét írják le $\lbrace -0.5, 0.5\rbrace$ dinamikatartományban, a tartalmuk ábrázolása így nem egyértelmű.
+	Jelen ábrán az egyszerűség kedvéért $Y=0.5$ mellett mutatja a színtartalmat ()}
+	\label{Fig:umbrella}
+\end{figure}
+%
+Az világosság és színinformáció külön kezelésének---azaz az $R'G'B'$ színpontok luma+chroma reprezentációjának---két nagy előnye volt bevezetésük idejében.
+Egyrészt történelmileg fontos előny a korai fekete-fehér TV vevőkkel való visszafelé kompatibilitás, ahogy azt a következő fejezet tárgyalja.
+Másrészt az ábrázolásmód jobban illeszkedik az emberi színérzékelés modelljéhez\footnote{Habár az emberi szemben a fényérzékelés három különböző, jellemzően vörös, zöld és kék árnyalatokra érzékeny fotoreceptorral történik, az opponens színelmélet alapján a látóidegeken már egy világosságinformáció-jellegű és két színezetet leíró ingerület terjed}:
+az emberi látás színezet-információra vett kisebb felbontása lehetővé teszi az analóg chroma jelek sávszélesség-csökkentését, azaz a színjelek kisebb felbontáson való tárolását, átvitelét.
+Digitális ábrázolás, azaz \ycbcr reprezentáció esetén ez a csökkentett felbontású színjel-ábrázolást a \textbf{chroma-alulmintavételezés} (\textbf{chroma subsampling}) valósítja meg.
+
+\subsection*{A mintavételi struktúra jelzése:\\}
+Az \ycbcr komponensek tartalma egy egyszerű mintakép esetén a \ref{Fig:umbrella} ábrán látható.
+Egyértelmű, hogy a színezet-tartalom ritkán tartalmaz apró részleteket (nagyfrekvenciás tartalmat), így a chroma jeleket elegendő kisebb felbontással tárolni.
+A chroma jelek felbontása a horizontális és vertikális irányban is csökkenthető, jellegzetesen a luma jel felbontása felére, vagy negyedére választják, azaz alulmintavételezik.
+Így különböző \textbf{mintavételi struktúrák,} vagy \textbf{sémák} (\textbf{subsampling scheme}) alakíthatóak ki.
+A chroma jel felbontásának a lumáéhoz képesti változását a horizontális és vertikális irányban a
+\begin{equation}
+J : a : b : \alpha
+\end{equation}
+mintavételi struktúra jelzéssel adható meg, ahol az egyes betűk a következőket jelölik:
+\begin{itemize}
+\item $J$: a horizontális referencia szám.
+Eredetileg (NTSC és SD esetén) a luma jel mintavételi frekvenciáját jelölte $f^{Y'}_s = J \cdot 3\,\frac{3}{8}~\mathrm{MHz}$ formában (azaz hányszorosa a luma jel mintavételi frekvenciája az NTSC rendszer színsegédvivő-frekvenciájának).
+A HD formátumok esetében már $J=22$ nagyságú értékeket kellett volna jelölni.
+Ehelyett végül referenciaértékként fixen 4-re választják, amelyhez képest megadhatjuk a chroma jelek alulmintavételezésének mértékét.
+\item $a$: a $J$ pixelre eső chroma ($C_{\mathrm{B}}$ és $C_{\mathrm{R}}$) minták száma egy sorban, tehát a színkülönbségi jelek vízszintes irányú alulmintavételezésének mértéke a lumához képest.
+Így pl. $J:a= 4:2$ a chromaminták számának felezését jelöli a vízszintes irányban.
+\item $b$: a chroma minták függőleges irányú alulmintavételezésének jelzése.
+Ha $b = a$, akkor nincs vertikális alulmintavételezés.
+Ha $b = 0$, akkor a 2:1 arányú alulmintavételezés történik (azaz a chroma jel vertikális felbontása a luma fele).
+\item $\alpha$: a színkulcsolási (pl. green box) csatorna jelenlétét jelzi. 
+Ha van színkulcsolás, akkor $\alpha = J$, máskülönben nem jelöljük.
+\end{itemize}
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/chroma_subsampling.png}
+ 	\end{overpic}
+	\caption{A leggyakrabban alkalmazott chroma mintavételi struktúrák szemléltetése.}
+	\label{Fig:chroma_subsampling}
+\end{figure}
+Természetesen a chroma jelek alulmintavételezése egyszerű veszteséges tömörítésként fogható fel, a tárolás és továbbítás során létrejövő adatmennyiség csökkentésére alkalmas.
+Megjelenítés előtt az alumintavételezett chroma jelek felbontását megfelelő eljárással vissza kell állítani az eredetire, amely után a megjelenítendő $R'G'B'$ jelek kiszámíthatók.
+
+\subsubsection*{Néhány gyakori mintavételi struktúra:\\}
+
+A leggyakrabban alkalmazott chroma mintavételezési struktúra a \ref{Fig:chroma_subsampling} ábrán láthatóak:
+\begin{itemize}
+\item \textbf{4:4:4}: Ezen mintavételi struktúra esetén sem horizontális, sem vízszintes alulmintavételezés nem történik, a chroma jelek felbontása a luma jelével megegyező.
+Ez esetben választható közvetlen $R'G'B'$ ábrázolás is az \ycbcr helyett.
+Konzumer berendezésekben nem alkalmazzák, filmstúdiókban (pl. CGI feldolgozás, filmszkennelés, utómunkálatok során gyakrabban).
+Elsőként az ITU-2020 UHD ajánlásban jelent meg szabványosított formában.
+Egy pixel ábrázolása 8 bites bitmélység esetén $3 \cdot 8 ~\mathrm{bit} = 24~\mathrm{bit}$ adatigényű.
+%
+\item \textbf{4:2:2}: A chroma jelek vízszintes felbontása a luma jelek fele, míg függőlegesen nincs alulmintavételezés.
+A chroma minták vízszintesen minden második luma mintával megegyező pozícióban helyezkednek el (\textbf{cosited}) (ld. később).
+Ez az alapvető SD és HD stúdióformátum, konzumer célra inkább csak high-end berendezések alkalmazzák.
+Mivel jut pixelre egy $C_{\mathrm{R}}$ és egy $C_{\mathrm{R}}$ minta, egy pixel ábrázolása 8 bit/komponens esetén $(1+ 2\cdot \frac{1}{2})\cdot 8~\mathrm{bit} = 16~\mathrm{bit}$-et vesz igénybe, így a tömörítési tényező 4:4:4-hez képest $\frac{2}{3}$.
+%
+\item \textbf{4:1:1}: Manapság ritkábban alkalmazott mintavételi struktúra, DV kézikamerák, olcsóbb konzumer elektronikák használták.
+A chroma minták vízszintes felbontása a luma felbontásának negyede, függőlegesen nincs alulmintavételezés.
+Mivel 4 pixelre jut egy-egy chroma minta, így egy pixel ábrázolása 8 bit/komponens esetén $(1+ 2\cdot \frac{1}{4})\cdot 8~\mathrm{bit} = 12~\mathrm{bit}$-et vesz igénybe. 
+A tömörítési faktor 4:4:4-hez képest $\frac{1}{2}$.
+%
+\item \textbf{4:2:0}: A manapság is legelterjedtebb, a digitális műsorszórás és lokális, digitális videótárolás mintavételi struktúrája.
+A chroma jelek mind horizontálisan, mind vertikálisan felezett felbontásúak a lumához képest.
+Hasonlóan a 4:1:1-hez, mivel 4 pixelre jut egy-egy chroma minta, így egy pixel ábrázolása 8 bit/komponens esetén $(1+ 2\cdot \frac{1}{4})\cdot 8~\mathrm{bit} = 12~\mathrm{bit}$-et vesz igénybe, és a tömörítési faktor 4:4:4-hez képest $\frac{1}{2}$.
+
+A 4:2:0 mintavételi struktúra megvalósítása két módon lehetséges, ahol a módszerek között a chroma minták horizontális helye tesz különbséget:
+\begin{itemize}
+\item A JPEG és MPEG-1 mintavételi struktúrája esetében a chroma minták horizontálisan minden második luma-minta \textbf{közé} esnek.
+\item MPEG-2 és újabb kódolok esetén a chroma minták horizontálisan \textbf{egybeesnek} minden második luma-mintával.
+\end{itemize}
+\end{itemize}
+Felmerülhet a kérdés, hogy hogyan értelmezhető a chroma minták helye a luma-mintákhoz képest.
+A ennek megválaszolásához fontos ismerni, milyen jelfeldolgozási lépések szükségesek a különböző mintavételi struktúrák előállításához.
+
+\subsubsection*{A mintavételi struktúra-konverzió kérdései:\\}
+
+Láthattuk, hogy a chroma jelek csökkentett felbontású tárolása két fontos jelfeldolgozási lépést igényel:
+\begin{itemize}
+\item adó oldalon az $R'G'B'$ jelekből képzett chroma jelek csökkentett mintavételi frekvenciával való mintavételezése, vagy eleve digiális ábrázolás esetén a mintavételi struktúrának megfelelően chroma minták elhagyása, azaz \textbf{decimálása}
+\item vevő oldalon a megjelenítéshez a hiányzó minták pótlása, azaz \textbf{interpolációja}, majd az $R'G'B'$ komponensek számítása és megjelenítése.
+\end{itemize}
+
+\paragraph{A decimálás megvalósítása}
+Általánosan, decimálás során a feladat a bemeneti jel mintavételi frekvenciájának csökkentése.
+Jól ismert tény, hogy egy jel mintavételezése hatására a folytonos jel spektruma a mintavételi egész számú többszörösein ismétlődni fog.
+Emiatt ha a jel sávszélessége nagyobb, mint a mintavételi frekvencia fele a spektrumok átlapolódnak, és a jel nem állítható vissza mintáiból.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth ]{figures/decimation.png}
+ 	\end{overpic}
+	\caption{A decimálás (alulmintavételezés) folyamatábrája: 
+	(1) a bemeneti jel, és $F(1)$ a bemenő jel spektruma.
+	(2) az átlapolódásgátló szűrő kimenete és $F(2)$ ennek spektruma.
+	(3) a kimeneti jel.}
+	\label{Fig:decimation}
+\end{figure}
+Videótechnikában az átlapolódás jól látható zavaró hatással van a visszaállított képre, így a szabványok szigorúan definiálják a mintavételezés előtt az analóg jel sávkorlátozásához szükséges aluláteresztő szűrőket.
+Ugyanez a jelenség fennáll eleve mintavett jel mintavételi frekvenciájának csökkentése esetén is:
+A mintavételi frekvencia csökkentése után a mintavett jel spektruma az új mintavételi frekvencia egész számú többszörösein fog ismétlődni, ahogy a \ref{Fig:decimation} ábrán látható.
+Emiatt az átlapolódás/visszahajlás elkerülése érdekében a jelet újramintavételezés előtt az új mintavételi frekvencia felére kell sávkorlátozni ún. \textbf{átlapolódásgátló szűrés} (\textbf{antialising filtering}) alkalmazásával.
+A decimálás folyamatábráját a \ref{Fig:decimation} ábra mutatja.
+
+\vspace{3mm}
+Vegyük észre, hogy pl. 4:4:4-ről 4:2:2-re való konverzió során a horizontális minták eldobása során a chroma jelek mintavételi frekvenciáját a felére csökkentjük.
+Így tehát sávkorlátozás nélkül---amely a nagyfrekvenciás részletek elkenését jelenti---a minták elhagyása után a chroma jel jó eséllyel átlapolódik.
+Ennek megfelelően decimálás során a mintacsökkentés előtt minden esetben a chroma-jel aluláteresztő szűrése szükséges, 4:4:4 $\rightarrow$ 4:2:2 konverzió esetén pl. az eredeti horizontális irányú sávszélesség felére történő sávkorlátozással.
+4:4:4 $\rightarrow$ 4:2:0 mintastruktúra elérése esetén vertikális alulátersztő szűrés is szükséges.
+
+\begin{figure}[h!]
+	\centering
+	\begin{overpic}[width = 0.75\columnwidth ]{figures/aliasing2.png}
+ 	\end{overpic}
+	\caption{Példa a színkülönbségi jelek átlapolódására nem megfelelő átlapolódásgátló szűrés esetén.
+ 	A tesztkép (a) egy mind vertikális, mind horizontális irányban növekvő frekvenciájú vörös és zöld alapszín között ingadozó térbeli szinusz.
+ 	A (b) ábra a tesztkép átlapolódásgátló szűrés nélküli 4:4:4 $\rightarrow$ 4:1:1 konverziójának eredményét mutatja be, inteproláció során egyszerű mintaismétlést alkalmazva ($\mathbf{h}_H= \left[ 1\,1 \,1 \,1 \right]^{\mathrm{T}}$).
+	A (c) ábra ideális aluláteresztő szűrést alkalmaz mind átlapolódásgátló, mind interpolációs szűrőként.}
+	\label{Fig:chroma_subsampling}
+\end{figure}
+\vspace{3mm}
+Az átlapolódásgátló szűrés elhagyásának hatását az \ref{Fig:chroma_subsampling} (a) ábra mutatja $4:4:4 \rightarrow 4:1:1$ konverzió esetén.
+Látható, hogy az átlapolódási jelenségek ún. Moiré ábrák kirajzolódásában manifesztálódnak térben periodikus képelemek esetén \footnote{A jelen mintakép a horizontális irányban periodikus, emiatt az átlapolódás hatása fokozottan látható.
+A mintavételi tétel be nem tartása miatt (a térbeli mintázat frekvenciája nagyobb, mint amit a fennmaradó chroma mintákkal ábrázolni lehetne) az eredeti minta helyett új, belapolódó komponensek jelennek meg.}.
+A megfelelő átlapolódásgátló szűrés tehát kritikus jelentőségű.
+
+Részletek nélkül: a képtartalom aluláteresztő szűrése, azaz a részletek ,,elkenése'' legegyszerűbben a szomszédos minták (pixelek) súlyozott átlagolásával történik \footnote{Más szóval a kép FIR szűrésével}: 
+Tételezzük fel, hogy mind vízszintes, mind függőleges irányban szűrjük a képet, azaz átlagoljuk a szomszédos mintákat.
+Az átlagolás során a vízszintes, illetve függőleges minták súlyát rendre $\mathbf{h}_H = h_H(n)$ és $\mathbf{h}_V = h_V(n)$ vektorok tartalmazzák.
+Jelöljük az aktuális kép adott komponensének (pl. $C_{\mathrm{B}}$, $C_{\mathrm{R}}$) $m.$ sorának $n.$ oszlopának intenzitását $x(m,n)$-el.	
+Ekkor a szűrt (azaz súlyozott átlagolt) képelemek intenzitása
+\begin{equation}
+y(m,n) = \sum_{k = -\infty}^{\infty} \sum_{l = -\infty}^{\infty} x(k,l)\, h_V(m-k) \, h_H(n-l)
+\end{equation}
+alakban adható, amely egy függőleges és vízszintes irányú konvolúciót ír le.
+A $h_H(n)$ és $h_V(n)$ vektorok a horizontális és vertikális szűrőegyütthatók, vagy szűrőkernelek (impulzusválaszok).
+
+Legegyszerűbb esetben mind vertikális, mind horizontális irányban egyszerűen a két szomszédos minta átlagát képezzük.
+Ezt az egyszerű átlagolást a 
+\begin{equation}
+\mathbf{h}_H =
+\mathbf{h}_V =
+\begin{bmatrix}[c]
+       1/2 \\[0.3em]
+       1/2\end{bmatrix}
+\end{equation}
+szűrőegyütthatókkal való szűrés valósítja meg.
+Ez a megoldást használja a JPEG és MPEG-1 kódoló a szabványos 4:2:0 formátumra való konverzió során a chroma jelek szűrésére, minden második horizontális és vertikális minta eldobása előtt.
+Mivel minden chroma minta 4 szomszédos minta egyszerű átlagaként áll elő, ezért az eredményként kapott átlagminta a négy eredeti minta közé esik.
+
+A szűrés számításigényének növelésével, hosszabb szűrőket alkalmazva a szűrés hatékonysága növelhető, a zárósávban (az decimálás utáni mintavételi frekvencia fele fölött) nagyobb elnyomás valósítható meg.
+Az MPEG-2 kódoló a vertikális irányban az MPEG-1-el megegyező egyszerű átlagolást alkalmaz, míg a horizontális irányban 3 minta átlagolásával hozza létre a szűrt jelet, így az MPEG-1-nél pontosabb szűrést elérve.
+A szűrőegyütthatók így MPEG-2 esetében
+\begin{equation}
+\mathbf{h}_V =
+\begin{bmatrix}[c]
+       1/2 \\[0.3em]
+       1/2\end{bmatrix}
+,
+\hspace{1cm}
+\mathbf{h}_H =
+\begin{bmatrix}[c]
+       1/4 \\[0.3em]
+       1/2 \\[0.3em]
+       1/4\end{bmatrix}
+\end{equation}
+Mivel a vízszintes irányban 3 minta átlagolódik, amelyek közül a középső szerepel a kimenetben a legnagyobb súllyal, így MPEG-2 esetében a szűrt és decimált chroma minták horizontálisan minden második luma minta (azaz az eredeti chroma minta) helyével esnek egybe.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth]{figures/interpolation.png}
+ 	\end{overpic}
+	\caption{Az egyszerű lineáris szűréssel megvalósított interpoláció folyamatábrája:
+	(1) a bemeneti jel, és $F(1)$ a bemenő jel spektruma.
+	(2) a nullákkal kibővített bemenő jel és $F(2)$ ennek spektruma.
+	(3) az interpolációs szűrő kimenete.}
+	\label{Fig:interpolation}
+\end{figure}
+
+\paragraph{Az interpoláció megvalósítása}
+A decimálás ellentétes műveleteként, a vevő oldali interpoláció során a feladat a bemeneti jel mintavételi frekvenciájának növelése, azaz az adó oldalon eldobott chroma minták becslése.
+
+Jelfeldolgozás szempontjából az interpoláció folyamata a \ref{Fig:interpolation} ábrán látható:
+A mintavételi frekvencia növeléséhez az ismert minták közé az új mintavételi pontokban 0 kezdeti értékű mintákat helyezünk el.
+A csupa-nulla értékű jel az eredeti jelhez adása természetesen a spektrumokat nem módosítja, azonban a valódi mintavételi frekvencia értéke azonban megnőtt, az ábrán látható példában kétszeresére.
+Ez alapján egyértelmű, hogy az új mintavételi pontokban a jel értéke a szomszédos minták alapján történő becslése egyenértékű a fennmaradó ,,image'' spektrumok kiszűrésével.
+Az interpoláció tehát a bemenet egyszerű aluláteresztő szűrésével megvalósítható, ez az ún. \textbf{rekonstrukciós szűrő}.
+\begin{figure}[t!]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth]{figures/subsampling_Example.png}
+ 	\end{overpic}
+	\caption{Egyszerű példa a színkülönbségi jelek alulmintavételezésére.
+	A felső ábrasor a teljes, csökkentett színfelbontású képet mutatja interpoláció után, míg az alsó ábrasor csak a színinformációt ábrázolja.}
+	\label{Fig:chroma_subsampling_Ex}
+\end{figure}
+
+Hasonlóan a decimáláshoz, az aluláteresztő szűrés legegyszerűbben a szomszédos minták súlyozott átlagolásaként valósítható meg mind a horizontális, és vertikális irányban. 
+Legegyszerűbb esetben a horizontális és vertikális rekonstrukciós szűrőegyütthatók a
+\begin{equation}
+\mathbf{h}_H =
+\mathbf{h}_V =
+\begin{bmatrix}[c]
+       1 \\[0.3em]
+       1\end{bmatrix}
+\end{equation}
+alakban adhatók meg.
+Könnyen belátható, hogy a szűrő mindkét irányban egyszerű mintaismétlést valósít meg (azaz a visszaállított képelem ,,pixeles'' lesz).
+A szükséges számításigény növelésével a hiányzó minták pontosabban is becsülhetők, pl. a 
+\begin{equation}
+\mathbf{h}_H =
+\mathbf{h}_V =
+\begin{bmatrix}[c]
+       1/2 \\[0.3em]
+       1 \\[0.3em]
+       1/2 \end{bmatrix}
+\end{equation}
+szűrőegyütthatókkal való szűrés (2:1 arányú interpoláció esetén) egyszerű lineáris interpolációt valósít meg.
+A lineáris szűrés (azaz az egyszerű súlyozott átlagolás) mellett egyéb, bonyolultabb módszerek is léteznek az interpoláció megvalósítására, pl. magasabb rendű hatványfüggvényekkel való közelítések (bicubic interpolation).
+Az \ref{Fig:interpolation} ábrán látható példa természetesen kirívó, extrém esetet szemléltet.
+
+Látható, hogy a bemutatott decimálásra és interpolációra alkalmazott aluláteresztő szűrőegyütthatók formailag megegyeznek.
+Fontos különbség, hogy a decimáláshoz alkalmazott szűrőegyütthatók összege 1, hiszen az ettől eltérő súlyozás a jelenergia megváltozását eredményezné (a kép intenzitása változna), míg $N:1$ arányú interpoláció esetén a rekonstrukciós szűrő együtthatóinak összege $N$, hiszen rekonstrukció során egy minta értékéből $N$ mintát becslünk.
+
+A \ref{Fig:interpolation} (c) ábrán látható példában mind az átlapolódásgátló, mind a rekonstrukciós szűrő ideális szűrést valósít meg.
+Látható, hogy a szűrés eredményeképp a kép azon részén, ahol a színezet változása a decimálás után már nem ábrázolható a $C_B$ és $C_R$ jelek ,,elkenése'' miatt az apró részletek helyett egy átlagos színezet jelenik meg (ami jelen esetben sárga).
+A bemutatott példában az átlapolódás teljesen elkerülhető.
+
+\vspace{3mm}
+A gyakorlatban előforduló természetes képek esetében elmondható, hogy a chroma komponens ritkán tartalmaz olyan nagyfrekvenciás komponenseket amelyek kiszűrése látható hatással lenne a teljes, megjelenített (visszainterpolált) képre.
+A \ref{Fig:chroma_subsampling_Ex} ábra egy ilyen gyakrabban előforduló tesztképre mutatja be a chroma-alulmintavételezés hatását.
+Látható, hogy még a példa kedvéért létrehozott 4:1:0 formátum esetében is---amely esetben a chroma jelek felbontása horizontális és vertikális irányban is a luma negyede---, a visszaállított képen a színjelek felbontáscsökkentése nem zavaró.
+A 4:2:0 formátum ehhez képest közel az eredetivel megegyező minőséget biztosít felezett horizontális és vertikális chroma felbontás mellett.
+
+\vspace{2cm}
+\noindent\rule{12cm}{0.4pt}
+
+\subsection*{Ellenőrző kérdések}
+
+\begin{itemize}
+\item a
+\item b
+\end{itemize}

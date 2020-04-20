@@ -1,7 +1,8 @@
 Az előző fejezet bemutatta az emberi látás képi reprodukció szempontjából legfontosabb tulajdonságait és részletesen tárgyalta a fény- és színmérés alapjait, bevezetve a világosság fogalmát és a CIE XYZ színteret.
 Ez a fejezet ezekre az ismeretekre építve bemutatja a színes képpontok videótechnikában alkalmazott analóg és digitális reprezentációs módját.
 
-Videótechnika szempontjából az XYZ színteret ritkán alkalmazzák képpontok színkoordinátáinak tárolására, kivétel ez alól a \href{https://en.wikipedia.org/wiki/Digital_Cinema_Package}{digitális mozi} és mozifilm-archiválási alkalmazások \footnote{Ennek oka, hogy egyrészt reprodukcióra közvetlenül nem használható, hiszen az XYZ alapszínek nem valós színek (az X,Y,Z bázisvektorok helyén nem található látható szín), másrészt a teljes látható színek tartománya igen nagy bitmélységet igényel, ráadásul feleslegesen:
+\vspace{3mm}
+Videótechnika szempontjából az XYZ színteret ritkán alkalmazzák képpontok színkoordinátáinak tárolására, kivétel ez alól a \href{https://en.wikipedia.org/wiki/Digital_Cinema_Package}{digitális mozi} és mozifilm-archiválási alkalmazások\footnote{Ennek oka, hogy egyrészt reprodukcióra közvetlenül nem használható, hiszen az XYZ alapszínek nem valós színek (az X,Y,Z bázisvektorok helyén nem található látható szín), másrészt a teljes látható színek tartománya igen nagy bitmélységet igényel, ráadásul feleslegesen:
 Az XYZ tér pozitív térnyolcadát a látható színek csak részben töltik ki (sok olyan kód lenne, amihez nem tartozik látható szín), ráadásul a ezen belül is a megjelenítők a látható színeknek csak egy részét képesek reprodukálni.}.
 Ugyanakkor az XYZ tér lehetővé teszi a különböző megjelenítők és kamerák által reprodukálható színek halmazának egyszerű vizsgálatát, valamint az ezen eszközök színterei közti átjárást.
 A következő szakasz ezeket a konkrét videóeszközökre jellemző, ún. \textbf{eszközfüggő színtereket} mutatja be.
@@ -444,6 +445,7 @@ A szabvány természetesen nem igényli, hogy az UHD megjelenítők spektrálsz�
 A mai konzumer megjelenítők az UHD képanyagot megjelenítés előtt a saját színterükben konvertálják, amely jellegzetesen jóval kisebb a szabvány színterénél.
 
 \subsection{Példa eszközfüggő színtér meghatározására:}
+\label{sec:CRT}
 
 Egyszerű példaként az eddig leírtakra vizsgáljuk, hogyan számítható és illusztrálható egy CRT kijelző által megjelenített színek tartománya, röviden rávilágítva a CRT technológia működési elvére is \footnote{Természetesen az itt leírtak változtatás nélkül alkalmazhatók más technológia alapján működő kijelzőkre is, pl. LCD.}.
 Bár a CRT technológia kezd egyre inkább eltűnni, néhány évvel ezelőttig a stúdiómonitorok jelentős része még mindig CRT alapon működött köszönhetően a színhű megjelenítésüknek, és a mai LCD megjelenítőkhöz képest is jóval nagyobb statikus kontrasztjuknak.
@@ -631,16 +633,33 @@ Y&: \text{Luminance }\\
 Vizsgáljuk most, hol helyezkednek el az adott RGB eszközfüggő színtérben ábrázolható színek ebben az új, $Y,\, R-Y,\, B-Y$ térben!
 Az előzőekben láthattuk, hogy az $XYZ$ térben ez a színhalmaz egy paralelepipedont, az RGB térben egy egységnyi oldalú kockát jelent (lásd \ref{Fig:device_dep} ábra).
 Vegyük észre, hogy a $Y,\, R-Y,\, B-Y$ koordinátákat akár az $XYZ$, akár az RGB komponensekből egy lineáris transzformációval előállíthatjuk:
-Maradva az NTSC rendszer világosság-együtthatóinál (kiindulva abból, hogy $Y = 0.3R + 0.59G + 0.11B$) a transzformáció alakja
+Jelöljük adott RGB alapszínek esetén a relatív fénysűrűség RGB együtthatóit $k_r, k_g, k_b$-vel.
+Ekkor általánosan a színkülönbségi jelek a 
 \begin{align}
 \begin{bmatrix}[c]
-       R- Y \\[0.3em]
+       Y \\[0.3em]
        B - Y \\[0.3em]
-       Y \end{bmatrix} &= 
+       R - Y\end{bmatrix} &= 
 \begin{bmatrix}[c c c]
-      0.7 &  -0.59&  -0.11  \\[0.3em]
+      k_r &  k_g&  k_b  \\[0.3em]
+      -k_r &  -k_g&  1-k_b  \\[0.3em]
+      1-k_r &  -k_g&  -k_b \end{bmatrix} 
+\begin{bmatrix}[c]
+       R \\[0.3em]
+       G \\[0.3em]
+       B \end{bmatrix}
+\end{align}
+transzformációval számíthatók.
+Példaképp maradva az NTSC rendszer világosság-együtthatóinál (kiindulva abból, hogy $Y = 0.3R + 0.59G + 0.11B$) a transzformáció alakja
+\begin{align}
+\begin{bmatrix}[c]
+       Y \\[0.3em]
+       B - Y \\[0.3em]
+       R - Y \end{bmatrix} &= 
+\begin{bmatrix}[c c c]
+      0.3 &  0.59&  0.11  \\[0.3em]
        -0.3 &  -0.59 & 0.89  \\[0.3em]
-      0.3 &  0.59&  0.11 \end{bmatrix} 
+      0.7 &  -0.59&  -0.11  \end{bmatrix} 
 \begin{bmatrix}[c]
        R \\[0.3em]
        G \\[0.3em]
@@ -650,7 +669,7 @@ A lineáris transzformációt az RGB kockára végrehajtva megkaphatjuk az ábr�
 Az így kapott test az \ref{Fig:YCbCr_space} (a) ábrán látható.
 Láthatjuk, hogy az RGB egységkocka egy paralelepipedonba transzformálódott, ahol a paralelepipedon főátlója az $Y$ világosság tengely.
 Ennek mentén, az $R-Y = B-Y = 0$ tengelyen helyezkednek el a különböző szürke árnyalatok. 
-\begin{figure}[]
+\begin{figure}[htp]
 	\centering
 	\begin{overpic}[width = 0.45\columnwidth ]{figures/Video_colorspaces/LC_space_1.png}
 	\small
@@ -694,7 +713,7 @@ A hatszög csúcsai a színtér alap- és komplementerszínei.
 Természetesen adott $Y$ érték mellett az ábrázolható színek nem tölti ki teljesen ezt a hatszöget:
 adott világosságérték mellett az ábrázolható színek halmaza a $Y, R-Y, B-Y$ paralelepipedon egy adott $Y$ magasságban húzott síkkal vett metszeteként képzelhető el, azaz tetszőleges $0 \leq Y \leq1$ esetén rajzolható egy $R-Y, B-Y$ diagram.
 Az így rajzolható diagramokra példákat a \ref{Fig:YCbCr_sect} ábra mutat.
-\begin{figure}[]
+\begin{figure}[htp]
 	\centering
 	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/YCbCr_2_11.png}
 	\small
@@ -726,7 +745,7 @@ Vizsgáljuk most, hogyan definiálhatóak ezen érzeti jellemzők, azaz a színe
 \subsection{Eszközfüggő színterek színezet- és telítettség-definíciója}
 A könnyebb elképzelhetőség kedvéért ábrázoljuk az $R-Y, B-Y$ koordinátákhoz tartozó színeket, az adott színponthoz tartozó olyan világosságérték mellett, amely esetén pontonként teljesül, hogy $X \!+\!Y\!+\!Z = 1$: 
 ezzel gyakorlatilag az adott RGB színtér $xy$-színpatkón felvett színét képezzük le az $R-Y, B-Y$ diagramra.
-\begin{figure}[]
+\begin{figure}[htp]
 	\centering
 	\begin{minipage}[c]{0.6\textwidth}
 	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/YCbCr_gamut.png}
@@ -772,7 +791,7 @@ Az így számolt telítettség valóban $0$ a fehér színre, azonban a kvázi-s
 \item A matematikailag korrekt telítettség-definíció bevezetéséhez kiterjeszthetjük a korábban megismert színsűrűséget eszközfüggő színterekre\footnote{Ismétlésként: az $XYZ$ térben adott pont színsűrűsége $p_c = \frac{Y_d}{Y}$, ahol $Y_d$ az adott színhez tartozó domináns hullámhosszú szín fénysűrűsége, $Y$ a vizsgált szín saját fénysűrűsége.}.
 Ennek egyszerűbb értelmezéséhez ábrázoljuk adott színpont paramétereit ún. területdiagramon!
 %
-\begin{figure}[]
+\begin{figure}[htp]
 	\centering
 	\begin{minipage}[c]{0.6\textwidth}
 	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/area_chart.png}
@@ -785,7 +804,7 @@ Ennek egyszerűbb értelmezéséhez ábrázoljuk adott színpont paramétereit �
 A területdiagram a következő módon rajzolható fel egy tetszőleges RGB koordinátáival adott szín esetén: 
 A vízszintes tengelyt osszuk fel az $Y$ fénysűrűség RGB együtthatóinak megfelelően, majd az egyes RGB komponenseket ábrázoljuk az intenzitásuknak megfelelő magasságú oszlopokkal.
 Ekkor egy $Y$ magasságban húzott vonal alatt és fölött a színkülönbségi jeleknek megfelelő magasságú oszlopok alakulnak ki, amely oszlopok előjelesen vett területeinek összege \eqref{eq:chrominances} alapján zérus.
-\begin{figure}[]
+\begin{figure}[b!]
 	\centering
 	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/YCbCr_saturation.png}
 	\small
@@ -943,338 +962,585 @@ Látható, hogy a gamma-torzítás hatására---ahogy \ref{Fig:gamma} ábrán is
 %Ugyanakkor látni fogjuk, hogy az emberi látás tulajdonságait kihasználva a színjeleket---azaz a chroma jeleket---csökkentett sávszélességgel, vagy digitális esetben kisebb felbontással továbbítjuk.
 %Minthogy a fentiek alapján így kis részben a világosságjel sávszélessége/felbontása is csökken, amelynek már látható hatása lehet a megjelenített képen.-
 
-\section{Videójel-formátumok}
+\section{Az \ypbpr színtér}
 
-Az előző szakaszban bevezettük a videó-technikában tárolandó, továbbítandó videó-jel komponenseket, a luma és chroma komponenseket.
-A következőekben láthatjuk, hogyan vihető át a három egymástól független videójel egy, kettő, illetve három érpáron.
-\begin{figure}[]
-	\centering
-	\begin{overpic}[width = 0.90\columnwidth ]{figures/video_comp.png}
-	\end{overpic}
-	\caption{A kompozit és komponens videójelek előállításának folyamatábrája}
-	\label{Fig:video_components}
-\end{figure}
-A következőekben bemutatott kompozit és komponens videójelek előállításának folyamatábrája a \ref{Fig:video_components} ábrán látható (kompozit esetben a PAL rendszer példáján).
+A luma és chroma központi szerepet játszanak videótechnikában, a leggyakrabban ezek a jelek a színes képpont ábrázolásának alapja mind komponens, mind kompozit (több komponens kombinációjaként létrehozott videó) formátumok esetén.
+Utóbbi formátum létrehozásával a következő fejezet foglalkozik részletesen.
+Analóg, komponens videótechnikában egy színes képpont luma-chroma térben való leírását az \textbf{\ypbpr színtérben} való ábrázolásnak nevezzük (az ezekből képzett \ypbpr videójeleket a következő fejezet részletezi).
 
-Korábban láthattuk, hogy az emberi szem színezetre vett térbeli felbontóképessége jóval kisebb (kevesebb, mint fele) a világosságéhoz képest.
-Ezt kihasználva a különböző videójel formátumokban közös, hogy a színkülönbségi (chroma) jeleket sávkorlátozva, azaz csökkentett felbontással reprezentálják.
-Ez analóg formátumok esetén sávszélességet takarít meg, míg digitális esetben már hatékony kompressziós módszerként is felfogható, mint a következőekben látható lesz.
+Az \ypbpr színtér $Y'$ jele maga a luma komponens, míg a $P'_{\mathrm{B}}, P'_{\mathrm{R}}$ jelek szimplán az átskálázott chroma komponensek, a skálafaktort úgy megválasztva, hogy dinamikatartományuk $\pm 0.5$ legyen.
 
-\subsection{A kompozit videójel}
-Analóg átviteltechnika szempontjából a legegyszerűbb megoldás a videójel továbbítására a 3 videókomponens egyetlen érpáron való átvitele.
-Ebben az esetben a luma és chroma komponensekből egyetlen ún. \textbf{kompozit} jelet kell képzeni, hogy a vevő oldalon az eredeti három komponens különválasztható.
-A feladat megoldására három---alapgondolatában azonos---módszer létezik, az NTSC, PAL és SECAM megoldások.
-A rendszerek pontos működésétől eltekintve a következő bekezdés az NTSC és PAL kompozitjelek képzésének alapelvét mutatja be.
-
-
-A kompozit formátum az NTSC rendszer bevezetésével került kidolgozásra a létező fekete-fehér TV-vevőkkel kompatibilis analóg színes műsorszórás megvalósítására.
-A feladat a már létező műsorszóró rendszerben alapsávban továbbított luma jelhez (fekete-fehér jelhez) a színinformáció olyan módú hozzáadása volt, hogy a létező monokróm vevőkben a többletinformáció minimális látható hatást okozzon, míg a színes vevő megfelelően külön tudja választani a luma és chroma jeleket.
-Tehát más szóval a visszafele-kompatibilitás miatt az új színes rendszerben a luma jelet változatlanul kellett átvinni. 
-Minthogy az átvitelhez használt RF spektrum jelentős részét már elfoglalták a frekvenciaosztásban küldött egyes TV csatornák (a képinformáció, és az FM modulált hanginformáció), így a luma és chroma komponensek csak ugyanabban a frekvenciasávban kerülhetnek továbbításra.
-
-Az alapsávi fekete-fehér TV jel felépítése egyszerű:
-Egymás után, soronként tartalmazza a CRT elektron-ágyú vezérlőfeszültségének időtörténetét, amely tehát így a műsor vételével teljesen valós időben rajzolja soronként a kijelző képernyőjére az $Y'(t)$ luma jel tartalmát.
-Az egyes sorok és képek kijelzése között az elektron-ágyú kikapcsolt állapotban véges idő alatt fut vissza a következő sor, illetve kép elejére. 
-%
-\begin{figure}[]
-	\centering
-	\begin{minipage}[c]{0.65\textwidth}
-	\begin{overpic}[width = 0.95\columnwidth ]{figures/PAL_line.png}
-	\end{overpic} \end{minipage}\hfill
-	\begin{minipage}[c]{0.35\textwidth}	\caption{Egyetlen TV sor luma jele és szinkron jelei a PAL rendszer időzítései mellett. Az NTSC esetében a TV sor felépítse jellegere teljesen azonos, a PAL-tól eltérő időzítésekkel.}
-	\label{Fig:PAL_line}  \end{minipage}
-\end{figure}
-%
-Ezekben a kioltási időkben a kijelzés vertikális és horizontális szinkronizációjához szükséges sor- és képszinkronjelek kerülnek továbbításra. 
-Egy sor felépítése az \ref{Fig:PAL_line} ábrán látható, ahol az aktív soridő a ténylegesen megjelenített világosságjelet tartalmazza, a sorkioltási idő pedig az az időtartam, amíg a CRT kijelző elektronsugara visszafut az adott sor végéről a következő elejére.
-Az egyes videósorok felépítését részletesebben a következő fejezetben tárgyaljuk.
-
-A valós idejű átvitel/kijelzés elvéből látható, hogy a színinformáció átvitele időosztásban sem lehetséges, tehát a chroma jeleket a luma jelekkel azonos frekvenciasávban és időben szükséges átvinni.
-A megoldás tárgyalása előtt vizsgáljuk külön a chroma jelek továbbításának módját.
-
-\paragraph{A színsegédvivő bevezetése:}
-A színformációt hordozó két chroma jel ($Y'(t)-R'(t), Y'(t)-B'(t)$) egyidőben történő átvitele során alapvető feladat a két analóg jel egyetlen jellé való átalakítása.
-Erre az kvadratúra amplitúdómoduláció ad lehetőséget, amely egy olyan modulációs eljárás, ahol az információt részben a vivőhullám amplitúdójának változtatásával, részben annak fázisváltoztatásával kódoljuk (ezzel tehát két független jel vihető át egyszerre). 
-Mind PAL, mind NTSC rendszer esetében az emberi látás színekre vett alacsony felbontását kihasználva a chroma jeleket erősen (PAL esetében pl. a luma jel ötödére, $1~\mathrm{MHz}$-re) sávkorlátozzák, ezzel az apró, nagyfrekvencián reprezentált részleteket kisimítják. 
-Ezután a kvadratúramodulált chroma jeleket pl. PAL esetén
-\begin{equation}
-c^{\mathrm{PAL}}(t) = \underbrace{U'(t)}_{\left( B'- Y'\right) / 2.03} \cdot \sin \omega_c t + \underbrace{V'(t)}_{\left( R'- Y'\right) / 1.14}  \cdot \cos \omega_c t
-\label{Eq:PAL_cr}
-\end{equation}
-alakban állíthatjuk elő, ahol $\sin \omega_c t$ az ún. \textbf{színsegédvivő}, $\omega_c$ a színsegédvivő frekvencia, $U'(t)$ az ún. fázisban lévő, $V'(t)$ pedig a kvadratúrakomponens.
-A kvadratúramodulált színjelek tehát egyszerűen az átskálázott színkülönbségi jelek fázisban és kvadratúrában lévő színsegédvívővel való modulációjával állítható elő.
-
-A színjelek demodulációja koherens (fázishelyes) vevővel egyszerű alapsávba való lekeveréssel és aluláteresztő szűréssel valósítható meg:
+Jelölje az adott RGB színtérben a relatív fénysűrűség együtthatóit $k_r, k_g$ és $k_b$.
+Minthogy az $R'-Y$ és $B'-Y'$ komponensek dinamikatartományra rendre $1 - k_r$ és $1 - k_b$, ezért általános az \ypbpr jelek az luma-chroma jelekből a
 \begin{align}
 \begin{split}
-\sin x \cdot \sin x = \frac{1-\cos 2x}{2}&,\hspace{1cm}
-\cos x \cdot \cos x = \frac{1+\cos 2x}{2} \\
-\sin x &\cdot \cos x = \frac{1}{2}\sin 2x
+Y' &= k_r \, R' + k_g \, G' + k_b \, B' ,\\
+P_R &= k_1 \, \left( R' - Y' \right) = \frac{1}{2} \frac{1}{1 - k_r} \, \left( R' - Y' \right)\\
+P_B &=  k_2 \, \left( B' - Y' \right) = \frac{1}{2} \frac{1}{1 - k_b} \, \left( B' - Y' \right)
 \end{split}
 \end{align}
-trigonometrikus azonosságok alapján $U'(t)$ demodulációja
-\begin{multline}
-c^{\mathrm{PAL}}_{\mathrm{QAM}}(t)\cdot \sin \omega_c t = U'(t)\cdot \sin \omega_c t\cdot \sin \omega_c t + V'(t) \cdot \cos \omega_c t  \cdot	\sin \omega_c t = \\
-\frac{1}{2} U'(t) -
-\underbrace{ \xcancel{ \frac{1}{2} U'(t)\cos 2 \omega_c t  + V'(t) \cdot \frac{1}{2}\sin 2 \omega_c t }}_{\text{aluláteresztő szűrés}}
-\end{multline}
-szerint történik, míg $V'(t)$ demodulálása hasonlóan $\sin \omega_c t$ lekeverés szerint.
-A megfelelő demodulációhoz tehát a vevőben a színsegédvivő fázishelye, koherens előállítása elengedhetetlen.
-\begin{figure}[]
-	\centering
-	\hspace{4mm}
-	\begin{overpic}[width = 0.80\columnwidth ]{figures/QAM_mod_demod.png}
-	\end{overpic}
-	\caption{QAM moduláció és demoduláció folyamatábrája}
-	\label{Fig:QAM_mod_demod}
-\end{figure}
+összefüggés alapján számítható.
+Az egyenletekben $R', G', B'  \in \lbrace 0, 1 \rbrace$ a Gamma-korrigált színkoordinátái az ábrázolt színpontnak adott eszközfüggő
 
-Az NTSC rendszerben a PAL-hoz hasonlóan a színjelek
-\begin{equation}
-c^{\mathrm{NTSC}}_{\mathrm{QAM}}(t) = I'(t) \cdot \sin \omega_c t + Q'(t) \cdot \cos \omega_c t
-\end{equation}
-alakban kerültek átvitelre, ahol az in-phase és kvadratúra komponensek rendre
+Hasonlóan meghatározhatjuk általános $R',G',B'$ komponensekre az \ypbpr jelek kiszámításához szükséges transzformációs mátrixot
 \begin{align}
-\begin{split}
-I'(t) &= k_1 (R'-Y') + k_2 (B'-Y) ,\\ 
-Q'(t) &= k_3 (R'-Y') + k_4 (B'-Y).
-\end{split}
+\begin{bmatrix}[c]
+       Y' \\[0.3em]
+       P_{\mathrm{B}} \\[0.3em]
+       P_{\mathrm{R}} \end{bmatrix}
+       =& 
+  \begin{bmatrix}[c c c]
+   k_r & k_g & k_b  \\
+   -\frac{1}{2}\frac{k_r}{1-k_b} & -\frac{1}{2}\frac{k_g}{1-k_b} & \frac{1}{2} \\
+   \frac{1}{2}& -\frac{1}{2}\frac{k_g}{1-k_r} & -\frac{1}{2}\frac{k_b}{1-k_r} \\
+\end{bmatrix}
+\cdot
+\begin{bmatrix}[c]
+       R' \\[0.3em]
+       G' \\[0.3em]
+       B' \end{bmatrix},
 \end{align}
-A $k_{1-4}$ konstansokat úgy választották meg, hogy az in-phase és kvadratúra modulált jelek nem a kék és piros merőleges bázisvektorok \ref{Fig:ycbcr_gamut} ábrán, hanem ezek kb. $+20^{\circ}$ elforgatottja.
-Az így kapott új tengelyek a magenta-zöld és türkiz-narancssárga tengelyek a közvetlen modulálójelek.
-Ennek oka, hogy úgy találták, az emberi látás felbontása jóval nagyobb türkiz-narancssárga közti változásokra, mint a magenta-zöld között.
-Ezt kihasználva a magenta-zöld $Q'(t)$ színjeleket az $I'(t)$ jelhez képest is jobban sávkorlátozták, sávszélesség-takarékosság céljából.
-A PAL rendszer bevezetésének idejére azonban kiderült, hogy ez rendszer felesleges túlbonyolítása, így az új rendszerben megmaradtak az eredeti színkülönbségi jelek modulációjánál.
+míg az inverz-transzformációt 
+\begin{align}
+\begin{bmatrix}[c]
+       R' \\[0.3em]
+       G' \\[0.3em]
+       B' \end{bmatrix}
+       =& 
+  \begin{bmatrix}[c c c]
+   1 & 0 & 2 - 2 \cdot k_r  \\
+   1 & -\frac{k_b}{k_g} \cdot (2-2k_b) &  -\frac{k_r}{k_g} \cdot (2-2k_r)  \\
+   1 & 2 - 2 \cdot k_b & 0 \\
+\end{bmatrix}
+\cdot       \begin{bmatrix}[c]
+       Y' \\[0.3em]
+       P_{\mathrm{B}} \\[0.3em]
+       P_{\mathrm{R}} \end{bmatrix}
+\end{align}
+írja le.
 
-\vspace{3mm}
-Vizsgáljuk végül a modulált színjel fizikai jelentését, az egyszerűség kedvéért $c^{\mathrm{PAL}}(t)$ esetére (PAL rendszerben)!
-Az \eqref{Eq:PAL_cr} egyenlet egyszerű trigonometrikus azonosságok alapján átírható a 
-\begin{equation}
-c^{\mathrm{PAL}}_{\mathrm{QAM}}(t) = \sqrt{U'(t)^2 + V'(t)^2} \, \sin \left( \omega_c t + \arctan \frac{V'(t)}{U'(t)} \right)
-\end{equation}
-polár alakra.
-Minthogy a moduláló $U',V'$ jelek a színkülönbségi jelekkel arányosak, így a fenti kifejezést \eqref{eq:saturation_1} és \eqref{eq:hue}-val összehasonlítva megállapítható, hogy a QAM modulált jel egy olyan szinuszos vivő, amelynek pillanatnyi amplitúdója a továbbított színpont telítettségét, pillanatnyi fázisa a színpont színezetét adja meg.
-
-\begin{figure}[]
-	\centering
-	\hspace{4mm}
-	\begin{overpic}[width = 0.50\columnwidth ]{figures/SMPTE_Color_Bars.png}
-\small
-\put(-7	,0){(a)}
-	\end{overpic} \hfill
-	\begin{overpic}[width = 0.395\columnwidth ]{figures/vectorscope.png}
-\small
-\put(-10,0){(b)}
-	\end{overpic}
-	\caption{Egy gyakran alkalmazott vizsgálókép (SMPTE color bar) (a) és vektorszkóppal ábrázolva (b).}
-	\label{Fig:bar_pattern_vscope}
-\end{figure}
-
-A színsegédvivő amplitúdójának és fázisának egyszerű értelmezhetősége miatt az NTSC és PAL jeleket gyakran vizsgálták ún. vektorszkóp segítségével jól meghatározott vizsgálóábrák megjelenítése mellett.
-A vektorszkóp kijelzője gyakorlatilag a \ref{Fig:ycbcr_gamut} ábrán is látható $B'-Y', B'-Y'$ térben jeleníti meg a teljes képtartalom (azaz egyszerre az összes képpont) chroma jeleit, $Y'$-tól függetlenül a demodulált chroma-jelek megjelenítésével.
-A vektorszkóp gyakorlatilag egy olyan oszcilloszkóp, amelynek $x$ kitérését a demodulált $B'-Y'$, $y$-kitérést a demodulált $R'-Y'$ jel vezérli, így a teljes képtartalom színezetét szinte egyszerre jeleníti meg az előre felrajzol vizsgálati rácson.
-Egy tipikus vizsgáló ábra és annak vektorszkópos képe látható a \ref{Fig:bar_pattern_vscope} ábrákon.
-A vektorszkóp alkalmazásának előnye, hogy az esetleges amplitúdó és fázishibából származó telítettség és színezethibák jól láthatóvá válnak a kijelzőn az egyes felvetített pontok ''összeszűkülése/tágulása'', illetve a teljes konstelláció elfordulásaként.
-Megjegyezhető, hogy a mai digitális videojeleket is gyakran ábrázolják szoftveres vektorszkópon az egyes pixelek színezetének vizsgálatához.
-
-\paragraph{A színsegédvivő frekvencia:}
-Vizsgáljuk most, hogyan választható meg a színsegédvivő $\omega_c$ vivőfrekvenciája úgy, hogy a QAM modulált $c^{\mathrm{PAL}}(t)$ jelet a luma jelhez hozzáadva a vevő oldalon lehetséges legyen a vett $c^{\mathrm{PAL}}(t) + Y'(t)$ jelből az eredeti chroma és luma jelek szétválasztása!
-
-A jelek vevőoldali szétválasztására a luma és chroma jelek spektruma ad lehetőséget:
-Láthattuk, hogy a videójel az egyes TV sorokban megjelenítendő világosság és színinformáció sorfolytonos időtörténeteként fogható fel.
-Természetes képeken a képtartalom sorról sorra csak lassan változik (természetesen a képtartalomban jelenlévő vízszintes éleket leszámítva), így mind a luma, mind a chroma jelek ún. kvázi-periodikusak, azaz közel periodikusak.
-Jel- és rendszerelméleti ismereteink alapján tudjuk, hogy egy periodikus jel spektruma vonalas, a jelfrekvencia egész számú többszörösein tartalmaz csak komponenseket.
-Ennek megfelelően mind a luma, mind a chroma jelek spektruma közel vonalas: az energiájuk a sorfrekvencia egész számú többszörösein csomósodik.
-Természetesen a luma jel az alapsávban helyezkedik el ($0~\mathrm{Hz}$ környezetében), kb. $5.6~\mathrm{MHz}$ sávszélességben\footnote{Ez a sávszélesség eredményezi az azonos horizontális és vertikális képfelbontást.}.
-A QAM modulált chroma jel spektruma a sávkorlátozás miatt keskenyebb ($1~\mathrm{MHz}$), és középpontját $\omega_c$ vivőfrekvencia határozza meg.
-\begin{figure}[]
-	\centering
-	\hspace{4mm}
-	\begin{overpic}[width = 0.80\columnwidth ]{figures/LC_interlace.png}
-	\end{overpic} \hfill
-	\caption{A luma és chroma jelek spektrális közbeszövésének alapelve a teljes spektrumokat ábrázolva (a) és a spektrális csomókat felnagyítva (b)}
-	\label{Fig:YC_interlace}
-\end{figure}
-
-A luma-chroma jel összegzése ennek ismeretében egyszerű: 
-Az $\omega_c$ vivőfrekvencia megfelelő megválasztásával elérhető, hogy a chroma jel spektrumvonalai (spektrumcsomói) éppen a luma jel spektrumvonalai közé essen, azaz a spektrumukat átlapolódás nélkül közbeszőhetjük.
-Az eljárás alapötletét \ref{Fig:YC_interlace} ábra illusztrálja $f_{\mathrm{H}}$-val a sorfrekvenciát jelölve.
-A szétválaszthatóság feltétele ekkor 
-\begin{equation}
-f_c = f_{\mathrm{H}} \cdot \left( \mathrm{n} + \frac{1}{2}\right), \hspace{1.5cm} \mathrm{n} \in \mathcal{N} 
-\end{equation}
-azaz a színsegédvivő frekvenciája a sorfrekvencia felének egész szűmú többszörösének kell, hogy legyen \footnote{Megjegyezhető, hogy PAL esetében az előre adott sorfrekvenciához egyszerű volt a színsegédvivő-frekvencia megválasztása, míg NTSC esetén bizonyos okok miatt a sorfrekvencia és ebből következően a képfrekvencia megváltoztatására volt szükség. 
-Innen származnak a ma is használatos $59.94$ és $29.97~\mathrm{Hz}$ képfrekvenciák, amelyeket a következő fejezet tárgyal részletesen.}.
-
-\paragraph{A CVBS kompozit videójel és luma-chroma szétválasztás:}
-Ennek ismeretében végül a teljes kompozitjel a 
-\begin{equation}
-\text{CVBS}(t) = \mathrm{Sy}(t) + Y'(t) + c_{\mathrm{QAM}}(t)
-\end{equation}
-alakban áll elő, ahol $Y'$ a luma jel, $c_{\mathrm{QAM}}$ a QAM modulált chroma jelek és $\mathrm{S\!y}(t)$ a kioltási időben jelen lévő sorszinkron és képszinkron jelek.
-A CVBS elnevezés gyakori szinoníma a kompozit videójelre, jelentése C: color, V: video (luma), B: blanking (azaz kioltás) és S: sync (azaz szinkronjelek).
-
-Az így létrehozott videójel a fekete-fehér képhez képest csak a modulált színsegédvivőt tartalmazza többletinformációnak.
-Egyszerű fekete-fehér vevőn a CVBS jelet megjelenítve a színinformáció nagyfrekvenciás zajként, pontozódásként (ún. \href{http://www.techmind.org/colrec/}{chroma dots}) jelenik csak meg a kijelzőn, így a visszafelé kompatibilitás biztosítva volt.
-Színes vevőkben a CVBS jelből a luma és chromajel elméletileg fésűszűréssel szeparálható a sorfrekvencia felének egész számú többszöröseit elnyomva.
-Ez ideálisan egy soridejű késleltetést igényel \footnote{A bizonyításhoz vizsgáljuk $h(t) = \delta(t) + \delta(t-t_{\mathrm{H}})$ szűrő átviteli karakterisztikáját, amely szűrő a jelből kivonja $t_H$-val késleltetett önmagát!}.
-A fésűszűrős luma-chroma szeparáció lehetősége már az NTSC fejlesztésének idején ismert volt, azonban a szükséges soridejű késleltető nem állt rendelkezésre, ezért a korai NTSC vevők egyszerű alul/felüláteresztő szűrőkkel, vagy egyszerű chroma jelre állított lyukszűrőkkel szeparálták a luma-chroma jeleket.
-Ennek eredményeképp még a színes vevőkben is a chroma jelen kisfrekvenciás tartalomként jelen lehetett a világosságinformáció látható \href{https://en.wikipedia.org/wiki/Dot_crawl}{hatással a megjelenített képre}.
-A megfelelő analóg PAL fésűszűrő-tervezés még a 90-es években is aktív \href{https://www.renesas.com/in/en/www/doc/application-note/an9644.pdf}{K+F} alatt álló terület volt.
-
-\begin{figure}[]
-	\centering
-	\begin{overpic}[width = 0.45\columnwidth ]{figures/ntsc_color_line.png}
-	\end{overpic} \hfill
-	\begin{overpic}[width = 0.48\columnwidth ]{figures/Waveform_monitor.jpg}
-	\end{overpic} \hfill
-	\caption{Az SMPTE color bar vizsgáló ábrának egy, illetve két sorának hullámformája sematikusan (a), és egy hulláforma monitoron (b) vizsgálva}
-	\label{Fig:NTSC_line}
-\end{figure}
-
-Az elmondottak alapján az NTSC rendszerben a \ref{Fig:bar_pattern_vscope} ábrán látható vizsgálóábrának egy sorának kompozit ábrázolását a \ref{Fig:NTSC_line} mutatja be jellegre helyesen, és egy konkrét hullámforma monitoron mérve.
-Az ábrán megfigyelhető az egyes oszlopokhoz tartozó hullámalak: látható, hogy a csökkenő világosságú oszlopokra (amelyek világosságát szaggatott vonal jelzi) hogyan ültették rá a QAM modulált chroma jeleket.
-Az első és utolsó fehér, illetve fekete oszlop esetén a chroma jelek amplitúdója zérus (fehérpont), egyéb esetekben a szinuszos színsegédvivő amplitúdója az oszlopok színének telítettségével, fázisa a színezetükkel arányos.
-Megjegyezzük, hogy a tényleges hullámforma már átskálázott chroma jeleket ábrázol, amely átskálázás épp azért történik, hogy a teljes CVBS jel beleférjen a fizikai interface dinamikatartományába (ez természetesen a nagy telítettségű színek esetén okozna problémát).
-Ez magyarázza tehát az eddig figyelmen kívül hagyott 2.03 és 1.14 skálafaktorokat pl. \eqref{Eq:PAL_cr} esetében.
-
-
-Az NTSC jel felépítése alapján egyértelmű, hogy a megfelelő színek helyreállításához a vevőben a színsegédvivő fázisának nagyon pontos ismerete szükséges.
-Ahhoz, hogy ez biztosítva legyen a sorkioltási időben az ún. hátsó vállra (ld. \ref{Fig:PAL_line} ábra) beültetésre került néhány periódusnyi (9) képtartalom nélküli referenciavivő, az ún. color burst, vagy burst jel.
-Ez a burst jel megfigyelhető a \ref{Fig:NTSC_line} ábrán is.
-
-Ennek ellenére az NTSC rendszer továbbra is fázisérzékeny volt, hiszen fázishibát a vevőben is bármelyik alkatrész okozhatott.
-A QAM moduláció jelege miatt már a legkisebb fázishiba is látható színezetváltozást okozott a megjelenített képen.
-A PAL rendszer tervezésének egyik fő célja épp ezért a rendszer fázishibára vett érzékenységének csökkentése volt
-
-\paragraph{A PAL rendszer:}
-Míg az egyszerű NTSC rendszer már 1953-ban bevezetésre került Amerikában, addig Európában egészen az 1960-as éveikg vártak a színes műsorszórás bevezetésére.
-Ennek oka, hogy az eltérő hálózati frekvencia miatt az NTSC-t nem lehetett egy az egyben átemelni Európába (ld. később).
-Mire az európai rendszert kifejlesztették, az NTSC rendszer jó néhány gyengeségére fény derült, így az újonnan kifejlesztett PAL (Phase Alternate Lines) ezek kijavítását célozta főként meg.
-Ennek eredményeképp a PAL rendszer más QAM modulációval dolgozik (a chroma jelek közvetlenül a modulálójelek), eltérő a színsegédvivő frekvencia, és legfontosabb újításként: egy egyszerű megoldással szinte érzéketlen a fázishibára.
-\begin{figure}[]
-	\centering
-	\begin{overpic}[width = 0.45\columnwidth ]{figures/PAL1.png}
-	\end{overpic} \hfill
-	\begin{overpic}[width = 0.45\columnwidth ]{figures/PAL2.png}
-	\end{overpic} \hfill
-	\caption{Az SMPTE color bar vizsgáló ábrának egy, illetve két sorának hullámformája sematikusan (a), és egy hulláforma monitoron (b) vizsgálva}
-	\label{Fig:PAL1}
-\end{figure}
-
-Láthattuk, hogy a vevő oldalán bármilyen fázishiba a színezet jól látható torzulását okozza.
-Mivel a fázishiba gyakran elkerülhetetlen, ezért hatásának kiküszöbölésére a PAL rendszer a következő egyszerű megoldást alkalmazza:
-\begin{itemize}
-\item Az adó oldalon (a PAL jel létrehozása során) képezzük QAM moduláció során a V' chromajel előjelét minden második TV-sorban negáljuk meg, azaz sorról sorra fordított előjellel vigyük át (ez ekvivalens a sorról sorra változó $\pm \cos \omega_c t$ vivővel való modulációval)!
-Az eljárás szemléltetésére tegyük fel, hogy két egymás utána sorban minden horizontális pozícióban a színinformáció azonos.
-Ekkor egy adott pontra az n. és (n+1). sorban átvitt $U',V'$ jeleket a \ref{Fig:PAL1} (a) ábra szemlélteti pl egy lila képpont átvitele esetén.
-\item Tegyük fel, hogy a vevő oldalon a vett jelhez $\Delta \alpha$ fázishiba adódik az átvitel és demoduláció során.
-Természetesen a fázishiba hatására az így vett színvektor mind az n., mind az (n+1). sorban azonos irányba fordul az $U'-V'$ konstellációs diagramon (azaz a $R'-Y', B'-Y'$ síkon), ahogy az a \ref{Fig:PAL1} (b) ábrán látható.
-\item A vevő oldalán forgassuk vissza minden második sorban a vett $V'$ komponens előjelét és képezzük az (n+1). sor és az n. sor átlagát.
-Ezzel természetesen a színjelek vertikális felbontását csökkentjük (az átlagképzés az apró részleteket elsimítja), azonban ennek eredménye az emberi szem színezetre vett felbontása eredményeképp az információveszteség nem látható (a horizontális felbontás már egyébként is jelentősen lecsökkent az egyszerű sávkorlátozás hatására).
-Könnyen belátható, hogy a két vektor átlagát képezve éppen az eredeti, hibamentes színvektort kapjuk eredményül.
-Két sor esetén azonos sortartalom esetén tehát ezzel az egyszerű trükkel a fázishiba hatása teljesen kiküszöbölhető, míg levezethető, hogy változó sortartalom esetén a fázishiba az átlagvektor hosszának csökkenését okozza, tehát színezetváltozás helyett csak telítettségváltozást okoz.
-\end{itemize}
-A bemutatott módosított modulációs módszerrel még aránylag nagy fázishibák hatása is minimális hatással van a megjelenített képre.
-Az ok, hogy mégis több, mint egy évtizedet kellett várni a PAL rendszer bevezetésére az volt, hogy a módszer alkalmazásához (az átlagolás elvégzéséhez) a videójel soridejű késleltetésére volt szükség.
-Ez az 50-es években analóg módon nem megoldható probléma volt amely a PAL implementálását hátráltatta.
-
-A PAL bevezetését végül az olcsón tömeggyártható ún akusztikus művonalak megjelenése tette lehetővé.
-Ez az akusztikus művonal, vagy \href{https://www.google.com/search?q=PAL+delay+line&client=firefox-b-d&sxsrf=ALeKk03EUTzVwc7dkYJFnEK-nlEI_p3hng:1586379019108&source=lnms&tbm=isch&sa=X&ved=2ahUKEwi90Kav2tnoAhXJ-ioKHWz6AJcQ_AUoAXoECA0QAw&biw=1407&bih=675}{PAL delay line} egy egyszerű üvegtömb, amelyre egy piezo aktuátor és piezo vevő csatlakozik.
-Az adó a TV chroma jelével arányos mechanikai rezgéseket (ultrahang) \href{https://www.youtube.com/watch?v=-qerYLM-eEg}{hoz létre}, amely többszörös visszaverődések után épp egy soridőnyi késleltetést szenvedve ér a vevő elektródához.
-Az ultrahang alapú késleltetővonalak egészen a 90-es évek végéig a PAL dekóderek részét képezték.
-
-
-\begin{figure}[]
-	\centering
-	\begin{overpic}[width = 0.82\columnwidth ]{figures/PAL_coder.png}
-	\end{overpic} \hfill
-	\caption{A PAL kódoló felépítése}
-	\label{Fig:PAL_coder}
-\end{figure}
-Az egyszerű PAL kódoló felépítése az eddig elmondottak alapján a \ref{Fig:PAL_coder} ábrán látható.
-Röviden összefoglalva, mind a PAL, mind NTSC esetén a kompozitjel létrehozása során a feladat a Gamma-torzított $R',G',B'$ jelekből az $Y',U',V$ (PAL) és $Y',I',Q'$ (NTSC) jelek létrehozása, majd az $U',V'$ és $I'Q'$ jelek megfelelő QAM modulációja. 
-Az így létrehozott jeleket összeadva és a kioltási időben továbbított szinkronjelekkel ellátva előáll a CVBS kompozit jel.
-
-\vspace{3mm}
-A kompozit videójel fizikai interface megvalósítása szabványról szabványra változó.
-Konzumer felhasználás (pl. kézikamerák, videólejátszók, DVD lejátszók) szempontjából a legelterjedtebb csatlakozó a sárga jelölésű RCA végződés, amely az esetleges kísérő hangtól szigetelve, külön érpáron továbbítja a kompozit videójelet.
 \begin{figure}[]
 	\centering
 	\begin{minipage}[c]{0.6\textwidth}
-	\begin{overpic}[width = 0.45\columnwidth ]{figures/Composite-video-cable.jpg}
-	\end{overpic} 
-		\begin{overpic}[width = 0.45\columnwidth ]{figures/s_video.jpg}
+	\begin{overpic}[width = 1\columnwidth ]{figures/Video_colorspaces/YPbPr.png}
 	\end{overpic} \end{minipage}\hfill
 	\begin{minipage}[c]{0.4\textwidth}
-	\caption{Konzumer alkalmazásokhoz használt sárga jelölésű RCA csatlakozó (a) és a luma-QAM chroma jeleket külön érpáron átvivő S-videó csatlakozó (b)}
-	\label{Fig:composite_video}  \end{minipage}
+	\caption{Az \ypbpr térben ábrázolható színek gamutja.}
+	\label{Fig:ypbpr_gamut}  \end{minipage}
 \end{figure}
+Egyszerű példaként a HD szabvány színterében 
+\begin{equation}
+k_r = 0.2126, \hspace{7mm}
+k_g = 0.7152, \hspace{7mm}
+k_b = 0.0722
+\end{equation}
+Az adott alapszínek mellett az ábrázolható színek tartománya a \ref{Fig:ypbpr_gamut} ábrán látható.
 
-\paragraph{Az S-video interface}
-A kompozit és komponens jelek közti kompromisszumként az S-video formátum a luma és chroma jeleket külön érpáron viszi át.
-Ezt leszámítva az interface jele teljesen a kompozit videóval azonosak, továbbíthat akár NTSC, akár PAL (akár SECAM) videókomponenseket:
-A luma tehát változatlanul alapsávban, míg a chroma a színsegédvivővel modulálva kerül átvitelre.
-A chroma jelek modulációja elkerülhetetlen, hiszen a két független színkülönbségi jel egy érpárra való ültetéséhez azokat legalább a sávszélességükkel megegyező frekvenciájú vivőjellel való moduláció szükséges az átlapolódás elkerüléséhez.
-Az S-video szabvány csatlakozója a \ref{Fig:composite_video} (b) ábrán látható.
+\section{A színes képpontok digitális reprezentációja}
 
-\subsection{Az analóg komponens videójel}
+A jelen fejezet az eddigiekben bemutatta az színes képpontok ábrázolásának módját folytonos értékű $RGB$, luma és chroma jeleket feltételezve.
+A színpontok diszkrét értékű reprezentációja ezen komponensek közvetlen digitalizálásával nyerhetők.
+A digitalizálandó komponensek ritkább esetben közvetlenül a gamma-korrigált $R'G'B'$ jelek, míg leggyakrabban a luma-chroma \ypbpr komponensek.
+A színes képpontok digitális luma-chroma ábrázolását az ún. $\mathbf{Y'C_{B}C'_{R}}$ jeleknek nevezzük\footnote{Az elnevezéseket gyakran hibásan használják, pl. \ycbcr helyett $Y'U'V'$ jelölést alkalmazva, ami helyesen nyilvánvalóan az analóg PAL kompozitjelet jelöli, ahogy a következő fejezetben láthatjuk.}.
 
-A videójel komponensenkét való tárolásának és továbbításának az ötlete kézenfekvő, annak ellenére, hogy a technológia ezt csak a kompozit formátum megjelenésénél jóval később tette lehetővé.
-Komponens videó esetén a luma és chroma (legritkább esetben az $RGB$ komponenseket) egymástól függetlenül, külön tároljuk és külön érpáron továbbítjuk.
-Az ábrázolás neve analóg videójelek esetén: \ypbpr.
+Az \ycbcr digitális színtér közvetlenül az \ypbpr tér digitalizálásával, azaz diszkrét jelszinteken való reprezentációjaként kapható meg.
+Ennek megfelelően az \ycbcr színtér természetesen eszközfüggő, a választott RGB alapszínektől függ, és gamutja az \ypbpr \ref{Fig:ypbpr_gamut} ábrán látható gamuttal megegyező, a folytonos értékkészlet helyett diszkrét értékek alkalmazása mellett.
+A fejezet a továbbiakban az \ycbcr jelek előállításának kérdéseivel, a digitalizálás megfontolásaival foglalkozik.
 
-Az \ypbpr  ábrázolás esetén tehát a három átvitt jel a következő:
+\subsection{A perceptuális kvantálás a mintánkénti bitszám}
+Vizsgáljuk elsőként, milyen kvantálási karakterisztikát kell alkalmazni a minél hatékonyabb diszkrét ábrázolás eléréséhez, ezzel rávilágítva a Gamma-korrekció valódi jelenlegi szerepére!
+Tételezzük fel, hogy a kvantálandó jel a világosság, azaz a lineáris $Y$ relatív fénysűrűség (tehát nem a Gamma torzított $Y'$ luma jel)!
+A kvantálási karakterisztika meghatározásához kiindulásul az emberi látás világosságérzékelésének tulajdonságai szolgálnak.
+
+Ökölszabályként elmondható, hogy képi reprodukció során a képen megjelenített csúcsfehér \footnote{maximális diffúz fehér fény} fénysűrűségéhez képest az $1~\%$-nyi fénysűrűségszintek alatt az emberi szem nem képes az árnyalatok között különbséget tenni, pusztán fekete színt érzékel.
+Más szóval ez azt jelenti, hogy a a reprodukálandó fénysűrűségszintek dinamikatartománya 100:1.
+
+Emellett láthattuk, hogy átlagos megvilágítási körülmények között az emberi szem fénysűrűségre vett világosságérzékelése közel logaritmikus (a fénysűrűség-érzékelt világosság görbe közel logaritmikus függvény) a kontrasztérzékenység kb. $1~\%$.
+Ez azt jeleneti, hogy két különböző fénysűrűségű felület akkor megkülönböztethető, ha a fénysűrűségeik aránya legalább 1.01.
+Később ezt az összefüggést pontosították, a CIE L* karakterisztikája alapján---amely nagyobb tartományban írja pontosabban le az emberi látás világosságérzéklését---az érzékelt világosság a fénysűrűség kb. 0.4 hatványkitevőjű hatványfüggvénye.
+
+Ez két elvárást támaszt a kvantálás során a teljes dinamikatartomány látható kvantálási zaj nélküli kvantálására vonatkozóan:
 \begin{itemize}
-\item $Y'$: az adott eszközfüggő színtérben ábrázolt luma komponens.
-Megjegyezhető, hogy a szükséges szinkron impulzusok az \ypbpr rendszerben ugyanúgy jelen vannak az $Y'$ jelen.
-Épp ezért pl. egy \ypbpr komponens bemenettel rendelkező megjelenítő $Y'$ bemenetére kompozit videójel szabadon ráköthető.
-Ez esetben a fekete-fehér TV vevőhöz hasonlóan a TV képen a fekete-fehér képre zajként-pontozódásként (,,chroma dots'') érzékelve a megjelenített modulált színsegédvivőt.
-\item $P'_{\mathrm{B}},P'_{\mathrm{R}}$: az aktuális analóg interface dinamikatartományához átskálázott (erősített) $B'-Y', R'-Y'$ chroma jelek.
-Az interface-ek általában $\pm 0.5~\mathrm{V}$ feszültségszinteket definiálnak.
-A $P$-rövidítés a kompozit videóból származik, ahol a színinformációt a színsegédvivő fázisa hordozza.
+\item A legnagyobb és legkisebb ábrázolt fénysűrűségszint aránya legalább 100:1
+\item A szomszédos (N. és (N-1).) kódszavak fénysűrűségeinek hányadosa legfeljebb 1.01, azaz relatív különbségük $1~\%$
 \end{itemize}
+
+A megfelelő kvantálásra ellenpéldaként vizsgáljuk, mi a probléma pl. lineáris kvantálás alkalmazásával, azaz ha az $Y$ világosságjel kvantálása során a relatív fénysűrűség $Y \in \lbrace Y_0, 100 Y_0 \rbrace$ dinamikatartományának elemihez lineárisan rendelnénk hozzá a digitális kódokat.
+A kvantálást tehát a 
+\begin{equation}
+q =  \nint{ \left( 2^N - 1 \right) \cdot  \frac{Y - Y_0 }{Y_1 - Y_0 } }
+\end{equation}
+leképzés valósítja meg, ahol $\nint{}$ az legközelebbi egészhez kerekítés operátora, és a kódolandó dinamika tartományból eredően $Y_1 = 100Y_0$.
+Hasonlóan az $q.$ kódszóhoz tartozó világosságérték
+\begin{equation}
+Y^q = q \cdot \frac{Y_1 - Y_0}{2^N - 1} + Y_0.
+\end{equation}
 
 \begin{figure}[]
 	\centering
-	\begin{overpic}[width = 0.45\columnwidth ]{figures/1280px-Component-cables.jpg}
-	\end{overpic} \hfill
-	\begin{overpic}[width = 0.45\columnwidth ]{figures/YPBPR_signals.png}
-	\end{overpic} \hfill
-	\caption{A leggyakrabban alkalmazott $YP_bP_r$ komponens videójel továbbítására alkalmazott csatlakozó (a) és a komponens videójelek a korábbi színsáv-tesztábra esetén (b)}
-	\label{Fig:comp_video}
+	\begin{overpic}[width = 1\columnwidth ]{figures/linear_vs_perc_quant.png}
+	\end{overpic}
+	\caption{Az szomszédos kódszavakhoz tartozó fénysűrűségek relatív különbsége lineáris (a) és perceptuális (b) kvantálás esetén.}
+	\label{Fig:linear_vs_perc_quant}
 \end{figure}
-A külön kezelt luma-chroma információra egy példa a \ref{Fig:comp_video} (b) ábrán látható a már korábban is bemutatott SMPTE color bars tesztábra esetében.
-A komponens videójel interface leggyakrabban a \ref{Fig:comp_video} (a) ábrán látható RCA csatlakozóhármas alkalmazásával került megvalósításra.
 
-\hspace{3mm}
-Az analóg interface-ek közül említést érdemel még elterjedtségük miatt két további videóinterface:
+Vizsgáljuk ekkor a szomszédos kódszavak relatív különbségét:
+\begin{equation}
+\frac{Y^{q+1}-Y^q}{Y^q} = \frac{1 }{q + \frac{2^N - 1}{99}}.
+\label{Eq:rel_dif}
+\end{equation}
+Ez alapján pl. $N = 8$  bites kvantálás esetén a $q = 100$-as kód esetére
+\begin{equation*}
+\frac{Y^{101}-Y^{100}}{Y^{100}} \approx 0.01 = 1~\%,
+\end{equation*}
+azaz a szomszédos kódokhoz tartozó világosságértékek éppen a megkülönböztethetőség határán vannak.
+Kisebb és nagyobb kódszavak (pl. 20 és 21, 200 és 201) esetén ugyanez a relatív különbség
+\begin{equation*}
+\frac{Y^{21}-Y^{20}}{Y^{20}} \approx 0.05 = 5~\%, \hspace{1cm} \frac{Y^{201}-Y^{200}}{Y^{200}} \approx 0.005 = 0.5~\%,
+\label{eq:code_100}
+\end{equation*}
+Egyértelmű, hogy a 100-as kód alatti kódok esetében a egyes kódszavakhoz tartozó világosságszintek jól megkülönböztethetőek.
+Ennek hatásaként a világosságjel lineáris kvantálása esetén a sötét árnyalatok esetén a különböző kvantálási szintek határa láthatóvá válna, ún. sávosodás (banding) jelenne meg a képen.
+A bitmélység növelésével természetesen ez a sávosodás elkerülhető:
+a legnagyobb relatív eltérés a 0 és 1-es kód között található. 
+%
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth ]{figures/linear_vs_perc_quant_2.png}
+	\end{overpic}
+	\caption{Kvantált szürkeskála 7 bites lineáris (a) és perceptuális (b) kvantálás alkalmazása esetén.
+	Lineáris kvantálás esetén a $1 / q + \frac{2^7 - 1}{99} = 0.01$ alapján a kvantálási zaj láthatósági határa $q \approx 99$.}
+	\label{Fig:linear_vs_perc_quant_2}
+\end{figure}
+%
+A minimális bitszám amelyre \eqref{Eq:rel_dif} relatív különbség már $q=0$-re is $1~\%$-nál nagyobb
+\begin{equation}
+\frac{99}{2^N - 1} \leq 0.01 \hspace{1cm} N \geq 13.27 
+\end{equation}
+alapján $N=14$ esetén teljesül, azaz a 14 bites lineáris kvantálás megfelelő lenne \footnote{Ennek megfelelően a kamerák gyakran a nyers képformátum 14 bites lineáris ábrázolást alkalmaznak, amelyből a digitális Gamma-torzítás után újrakvantálással hozzák létre a végleges kimenetet.}.
+Ugyanakkor \eqref{eq:code_100} összefüggésből látszik, hogy a 100-as kód fölötti tartományban a kvantálási lépcsők kihasználtsága rossz, a világosságjel feleslegesen finoman kvantált.
+
+Kézenfekvő az ötlet, hogy az $Y$ relatív fénysűrűség helyett az érzékelt, szubjektív világosságinformációt kvantáljuk, így a kvantálási szintek közti szubjektív világosságérzet-különbség állandó.
+A CIE $L^*$ görbéje alapján a szubjektív világosság az $Y$ relatív fénysűrűség 0.4-es kitevőjű hatványaként közelíthető.
+A kvantálás előtt az $Y$ koordináta ennek megfelelő nem-lineáris előtorzításával tehát \textbf{perceptuális kvantálás} érhető el.
+A kvantálási leképzést és az egyes kvantálási szintekhez tartozó fénysűrűségértékeket ebben az esetben a
+\begin{equation}
+q =  \nint{ \left( 2^N - 1 \right) \cdot  \frac{Y^{0.4} - Y_0^{0.4} }{Y_1^{0.4} - Y_0^{0.4}} }
+\hspace{1cm}
+Y^q = \left( q \cdot \frac{Y_1^{0.4} - Y_0^{0.4}}{\left( 2^N - 1 \right) } + Y_0^{0.4} \right)^{\frac{1}{0.4}} 
+\end{equation}
+alakban adhatjuk meg.
+Ebből az összefüggésből már könnyen meghatározhatjuk az szomszédos kódszavakhoz tartozó fénysűrűségértékek relatív távolságát, ahogy az a \ref{Fig:linear_vs_perc_quant} (b) ábrán látható.
+Megfigyelhetjük, hogy perceptuális kvantálás alkalmazásával a szomszédos fénysűrűségek relatív különbsége a dinamikatartomány nagy részén állandó, és már 10 bites kvantálás esetén is alig nagyobb, mint $1~\%$ \footnote{Harmadik opcióként logaritmikus kvantálást alkalmazva elérhető lenne, hogy a kódszavak elhelyezkedése feleljen meg az 1.01 relatív lépésköznek.
+Ekkor $1.01^q \geq 100$ alapján $q = 463$ kódszóra van szükség, aminek reprezentációjára $N=9$ bit elegendő.
+Történelmi okokból (Gamma-korrekció) azonban az itt bemutatott perceptuális kvantálás került szabványosításra.}.
+
+Ebből kifolyólag videó esetén stúdiószabványokban perceptuális, nem-lineáris kvantálás mellett legalább 10 bites kvantálást alkalmaznak, míg konzumer célokra (pl. állókép esetén JPEG, műsorszórás, MPEG) elegendőnek ítélték a  8 bites ábrázolást.
+Ennek megfelelően pl. az ITU-601 standard defintion és az ITU-709 HD szaványokban 8 és 10 bites reprezentációt írnak elő, a perceptuális kvantálás megvalósításának módjának és a pontos karakterisztikájának szigorú előírásával.
+Ezt tárgyaljuk a következő szakaszban.
+
+\subsection{A gamma-korrekció célja és megvalósítása}
+
+Az előzőekben láthattuk, hogy digitalizálás előtt az $Y$ fénysűrűség kb. 0.4-es hatványfüggvénnyel való előtorzításával közelítően perceptuális kvantálás érhető el (azaz a szubjektív világosságérzet kvantálása).
+Ennek hatására a kvantálási zaj a teljes dinamikatartományban egyenletesen oszlik el, és nem okoz jól látható sávosodást a kis fénysűrűségű területeken, mint lineáris kvantálás esetén, ahogy az a \ref{Fig:linear_vs_perc_quant_2} ábrán megfigyelhető.
+
+Vizsgáljuk most, hogyan valósítható meg a perceptuális kvantálás a gyakorlatban a videó-rendszertechnikában!
+Az elmondottak alapján egyszerű RGB forrást feltételezve a perceptuális kvantálás az RGB jelekből képzett $Y$ relatív fénysűrűség nem-lineáris, kb. 0.4-es hatványfüggvénnyel való torzítás utáni (tehát az $L^*$ szubjektív világosságjel) kvantálásával oldható meg.
+Ekkor vevőoldalon (kijelző) digitális-analóg átalakítás után a megfelelő inverz-torzítás után az $Y$ összetevő visszanyerhető és a megfelelő inverz-transzformáció után az $RGB$ jelek kijelezhetők.
+
+A kvantálás kérdései során nem vettük eddig figyelembe eddig a gamma-korrekciót: 
+Gamma-korrigálás nélkül a kijelző nem-lineáris átvitele a megjelenített kép jól látható gamma-torzításához vezetne, amelyet tehát még a megjelenítés előtt egy kb. 0.4 hatványkitevőjű gamma-korrekciós görbével korrigálni kell.
+Ez egy újabb, második nem-lineáris torzítás alkalmazását igényelné a dekóderoldalon, amely az analóg időkben természetesen drága, és feleslegesen bonyolult megoldásnak számított.
+
+Vegyük észre azonban azt a szerencsés, de teljesen véletlen tényt, hogy a gamma-korrekciós hatványfüggvény kitevője pontosan megegyezik az emberi látás világosságérzékelést leíró $L^*$ hatványfüggvényével, azaz a perceptuális kvantálást megvalósító görbéjével.
+Az egyszerűsítés kedvéért szakadjunk el a szigorú perceptuális kvantálás elvétől és adó oldalon cseréljük meg a nem-lineáris torzítást és a $P$-vel jelölt $RGB \rightarrow Y, R-Y, B-Y$ lineáris transzformációt!
+Ennek hatására két dolog történik:
+%
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/gamma_flow_1.png}
+	\small	
+	\put(0,0){(a)}
+	 \vspace{5mm}
+ 	\end{overpic}
+	\begin{overpic}[width = 1\columnwidth ]{figures/gamma_flow_2.png}
+	\small	
+	\put(0,0){(b)}
+	\end{overpic} \vspace{5mm}
+	\begin{overpic}[width = 0.98\columnwidth ]{figures/gamma_flow_3.png}
+	\small	
+	\put(0,0){(c)}
+	\end{overpic}
+	\caption{A gamma-korrekció rendszertechnikája:
+	(a) a tényleges perceptuális kvantálás megvalósításának módja.
+	Ekkor azonban a CRT gamma-torzítása nem kerül még korrekcióra
+	(b) esetben megjelenítés előtt ez a CRT-korrekció is megvalósul, a megoldás azonban túlbonyolított.
+	Mérnöki közelítésként épp ezért a lineáris transzformáció és a nem-lineáris korrekció sorrendjét megfordítjuk, amely ugyan matematikailag nem precíz, azonban a rendszertechnikát jelentősen egyszerűsíti (c).}
+	\label{Fig:gamma_flow}
+\end{figure}
+%
 \begin{itemize}
-\item A SCART (vagy EuroSCART, Syndicat des Constructeurs d'Appareils Radiorécepteurs et Téléviseurs rövidítése) interface mind kompozit videójelek, mind S-video, mind $RGB$ jelkomponensek kétirányú átvitelét lehetővé teszik sztereó hang és digitális jelzések továbbítása mellet.
-A SCART csatlakozó jelentőségét az jelentette, hogy megjelenése előtt a TV vevők videó bemenetére nem létezett szabványos interface.
-Gyakran a külső videójel-források jobb híján a TV vevő rádiófrekvenciás bemenetére csatlakoztak a kompozit videójelet valamilyen az adott jelforrásra előírt vivőfrekvenciára modulálva.
-A SCART interface 1080p HD jel átvitelére is képes volt $YP_bPr$ formátumra a HDMI szabvány elterjedése előtt.
-A tipikus 21-érintkezős SCART csatlakozó a \ref{Fig:scart_vga} (a) ábrán látható
-\item A VGA (Video Graphics Array) a mai napig széles körben elterjedt interface videókártyák és megjelenítők (monitor, projektor, stb) közti analóg komponens videójel-átvitelre.
-A VGA interface alapvetően az analóg megjelenítendő (legalábbis az adott videókártya színterében ábrázolt) $RGB$ komponenseket továbbítják a megjelenítő felé, külön ereken továbbítva a vertikális és horizontális (kép- és sor-) szinkronjeleket.
-A VGA portot az utóbbi években már szinte teljesen leváltották a DVI, HDMI és DisplayPort digitális interface-ek.
+\item Az adó oldalon nem a $L^* = Y^{0.4}$ jelet kvantáljuk, hanem az $R^{0.4},G^{0.4},B^{0.4}$ jelekből képzett $Y'$ \textbf{luma} jelet.
+Mint láthattuk, fehér színekre ($R=G=B$) a luma jelre igaz, hogy $Y^{0.4} = Y'$, egyéb színekre a luma jel tartalmaz színinformációt is.
+Az így megvalósított kvantálás tehát fehér színekre valóban perceptuális kvantálást valósít meg, egyéb színekre ezt csak jól közelíti.
+\item A vevő oldalon a CRT korrekciós görbéje és az $L^* \rightarrow Y$ görbe eredőben épp lineáris átvitelt valósít meg (a görbék ,,kioltják egymást'').
 \end{itemize}
+Az így kapott rendszertechnika tehát egyetlen nem-lineáris átvitel alkalmazását igényli forrásoldalon és a teljes rendszer az eddig is tárgyalt Gamma-korrekciót valósítja meg.
+
+Ezzel tehát most már láthatjuk a Gamma-korrekció tényleges, jelenlegi szerepét:
+Habár manapság már a CRT kijelzőket szinte teljesen leváltották az LCD és LED alapon működő kijelzők, mégis a Gamma-korrekciót változatlanul alkalmazzák forrásoldalon.
+Jelentősége ma már \textbf{nem} a CRT képcsövek karakterisztikájának kompenzálása, hanem az érzékeléshez illeszkedő perceptuális kvantálás megvalósítása.
+
+\vspace{3mm}
+Manapság természetesen a nem-lineáris átvitel digitális megvalósítása nem számít költséges feladatnak.
+A jelenlegi megjelenítők vezérlőfeszültség-fénysűrűség karakterisztikája erősen nemlineáris, kijelzőről kijelzőre változik és jellemzően a CRT-k átvitelétől eltérő.
+Emiatt kijelző oldalon egyrészt a gamma-torzítást semlegesíteni kell, illetve a kijelző átvitelének megfelelően az $RGB$ jelek előtorzítása szükséges.
+Ezt a feladatot jellegzetesen közvetlenül kijelzés előtt megfelelő Look-up-Table alkalmazásával oldják meg.
+
+\vspace{3mm}
+A perceptuális kvantálás megvalósításához a különböző digitális formátumok a gamma-torzítást szabványos módon előírják.
+Ezen nem lineáris transzferkarakterisztikák a szabványban ún. \textbf{opto-elektronikus transzfer karakterisztika} néven szerepelnek.
+Pontos megválasztásuknak két fő szempontja van:
+\begin{itemize}
+\item A perceptuális kvantálás megvalósítása
+\item A megjelenítési körülmények kompenzációja
+\end{itemize}
+
+\paragraph{Megjelenítési körülmények kompenzációja:\\}
+Eddigi vizsgálatunk során az emberi látás jellemzői alapján a Gamma-korrekció exponensét 0.4-re választottuk.
+Mégis, a gyakorlatban ennél gyakran magasabb hatványkitevőket alkalmaznak.
+Ennek oka a megjelenítési körülményekre vezethető vissza: \ref{Fig:gamma} ábrán látható, hogy az RGB jelek 1-nél nagyobb hatványkitevőjű torzítása a kontraszt növekedéséhez és a színek telítéséhez vezet.
+Ismert tény, hogy a Stevens (Bartleson-Breneman) és a Hunt hatás alapján sötét környezetben a sötét árnyalatok megkülönböztetési képessége romlik, a kép észlelt kontrasztja csökken, a színek színezettsége csökken.
+%
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/stevens.png}
+	\end{overpic}
+	\caption{A Bartleson-Breneman hatás illusztrációja.}
+	\label{Fig:stevens_effect}
+\end{figure}
+A Bartleson-Breneman hatás pl. a \ref{Fig:stevens_effect} ábrán figyelhető meg.
+Látható, hogy az emberi látás világosságérzékelése már képen belül is jelentősen változik a háttérvilágítás függvényében:
+Egyrészt világos háttér előtt az érzékelt kontraszt (legvilágosabb és legsötétebb árnyalat aránya) nagyobb, a sötét háttérhez képest.
+Másrészt világos háttér előtt a világos árnyalatok által keltett világosságkülönbség nő, a sötét árnyalatok által keltett kontraszt csökken.
+Sötét háttér előtt a helyzet megfordul.
+Ez azt jelenti, hogy a világos háttér előtt a látás világosság-érzékelése 0.4-nél kicsit nagyobb, sötét háttér előtt 0.4-nél kisebb hatványfüggvénnyel közelíthető.
+
+Ha tehát a képi reprodukció helyszínén a környezeti fénysűrűség kicsi (pl. mozi) a megfelelő kontraszt és telítettség eléréséhez a kép előtorzítása szükséges.
+Ennek módja olyan Gamma-korrekciós tényező előírása, amely a megjelenítő Gamma-torzítása után egy nem-lineáris, 1-nél kicsivel nagyobb kitevőjű eredő átvitelt valósít meg, így növelve a kontrasztot és a telítettséget.
+A megfelelő Gamma-korrekcióval tehát a megjelenítési körülmények hatása kompenzálható.
+
+Ez alapján pl. TV képernyőn való megjelenítéshez az ITU-709-es HD szabvány által definiált opto-elektronikus átviteli függvény a
+\begin{equation}
+E = 
+\begin{cases}
+4.500 L, \hspace{20mm} \mathrm{ha}\, L < 0.018 \\
+1.099 L^{0.45} - 0.099, \hspace{3mm} \mathrm{ha}\, L \geq 0.018,
+\end{cases}
+\end{equation}
+alakú, ahol $L \in \{ R, G, B \}$.
+A görbe egy hatványfüggvényből és egy lineáris kezdeti szakaszból áll.
+Ez a lineáris szakasz megakadályozza, hogy a görbe meredeksége (azaz a sötét árnyalatok erősítése) végtelen nagy legyen, amely erősítés a kamera érzékelőjének zaját látható nagyságúra erősítené.
+Ahogy az ref{Fig:itu709} ábrán látható, a teljes görbe jól közelíthető egy $L^{0.5}$ függvénnyel.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.7\columnwidth ]{figures/itu709.png}
+	\end{overpic}
+	\caption{Az ITU-709 HD szabvány (és SD szabvány) és az NTSC ($1/2.2$-es) gamma-karakterisztikája.}
+	\label{Fig:itu709}
+\end{figure}
+A HD szabvány a kijelző oldalon minden esetben egy $\gamma_D \approx 2.5$-kitevőjű átvitelt feltételez.
+Ez a gamma-korrekcióval 1.25 eredő hatványkitevőjű torzítást eredményez, amely egy átlagos nappali megvilágítása mellett a készítők által elérni kívánt kontrasztot eredményezi.
+
+Ezzel szemben pl. a mozis célra szánt DCI-P3 szabvány a mozivásznon megjelenített kép 1.5-ös nem-lineáris torzítását írja elő \footnote{Valójában pl. HD esetén a teljes produkciós lánc minden eleme jól definiált, szabványosított.
+A képi tartalmat úgy állítják elő, hogy az a kívánt (szubjektíve esztétikus) módon jelenjen meg egy szabványos átlagos megjelenítési környezetben, amelyet a ITU-R BT.2035 szabvány definiál, szabványos ITU-R BT.1886 szabvány szerinti referencia képernyőn megjelenítve.}.
+A gyakorlatban természetesen a jelenlegi LCD kijelzők esetében a Gamma-torzítás (vagy éppen az eredő Gamma) szabadon állítható a néző számára optimális kontraszt beállítására.
+
+\subsection{A digitális ábrázolás dinamikatartománya}
+
+Az előzőekben láthattuk, hogy a perceptuális kvantálás lehetővé teszi az SD és HD tartalomra szánt színtér 10 biten való ábrázolását, valamint konzumer és műsorszórási célokra már 8 bites ábrázolás is kielégítő eredményt ad.
+Kézenfekvő lenne a rendelkezésre álló teljes dinamikatartomány kihasználása a digitális tartalom ábrázolására, azaz pl. a világosságjel 8 bites ábrázolása esetén a $\lbrace 0, 255 \rbrace$ tartomány kihasználása úgy, hogy 0 a feketéhez, 255 a fehérhez tartozó kódszó.
+Ezt az ún. full range hozzáállást alkalmazza pl. a JPEG kódoló, illetve számos közvetlenül RGB koordinátákkal dolgozó képszerkesztő szoftver.
+%https://books.google.hu/books?id=hOu5DQAAQBAJ&pg=PA427&lpg=PA427&dq=RGB+headroom+footroom&source=bl&ots=NsT6C3TiLr&sig=ACfU3U1HLa7oM0fxBZLHjs6PFfuyi2kflg&hl=en&sa=X&ved=2ahUKEwjSlf-Uw-PoAhWkw4sKHebNCl0Q6AEwC3oECA0QLw#v=onepage&q=RGB%20headroom%20footroom&f=false 
 
 \begin{figure}[]
 	\centering
-	\begin{minipage}[c]{0.63\textwidth}
-	\begin{overpic}[width = 0.47\columnwidth ]{figures/scart.jpg}
-	\end{overpic} \hfill
-		\begin{overpic}[width = 0.4\columnwidth ]{figures/vga.jpg}
-	\end{overpic} \end{minipage}\hfill
-	\begin{minipage}[c]{0.35\textwidth}
-	\caption{Analóg videótovábbításra alkalmazott SCART (a) és VGA (b) csatlakozók}
-	\label{Fig:scart_vga}  \end{minipage}
+	\begin{overpic}[width = 0.7\columnwidth ]{figures/ycbcr_dyn_range.png}
+	\end{overpic}
+	\caption{A digitális \ycbcr kódszavak dinamikatartománya.}
+	\label{Fig:ycbcr_dyn_range}
+\end{figure}
+Videótechnika szempontjából \ycbcr ábrázolás mellett gyakoribb az \textbf{narrow range} dinamika tartomány alkalmazása.
+Ebben az esetben a teljes dinamikatartomány csak egy részét töltik ki az érvényes \ycbcr (vagy éppen $RGB$) értékek, az érvényes kódszavak alatt és fölött ún. \textbf{footroom} és \textbf{headroom} található.
+Ezek a kódtartományok csak feldolgozás során (szűrések, mintavételi konverzió stb.) kihasználtak, a tárolás és továbbítás során nem tartalmaznak érvényes videóadatot.
+A headroom és a footroom célja a kép szűrése, feldolgozása során esetlegesen fellépő túl- és alullövések (Gibbs-jelenség) kezelése, tárolása adatvesztés (clipping) nélkül.
+
+8 bites reprezentáció esetén luma ($Y'$), illetve esetlegesen $R',G',B'$ jelekre a footroom 15 kódszónyi, míg a headroom 19 kód széles, így a luma jel 0 és 219 között vehet fel értékeket, tehát $16 \leq Y' \leq 235$ (A 0 és 255 kód szinkronizációs célokra foglalt).
+A headroom és footroom aszimmetriájának valódi nyomós oka nincsen.
+
+A $C'_\mathrm{B}$ és $C'_\mathrm{R}$ jelek esetén a nullszint a dinamikatartomány közepe, azaz a 128-as kód, míg headroom és footroom azonosan 15 kódnyi, azaz $16 \leq C'_\mathrm{B}, C'_\mathrm{R} \leq 240$.
+
+Magasabb bitszámon való ábrázolás esetén minden előbb leírt jelszint arányosan skálázódik.
+Az \ycbcr jelszintek tehát az \ypbpr analóg jelszintekből a 
+\begin{equation}
+\begin{bmatrix}[c]
+       Y' \\[0.3em]
+       C'_{\mathrm{B}} \\[0.3em]
+       C'_{\mathrm{R}} \end{bmatrix}
+       =
+D\cdot
+\begin{bmatrix}[c]
+       16 \\[0.3em]
+       128 \\[0.3em]
+       128 \end{bmatrix}
++
+D\cdot
+\begin{bmatrix}[c]
+       219 Y' \\[0.3em]
+       224 P'_\mathrm{B} \\[0.3em]
+       224 P'_{\mathrm{R}} \end{bmatrix}
+\end{equation}
+összefüggéssel számítható, ahol $D = 2^{N-8}$, $N$-el a bitszámot jelölve.
+
+\subsection{A színkülönbségi jelek alulmintavételezése}
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/umbrella.png}
+ 	\end{overpic}
+	\caption{Az \ycbcr komponensek tartalma egyszerű tesztkép esetén.
+	Megjegyezhető, hogy a $C_B$ és $C_R$ komponensek a színpont színezetét írják le $\lbrace -0.5, 0.5\rbrace$ dinamikatartományban, a tartalmuk ábrázolása így nem egyértelmű.
+	Jelen ábrán az egyszerűség kedvéért $Y=0.5$ mellett mutatja a színtartalmat ()}
+	\label{Fig:umbrella}
+\end{figure}
+%
+Az világosság és színinformáció külön kezelésének---azaz az $R'G'B'$ színpontok luma+chroma reprezentációjának---két nagy előnye volt bevezetésük idejében.
+Egyrészt történelmileg fontos előny a korai fekete-fehér TV vevőkkel való visszafelé kompatibilitás, ahogy azt a következő fejezet tárgyalja.
+Másrészt az ábrázolásmód jobban illeszkedik az emberi színérzékelés modelljéhez\footnote{Habár az emberi szemben a fényérzékelés három különböző, jellemzően vörös, zöld és kék árnyalatokra érzékeny fotoreceptorral történik, az opponens színelmélet alapján a látóidegeken már egy világosságinformáció-jellegű és két színezetet leíró ingerület terjed}:
+az emberi látás színezet-információra vett kisebb felbontása lehetővé teszi az analóg chroma jelek sávszélesség-csökkentését, azaz a színjelek kisebb felbontáson való tárolását, átvitelét.
+Digitális ábrázolás, azaz \ycbcr reprezentáció esetén ez a csökkentett felbontású színjel-ábrázolást a \textbf{chroma-alulmintavételezés} (\textbf{chroma subsampling}) valósítja meg.
+
+\subsection*{A mintavételi struktúra jelzése:\\}
+Az \ycbcr komponensek tartalma egy egyszerű mintakép esetén a \ref{Fig:umbrella} ábrán látható.
+Egyértelmű, hogy a színezet-tartalom ritkán tartalmaz apró részleteket (nagyfrekvenciás tartalmat), így a chroma jeleket elegendő kisebb felbontással tárolni.
+A chroma jelek felbontása a horizontális és vertikális irányban is csökkenthető, jellegzetesen a luma jel felbontása felére, vagy negyedére választják, azaz alulmintavételezik.
+Így különböző \textbf{mintavételi struktúrák,} vagy \textbf{sémák} (\textbf{subsampling scheme}) alakíthatóak ki.
+A chroma jel felbontásának a lumáéhoz képesti változását a horizontális és vertikális irányban a
+\begin{equation}
+J : a : b : \alpha
+\end{equation}
+mintavételi struktúra jelzéssel adható meg, ahol az egyes betűk a következőket jelölik:
+\begin{itemize}
+\item $J$: a horizontális referencia szám.
+Eredetileg (NTSC és SD esetén) a luma jel mintavételi frekvenciáját jelölte $f^{Y'}_s = J \cdot 3\,\frac{3}{8}~\mathrm{MHz}$ formában (azaz hányszorosa a luma jel mintavételi frekvenciája az NTSC rendszer színsegédvivő-frekvenciájának).
+A HD formátumok esetében már $J=22$ nagyságú értékeket kellett volna jelölni.
+Ehelyett végül referenciaértékként fixen 4-re választják, amelyhez képest megadhatjuk a chroma jelek alulmintavételezésének mértékét.
+\item $a$: a $J$ pixelre eső chroma ($C_{\mathrm{B}}$ és $C_{\mathrm{R}}$) minták száma egy sorban, tehát a színkülönbségi jelek vízszintes irányú alulmintavételezésének mértéke a lumához képest.
+Így pl. $J:a= 4:2$ a chromaminták számának felezését jelöli a vízszintes irányban.
+\item $b$: a chroma minták függőleges irányú alulmintavételezésének jelzése.
+Ha $b = a$, akkor nincs vertikális alulmintavételezés.
+Ha $b = 0$, akkor a 2:1 arányú alulmintavételezés történik (azaz a chroma jel vertikális felbontása a luma fele).
+\item $\alpha$: a színkulcsolási (pl. green box) csatorna jelenlétét jelzi. 
+Ha van színkulcsolás, akkor $\alpha = J$, máskülönben nem jelöljük.
+\end{itemize}
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures/chroma_subsampling.png}
+ 	\end{overpic}
+	\caption{A leggyakrabban alkalmazott chroma mintavételi struktúrák szemléltetése.}
+	\label{Fig:chroma_subsampling}
+\end{figure}
+Természetesen a chroma jelek alulmintavételezése egyszerű veszteséges tömörítésként fogható fel, a tárolás és továbbítás során létrejövő adatmennyiség csökkentésére alkalmas.
+Megjelenítés előtt az alumintavételezett chroma jelek felbontását megfelelő eljárással vissza kell állítani az eredetire, amely után a megjelenítendő $R'G'B'$ jelek kiszámíthatók.
+
+\subsubsection*{Néhány gyakori mintavételi struktúra:\\}
+
+A leggyakrabban alkalmazott chroma mintavételezési struktúra a \ref{Fig:chroma_subsampling} ábrán láthatóak:
+\begin{itemize}
+\item \textbf{4:4:4}: Ezen mintavételi struktúra esetén sem horizontális, sem vízszintes alulmintavételezés nem történik, a chroma jelek felbontása a luma jelével megegyező.
+Ez esetben választható közvetlen $R'G'B'$ ábrázolás is az \ycbcr helyett.
+Konzumer berendezésekben nem alkalmazzák, filmstúdiókban (pl. CGI feldolgozás, filmszkennelés, utómunkálatok során gyakrabban).
+Elsőként az ITU-2020 UHD ajánlásban jelent meg szabványosított formában.
+Egy pixel ábrázolása 8 bites bitmélység esetén $3 \cdot 8 ~\mathrm{bit} = 24~\mathrm{bit}$ adatigényű.
+%
+\item \textbf{4:2:2}: A chroma jelek vízszintes felbontása a luma jelek fele, míg függőlegesen nincs alulmintavételezés.
+A chroma minták vízszintesen minden második luma mintával megegyező pozícióban helyezkednek el (\textbf{cosited}) (ld. később).
+Ez az alapvető SD és HD stúdióformátum, konzumer célra inkább csak high-end berendezések alkalmazzák.
+Mivel jut pixelre egy $C_{\mathrm{R}}$ és egy $C_{\mathrm{R}}$ minta, egy pixel ábrázolása 8 bit/komponens esetén $(1+ 2\cdot \frac{1}{2})\cdot 8~\mathrm{bit} = 16~\mathrm{bit}$-et vesz igénybe, így a tömörítési tényező 4:4:4-hez képest $\frac{2}{3}$.
+%
+\item \textbf{4:1:1}: Manapság ritkábban alkalmazott mintavételi struktúra, DV kézikamerák, olcsóbb konzumer elektronikák használták.
+A chroma minták vízszintes felbontása a luma felbontásának negyede, függőlegesen nincs alulmintavételezés.
+Mivel 4 pixelre jut egy-egy chroma minta, így egy pixel ábrázolása 8 bit/komponens esetén $(1+ 2\cdot \frac{1}{4})\cdot 8~\mathrm{bit} = 12~\mathrm{bit}$-et vesz igénybe. 
+A tömörítési faktor 4:4:4-hez képest $\frac{1}{2}$.
+%
+\item \textbf{4:2:0}: A manapság is legelterjedtebb, a digitális műsorszórás és lokális, digitális videótárolás mintavételi struktúrája.
+A chroma jelek mind horizontálisan, mind vertikálisan felezett felbontásúak a lumához képest.
+Hasonlóan a 4:1:1-hez, mivel 4 pixelre jut egy-egy chroma minta, így egy pixel ábrázolása 8 bit/komponens esetén $(1+ 2\cdot \frac{1}{4})\cdot 8~\mathrm{bit} = 12~\mathrm{bit}$-et vesz igénybe, és a tömörítési faktor 4:4:4-hez képest $\frac{1}{2}$.
+
+A 4:2:0 mintavételi struktúra megvalósítása két módon lehetséges, ahol a módszerek között a chroma minták horizontális helye tesz különbséget:
+\begin{itemize}
+\item A JPEG és MPEG-1 mintavételi struktúrája esetében a chroma minták horizontálisan minden második luma-minta \textbf{közé} esnek.
+\item MPEG-2 és újabb kódolok esetén a chroma minták horizontálisan \textbf{egybeesnek} minden második luma-mintával.
+\end{itemize}
+\end{itemize}
+Felmerülhet a kérdés, hogy hogyan értelmezhető a chroma minták helye a luma-mintákhoz képest.
+A ennek megválaszolásához fontos ismerni, milyen jelfeldolgozási lépések szükségesek a különböző mintavételi struktúrák előállításához.
+
+\subsubsection*{A mintavételi struktúra-konverzió kérdései:\\}
+
+Láthattuk, hogy a chroma jelek csökkentett felbontású tárolása két fontos jelfeldolgozási lépést igényel:
+\begin{itemize}
+\item adó oldalon az $R'G'B'$ jelekből képzett chroma jelek csökkentett mintavételi frekvenciával való mintavételezése, vagy eleve digiális ábrázolás esetén a mintavételi struktúrának megfelelően chroma minták elhagyása, azaz \textbf{decimálása}
+\item vevő oldalon a megjelenítéshez a hiányzó minták pótlása, azaz \textbf{interpolációja}, majd az $R'G'B'$ komponensek számítása és megjelenítése.
+\end{itemize}
+
+\paragraph{A decimálás megvalósítása}
+Általánosan, decimálás során a feladat a bemeneti jel mintavételi frekvenciájának csökkentése.
+Jól ismert tény, hogy egy jel mintavételezése hatására a folytonos jel spektruma a mintavételi egész számú többszörösein ismétlődni fog.
+Emiatt ha a jel sávszélessége nagyobb, mint a mintavételi frekvencia fele a spektrumok átlapolódnak, és a jel nem állítható vissza mintáiból.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth ]{figures/decimation.png}
+ 	\end{overpic}
+	\caption{A decimálás (alulmintavételezés) folyamatábrája: 
+	(1) a bemeneti jel, és $F(1)$ a bemenő jel spektruma.
+	(2) az átlapolódásgátló szűrő kimenete és $F(2)$ ennek spektruma.
+	(3) a kimeneti jel.}
+	\label{Fig:decimation}
+\end{figure}
+Videótechnikában az átlapolódás jól látható zavaró hatással van a visszaállított képre, így a szabványok szigorúan definiálják a mintavételezés előtt az analóg jel sávkorlátozásához szükséges aluláteresztő szűrőket.
+Ugyanez a jelenség fennáll eleve mintavett jel mintavételi frekvenciájának csökkentése esetén is:
+A mintavételi frekvencia csökkentése után a mintavett jel spektruma az új mintavételi frekvencia egész számú többszörösein fog ismétlődni, ahogy a \ref{Fig:decimation} ábrán látható.
+Emiatt az átlapolódás/visszahajlás elkerülése érdekében a jelet újramintavételezés előtt az új mintavételi frekvencia felére kell sávkorlátozni ún. \textbf{átlapolódásgátló szűrés} (\textbf{antialising filtering}) alkalmazásával.
+A decimálás folyamatábráját a \ref{Fig:decimation} ábra mutatja.
+
+\vspace{3mm}
+Vegyük észre, hogy pl. 4:4:4-ről 4:2:2-re való konverzió során a horizontális minták eldobása során a chroma jelek mintavételi frekvenciáját a felére csökkentjük.
+Így tehát sávkorlátozás nélkül---amely a nagyfrekvenciás részletek elkenését jelenti---a minták elhagyása után a chroma jel jó eséllyel átlapolódik.
+Ennek megfelelően decimálás során a mintacsökkentés előtt minden esetben a chroma-jel aluláteresztő szűrése szükséges, 4:4:4 $\rightarrow$ 4:2:2 konverzió esetén pl. az eredeti horizontális irányú sávszélesség felére történő sávkorlátozással.
+4:4:4 $\rightarrow$ 4:2:0 mintastruktúra elérése esetén vertikális alulátersztő szűrés is szükséges.
+
+\begin{figure}[h!]
+	\centering
+	\begin{overpic}[width = 0.75\columnwidth ]{figures/aliasing2.png}
+ 	\end{overpic}
+	\caption{Példa a színkülönbségi jelek átlapolódására nem megfelelő átlapolódásgátló szűrés esetén.
+ 	A tesztkép (a) egy mind vertikális, mind horizontális irányban növekvő frekvenciájú vörös és zöld alapszín között ingadozó térbeli szinusz.
+ 	A (b) ábra a tesztkép átlapolódásgátló szűrés nélküli 4:4:4 $\rightarrow$ 4:1:1 konverziójának eredményét mutatja be, inteproláció során egyszerű mintaismétlést alkalmazva ($\mathbf{h}_H= \left[ 1\,1 \,1 \,1 \right]^{\mathrm{T}}$).
+	A (c) ábra ideális aluláteresztő szűrést alkalmaz mind átlapolódásgátló, mind interpolációs szűrőként.}
+	\label{Fig:chroma_subsampling}
+\end{figure}
+\vspace{3mm}
+Az átlapolódásgátló szűrés elhagyásának hatását az \ref{Fig:chroma_subsampling} (a) ábra mutatja $4:4:4 \rightarrow 4:1:1$ konverzió esetén.
+Látható, hogy az átlapolódási jelenségek ún. Moiré ábrák kirajzolódásában manifesztálódnak térben periodikus képelemek esetén \footnote{A jelen mintakép a horizontális irányban periodikus, emiatt az átlapolódás hatása fokozottan látható.
+A mintavételi tétel be nem tartása miatt (a térbeli mintázat frekvenciája nagyobb, mint amit a fennmaradó chroma mintákkal ábrázolni lehetne) az eredeti minta helyett új, belapolódó komponensek jelennek meg.}.
+A megfelelő átlapolódásgátló szűrés tehát kritikus jelentőségű.
+
+Részletek nélkül: a képtartalom aluláteresztő szűrése, azaz a részletek ,,elkenése'' legegyszerűbben a szomszédos minták (pixelek) súlyozott átlagolásával történik \footnote{Más szóval a kép FIR szűrésével}: 
+Tételezzük fel, hogy mind vízszintes, mind függőleges irányban szűrjük a képet, azaz átlagoljuk a szomszédos mintákat.
+Az átlagolás során a vízszintes, illetve függőleges minták súlyát rendre $\mathbf{h}_H = h_H(n)$ és $\mathbf{h}_V = h_V(n)$ vektorok tartalmazzák.
+Jelöljük az aktuális kép adott komponensének (pl. $C_{\mathrm{B}}$, $C_{\mathrm{R}}$) $m.$ sorának $n.$ oszlopának intenzitását $x(m,n)$-el.	
+Ekkor a szűrt (azaz súlyozott átlagolt) képelemek intenzitása
+\begin{equation}
+y(m,n) = \sum_{k = -\infty}^{\infty} \sum_{l = -\infty}^{\infty} x(k,l)\, h_V(m-k) \, h_H(n-l)
+\end{equation}
+alakban adható, amely egy függőleges és vízszintes irányú konvolúciót ír le.
+A $h_H(n)$ és $h_V(n)$ vektorok a horizontális és vertikális szűrőegyütthatók, vagy szűrőkernelek (impulzusválaszok).
+
+Legegyszerűbb esetben mind vertikális, mind horizontális irányban egyszerűen a két szomszédos minta átlagát képezzük.
+Ezt az egyszerű átlagolást a 
+\begin{equation}
+\mathbf{h}_H =
+\mathbf{h}_V =
+\begin{bmatrix}[c]
+       1/2 \\[0.3em]
+       1/2\end{bmatrix}
+\end{equation}
+szűrőegyütthatókkal való szűrés valósítja meg.
+Ez a megoldást használja a JPEG és MPEG-1 kódoló a szabványos 4:2:0 formátumra való konverzió során a chroma jelek szűrésére, minden második horizontális és vertikális minta eldobása előtt.
+Mivel minden chroma minta 4 szomszédos minta egyszerű átlagaként áll elő, ezért az eredményként kapott átlagminta a négy eredeti minta közé esik.
+
+A szűrés számításigényének növelésével, hosszabb szűrőket alkalmazva a szűrés hatékonysága növelhető, a zárósávban (az decimálás utáni mintavételi frekvencia fele fölött) nagyobb elnyomás valósítható meg.
+Az MPEG-2 kódoló a vertikális irányban az MPEG-1-el megegyező egyszerű átlagolást alkalmaz, míg a horizontális irányban 3 minta átlagolásával hozza létre a szűrt jelet, így az MPEG-1-nél pontosabb szűrést elérve.
+A szűrőegyütthatók így MPEG-2 esetében
+\begin{equation}
+\mathbf{h}_V =
+\begin{bmatrix}[c]
+       1/2 \\[0.3em]
+       1/2\end{bmatrix}
+,
+\hspace{1cm}
+\mathbf{h}_H =
+\begin{bmatrix}[c]
+       1/4 \\[0.3em]
+       1/2 \\[0.3em]
+       1/4\end{bmatrix}
+\end{equation}
+Mivel a vízszintes irányban 3 minta átlagolódik, amelyek közül a középső szerepel a kimenetben a legnagyobb súllyal, így MPEG-2 esetében a szűrt és decimált chroma minták horizontálisan minden második luma minta (azaz az eredeti chroma minta) helyével esnek egybe.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth]{figures/interpolation.png}
+ 	\end{overpic}
+	\caption{Az egyszerű lineáris szűréssel megvalósított interpoláció folyamatábrája:
+	(1) a bemeneti jel, és $F(1)$ a bemenő jel spektruma.
+	(2) a nullákkal kibővített bemenő jel és $F(2)$ ennek spektruma.
+	(3) az interpolációs szűrő kimenete.}
+	\label{Fig:interpolation}
 \end{figure}
 
-Az $Y'P'_B P'_R$ komponensjelek közvetlen digitalizálásával kapjuk az $Y'C'_BC'_r$ digitális komponens videójelek.
-A következő fejezet ennek a digitalizációs lépésnek különböző megfontolásaival foglalkozik.
+\paragraph{Az interpoláció megvalósítása}
+A decimálás ellentétes műveleteként, a vevő oldali interpoláció során a feladat a bemeneti jel mintavételi frekvenciájának növelése, azaz az adó oldalon eldobott chroma minták becslése.
 
+Jelfeldolgozás szempontjából az interpoláció folyamata a \ref{Fig:interpolation} ábrán látható:
+A mintavételi frekvencia növeléséhez az ismert minták közé az új mintavételi pontokban 0 kezdeti értékű mintákat helyezünk el.
+A csupa-nulla értékű jel az eredeti jelhez adása természetesen a spektrumokat nem módosítja, azonban a valódi mintavételi frekvencia értéke azonban megnőtt, az ábrán látható példában kétszeresére.
+Ez alapján egyértelmű, hogy az új mintavételi pontokban a jel értéke a szomszédos minták alapján történő becslése egyenértékű a fennmaradó ,,image'' spektrumok kiszűrésével.
+Az interpoláció tehát a bemenet egyszerű aluláteresztő szűrésével megvalósítható, ez az ún. \textbf{rekonstrukciós szűrő}.
+\begin{figure}[t!]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth]{figures/subsampling_Example.png}
+ 	\end{overpic}
+	\caption{Egyszerű példa a színkülönbségi jelek alulmintavételezésére.
+	A felső ábrasor a teljes, csökkentett színfelbontású képet mutatja interpoláció után, míg az alsó ábrasor csak a színinformációt ábrázolja.}
+	\label{Fig:chroma_subsampling_Ex}
+\end{figure}
+
+Hasonlóan a decimáláshoz, az aluláteresztő szűrés legegyszerűbben a szomszédos minták súlyozott átlagolásaként valósítható meg mind a horizontális, és vertikális irányban. 
+Legegyszerűbb esetben a horizontális és vertikális rekonstrukciós szűrőegyütthatók a
+\begin{equation}
+\mathbf{h}_H =
+\mathbf{h}_V =
+\begin{bmatrix}[c]
+       1 \\[0.3em]
+       1\end{bmatrix}
+\end{equation}
+alakban adhatók meg.
+Könnyen belátható, hogy a szűrő mindkét irányban egyszerű mintaismétlést valósít meg (azaz a visszaállított képelem ,,pixeles'' lesz).
+A szükséges számításigény növelésével a hiányzó minták pontosabban is becsülhetők, pl. a 
+\begin{equation}
+\mathbf{h}_H =
+\mathbf{h}_V =
+\begin{bmatrix}[c]
+       1/2 \\[0.3em]
+       1 \\[0.3em]
+       1/2 \end{bmatrix}
+\end{equation}
+szűrőegyütthatókkal való szűrés (2:1 arányú interpoláció esetén) egyszerű lineáris interpolációt valósít meg.
+A lineáris szűrés (azaz az egyszerű súlyozott átlagolás) mellett egyéb, bonyolultabb módszerek is léteznek az interpoláció megvalósítására, pl. magasabb rendű hatványfüggvényekkel való közelítések (bicubic interpolation).
+Az \ref{Fig:interpolation} ábrán látható példa természetesen kirívó, extrém esetet szemléltet.
+
+Látható, hogy a bemutatott decimálásra és interpolációra alkalmazott aluláteresztő szűrőegyütthatók formailag megegyeznek.
+Fontos különbség, hogy a decimáláshoz alkalmazott szűrőegyütthatók összege 1, hiszen az ettől eltérő súlyozás a jelenergia megváltozását eredményezné (a kép intenzitása változna), míg $N:1$ arányú interpoláció esetén a rekonstrukciós szűrő együtthatóinak összege $N$, hiszen rekonstrukció során egy minta értékéből $N$ mintát becslünk.
+
+A \ref{Fig:interpolation} (c) ábrán látható példában mind az átlapolódásgátló, mind a rekonstrukciós szűrő ideális szűrést valósít meg.
+Látható, hogy a szűrés eredményeképp a kép azon részén, ahol a színezet változása a decimálás után már nem ábrázolható a $C_B$ és $C_R$ jelek ,,elkenése'' miatt az apró részletek helyett egy átlagos színezet jelenik meg (ami jelen esetben sárga).
+A bemutatott példában az átlapolódás teljesen elkerülhető.
+
+\vspace{3mm}
+A gyakorlatban előforduló természetes képek esetében elmondható, hogy a chroma komponens ritkán tartalmaz olyan nagyfrekvenciás komponenseket amelyek kiszűrése látható hatással lenne a teljes, megjelenített (visszainterpolált) képre.
+A \ref{Fig:chroma_subsampling_Ex} ábra egy ilyen gyakrabban előforduló tesztképre mutatja be a chroma-alulmintavételezés hatását.
+Látható, hogy még a példa kedvéért létrehozott 4:1:0 formátum esetében is---amely esetben a chroma jelek felbontása horizontális és vertikális irányban is a luma negyede---, a visszaállított képen a színjelek felbontáscsökkentése nem zavaró.
+A 4:2:0 formátum ehhez képest közel az eredetivel megegyező minőséget biztosít felezett horizontális és vertikális chroma felbontás mellett.
 
 \vspace{2cm}
 \noindent\rule{12cm}{0.4pt}

@@ -1,0 +1,106 @@
+%\documentclass{wileySev}
+%%\documentclass{wileySix}
+\documentclass{book}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{overpic}
+\usepackage{tabularx} % in the preamble
+\usepackage{hyperref}
+\usepackage{caption,graphicx,enumitem}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{movie15}
+\usepackage{makecell}
+\usepackage[makeroom]{cancel}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+\usepackage{mathtools, nccmath}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\makeatother
+
+\DeclarePairedDelimiter{\nint}\lfloor\rceil
+
+\DeclarePairedDelimiter{\abs}\lvert\rvert
+\newcommand{\ycbcr}{$Y'C_{\mathrm{B}}C_{\mathrm{R}}$}
+\newcommand{\ypbpr}{$Y'P_{\mathrm{B}}P_{\mathrm{R}}$}
+\newcommand{\xyz}{$XY\!Z$}
+\renewcommand\theadalign{bc}
+\renewcommand\theadfont{\bfseries}
+\renewcommand\theadgape{\Gape[4pt]}
+\renewcommand\cellgape{\Gape[4pt]}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\usepackage[american]{babel}
+%%%%%%%
+%% for times math: However, this package disables bold math (!)
+%% \mathbf{x} will still work, but you will not have bold math
+%% in section heads or chapter titles. If you don't use math
+%% in those environments, mathptmx might be a good choice.
+
+% \usepackage{mathptmx}
+
+% For PostScript text
+\usepackage{w-bookps}
+\usepackage{sidenotes}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+
+\title{Foundations of Multimedia Technologies}
+\author{Dr. Firtha Gergely}
+\date{\today}
+  
+
+\begin{document}
+\sloppy 
+
+
+\titlepage
+\maketitle
+\cleardoublepage 
+  
+\tableofcontents
+
+\pagenumbering{arabic}			% arabic page numbering
+\setcounter{page}{1}			% set page counter 
+%\chapter{Az emberi látás tulajdonságai}
+%\label{sec:HVS}
+%\input{HVS} 
+%
+%\chapter{Fény- és színmérés}
+%\label{sec:colorimetry}
+%\input{colorimetry}
+
+\chapter{Representation of colors in video technologies}
+\label{sec:video_color_representation}
+\input{video_colorspaces_en} 
+
+\chapter{Video formats}
+\label{sec:video_formats}
+\input{video_formats_en} 
+
+%\chapter{A videótömörítés alapjai}
+%\label{sec:compression}
+%\input{compression} 
+%
+%\chapter{Az MPEG tömörítés}
+%\label{sec:mpeg}
+%\input{mpeg} 
+
+\end{document}
+

@@ -22,12 +22,15 @@
   \array{#1}}
 \makeatother
 \usepackage{mathtools, nccmath}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\makeatother
 
 \DeclarePairedDelimiter{\nint}\lfloor\rceil
 
 \DeclarePairedDelimiter{\abs}\lvert\rvert
-\newcommand{\ycbcr}{$Y'C'_{\mathrm{B}}C'_{\mathrm{R}}$}
-\newcommand{\ypbpr}{$Y'P'_{\mathrm{B}}P'_{\mathrm{R}}$}
+\newcommand{\ycbcr}{$Y'C_{\mathrm{B}}C_{\mathrm{R}}$}
+\newcommand{\ypbpr}{$Y'P_{\mathrm{B}}P_{\mathrm{R}}$}
 \newcommand{\xyz}{$XY\!Z$}
 \renewcommand\theadalign{bc}
 \renewcommand\theadfont{\bfseries}
@@ -91,10 +94,6 @@
 \chapter{A videótechnika színterei}
 \label{sec:video_color_representation}
 \input{video_colorspaces} 
-
-\chapter{A színpontok digitális reprezentációja}
-\label{sec:digital_video}
-\input{digital_video}
 
 \chapter{Videóformátumok}
 \label{sec:video_formats}
