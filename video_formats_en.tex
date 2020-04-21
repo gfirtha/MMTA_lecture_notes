@@ -1,25 +1,31 @@
-Az előző fejezet témája a színes képpontok ábrázolásának módja volt mind analóg, mind digitális esetben.
-A jelen fejezet bemutatja, hogyan állíthatók össze ezen képpont-reprezentációkból az analóg és digitális videójelek, illetve az így létrehozott videóformátumok paraméterválasztásának kérdéseivel foglalkozik. 
+The previous chapter introduced the representation of color pixels in analog and digital systems.
+The current chapter presents how analog and digital video signals can be formed by using these pixel representations and discusses how the parameters of the resulting video formats were chosen.
 
-\section{A videójel felépítése és jellemzői}
+\section{Structure and properties of the video signal}
 
-Elsőként a korai, normál felbontású analóg televíziós rendszerek képformátumát és paramétereinek megválasztásának kérdéseit tárgyaljuk, kezdve az NTSC és PAL rendszerben alkalmazott képformátum jellemzőivel, amelyet közvetlenül átvett az SD digitális formátum is.
-Bár ezen analóg rendszerek már csak elvétve vannak használatban világszerte---Magyarországon például több éves digitális átállásra való előkészülés után 2013-ban szűnt meg az analóg műsorszórás---, mégis fontos tárgyalni főbb jellemzőit.
-Ennek oka, egyrészt, hogy a paraméterek megválasztásának irányelvei ugyanúgy vonatkoznak a jelenlegi videóformátumokra is.
-Másrészt a jelenleg alkalmazott képformátumok számos jellemzője ezen korai analóg formátumok hagyatéka.
+The discussion starts with the questions that arose at the establishment of the early analog TV broadcast systems, beginning with the format parameters elaborated for the NTSC and PAL standards and later adopted by the SD digital format.
+These analog systems are, of course, already superseded by digital transmission and broadcasting standards.
+However, their discussion is still of great importance, on one hand because the principles of their actual parameter choices hold unchanged for introducing modern systems as well.
+On the other hand, a large number of parameters, used in HD and UHD formats are the legacy of these early systems.
 
-\subsection{Az analóg videójel felépítése}
+\subsection{Structure of the analog video signal}
 
-Az egyes videóparaméterek tárgyalása előtt fontos tisztázni, hogyan épül fel az analóg videójel, amely utána egyszerűen kiterjeszthető a digitális esetre is.
-Az előző fejezetben látható volt a CRT megjelenítők működési elve: láthattuk, hogy az RGB alapszínek létrehozásáért a képernyőt bevonó foszforanyagok feleltek, amelyek gerjesztés hatására adott spektrális eloszlású fényt bocsájtanak ki.
-Egy konkrét CRT megjelenítő által alkalmazott foszforanyagok jellemzőit a \ref{sec:CRT} szakasz tárgyalta részletesen, a CRT működési elvét is bemutatva.
-A foszforok gerjesztését egy elektronágyú valósítja meg, amelynek elektronnyaláb-áramsűrűsége a vezérlőfeszültségének kb. 2.2 kitevőjű hatványa (ld. gamma-torzítás).
+Before discussing the actual video parameters the structure of the video signals is introduced.
+The term video signal refers to the signal, carrying video information either from a broadcasting video source, or between local electronic devices (e.g. from set-top-box to the TV on a HDMI interface, or from a computer/laptop to an external display through VGA interface).
+Even today, the structure of the digital video signal is completely identical with the analog representation, that's structure is the result of the operation principle of early CRT displays.
 
-Megfelelően vezérelt mágneses eltérítők segítségével ez az elektronnyaláb sorról sorra járja be a kijelzőt\footnote{A bejárás megválasztása nem egyértelmű, a fekete-fehér szabvány létrehozása során vizsgálták az oszloponkénti bejárás, illetve a soronkénti váltott-irányú (oda-vissza) bejárás lehetőségét is, azonban az áramköri megvalósíthatóság szempontjából a bemutatott megoldás mellett esett a választás.}.
-Sor végére érkezve horizontálisan visszafutva a következő TV-sor elejére, kép végére érkezve vertikálisan visszafutva a következő képernyő elejére.
-Fontos alapelv az analóg TV-technikában, hogy a videójel vétele és kijelzése teljesen valós-időben valósul meg (a korai vevők esetében analóg tárolót nem lehetett beépíteni).
-A videójel tartalma ezért maga a megjelenítendő kép sorainak tartalma---fekete-fehér esetben egyetlen $Y'$ jel, színes kép esetén az $R'G'B'$ intenzitások, vagy az ezekből képzett luma-chroma jelek---sorról sorra ábrázolva.
-A sorról sorra történő kijelzés alapelve a \ref{Fig:TV_signal} (a) ábrán látható.
+In the previous chapter \ref{sec:CRT} gave a detailed explanation on the principle of cathode-ray tube based imaging devices:
+The realization of the RGB primaries was achieved by phosphores covering the screen, emitting visible light when excited.
+The excitation was ensured by an electron gun, producing a narrow electron beam, with the current density being approximately proportional to the 2.2 power of the input voltage (hence the original need for gamma correction).
+
+The electron beams (one in case of black and white, three beams in case of colored display), driven with the input voltage of the video signal, are focused and steered by properly driven magnetic coils, and scan the display screen line by line, along \textbf{scan lines} in a predefined \textbf{raster scanning pattern}\footnote{The choice of scanning the screen linewise is not absolutely obvious, while creating the early black and white TV standards other solution, e.g. columnwise or back-and-fortha linewise scanning types were also investigated.}.
+As the electron beam reaches the end of a given scan line, it retraces horizontally to the beginning of the next line.
+Similarly, by reaching the lower end of the screen the beam retraces vertically to the beginning of the next frame.
+
+An important principle of CRT displays is that the video data is received and displayed real-time, instantaneously (when early TV receivers were introduced circuits existed for storing video data).
+Hence, the analog video signal is basically the driving voltage of the CRT electron guns, containing the video data line by line: 
+In case of a black and white display, the video signal consists of the continuous luma information $Y'$, while in color receivers the receiver either receives directly the $R'G'B'$ signals (not used in video broadcasting), or demodulates them from the luma-chroma representation.
+The principle of raster scanning is depicted in Figure \ref{Fig:TV_signal} (a).
 %
 \begin{figure}[]
 	\centering
@@ -41,106 +47,117 @@ A sorról sorra történő kijelzés alapelve a \ref{Fig:TV_signal} (a) ábrán 
 		\put(0,0){(c)}		\end{overpic}
 	\end{minipage}
 %
-	\caption{Az analóg videójel felépítésének elve}
+	\caption{General structure of analog video signal}
 	\label{Fig:TV_signal}
 \end{figure}
 %
 
-Természetesen az elektronnyalábnak véges idő alatt kell az egyes sorok végéről a következő sor elejére futnia, illetve a kép végére érve a következő kép kezdetére visszatérnie.
-Ezalatt az idő alatt az elektronnyaláb kioltott állapotban kell, hogy legyen, különben a visszafutás látható nyomot hagyna a kijelzőn.
-Ez a gyakorlatban azt jelenti, hogy a videójel ezekben az időszakokban nulla, vagy negatív értékű, azaz feketeszintű, vagy az alatti értékű.
-Ezek az ún. \textbf{kioltási intervallumok (blanking interval)}, amelyek kihasználhatók információ-hordozásra is, ahogy azt a következőekben látni fogjuk.
-Alapvető fontosságúak az ezekben az időintervallumokban elhelyezett ún. \textbf{szinkronjelek}, vagy \textbf{szinkronimpulzusok}.
-Ezek az impulzusok az egyes sorok, illetve képek kezdetét jelzik a vevőnek annak érdekében, hogy az egyes videóminták a megfelelő pozícióban jelenjenek meg.
+Obviously, it takes a finite time for the electron beam to retrace from the end of a line to the beginning of the next one, and similarly to retrace from the end of the screen to the beginning.
+During these \textbf{retracing intervals} the electron beam is turned off, i.e. \textbf{blanked}, otherwise undesired traces would appear on the screen.
+In practice this means that during these \textbf{blanking intervals} the video signal is zero, or negative valued, i.e. it takes black level, or synch level.
+In the blanking interval synchronizing pulses are added to the video signal that ensure that the oscillators in the receiver remain locked with the transmitted signal, so that the image can be reconstructed on the receiver screen.
 
-Az elmondottak alapján a sorfolytonos videójel jól megkülönböztethető időintervallumokra bontható:
+Based on the foregoing the linewise video signal contains three distinct time intervals:
 \begin{itemize}
-\item \textbf{Aktív soridőre}, amely egy adott TV-sor tényleges tartalmát tartalmazza.
-Analóg formátumok esetén az intervallum hosszát $\mu \mathrm{s}$-ben, digitális esetben pixelben mérjük.
-\item A \textbf{sorkioltási időre (horizontal blanking)}, vagy horizontális kioltási időre, amely idő alatt az elektronnyaláb kioltott állapotban a következő sor elejére fut.
-A sorkioltási időben kerül elhelyezésre a \textbf{sorszinkron impulzus (HSYNC)}, amely gyakorlatilag a sorvisszafutás triggerjeleként fogható fel.
-A sorszinkron impulzus előtti és utáni rövid intervallumok rendre az ún. előváll és utóváll (front porch és back porch).
-Analóg formátumok esetén a kioltási intervallum hosszát $\mu \mathrm{s}$-ben, digitális esetben pixelben mérjük
-\item A \textbf{képkioltási időre (vertical blanking)}, amely idő alatt az elektronnyaláb kioltott állapotban a képernyő végéről a képernyő első sorának elejére fut.
-A vertikális kioltás hosszát jellemzően soridőben mérik (inaktív sorok száma).
+\item The \textbf{active video content}, containing the actual video information of one line.
+In analog formats the length of the active video interval is expressed in $\mu \mathrm{s}$, and in $\mathrm{px}$-s in the digital case.
+\item The \textbf{horizontal blanking interval}, the time it takes for the electron beam to retrace from the end of the actual scan line to the beginning of the next scan line.
+The horizontal blanking interval contains the horizontal sync pulse (\textbf{HSYNC}) with negative signal level (i.e. ,,blacker than black''), serving as the trigger pulse for the horizontal retracing circuit.
+The sync pulse is separated from the active video data with black level intervals before and after the sync pulse, termed as the front porch and black porch.
+The length of horizontal blanking is expressed in $\mu \mathrm{s}$ in the analog, and in $\mathrm{px}$-s in the digital case.
+\item The \textbf{vertical blanking interval (VBI)}, the time it takes for the electron beam to retrace from the end of the actual frame to the beginning of the next frame.
+The vertical blanking interval contains the vertical sync pulses (\textbf{VSYNC}) at negative signal level, allowing the vertical synchronization of the display frames on the screen.
+The length of the VBI is expressed in lines (number of the inactive lines).
 \end{itemize}
-A videójelben tehát egy teljes soridőben ($T_{\mathrm{H}}$, mint horizontal) mind aktív videótartalom, mind inaktív időintervallum található.
-A videójel sorainak felépítése a \ref{Fig:TV_signal} (b) ábrán látható.
-Hasonlóan, egy képidő ($T_{\mathrm{V}}$, mint vertical) felbontható aktív és inaktív sorokra.
-Az aktív és inaktív sorok felépítése a \ref{Fig:TV_signal} (c) ábrán látható.
+The video signal, therefore, contains in one entire line period time ($T_{\mathrm{H}}$, for horizontal) both \textbf{active video interval} and \textbf{inactive interval}, carrying no video information.
+The structure of video lines is depicted in Figure \ref{Fig:TV_signal} (b).
+Similarly, the entire period time of one frame ($T_{\mathrm{V}}$, as vertical) contains \textbf{active lines} and \textbf{inactive lines}, containing no actual video data.
+The structure of active and inactive lines is depicted in Figure \ref{Fig:TV_signal} (c).
 
-A teljes videójel és így egy teljes kép tehát általánosan felbontható aktív és inaktív területekre.
-Ezt a \ref{Fig:TV_signal} (d) ábra illusztrálja.
+In the following it is revealed what principles lead to the actual timing parameters (e.g. the lengths of the above intervals, line frequency, frame frequency) and to the standard definition resolution parameters. 
 
-A következőekben azt vizsgáljuk, hogy milyen elvek mentén kerültek megválasztásra a videójelben a különböző időzítések, pl. sorfrekvencia, képfrekvencia, illetve a felbontást meghatározó paraméterek.
+\subsection{Parameters of analog video formats}
 
-\subsection{Az analóg videóformátumok paraméterei}
+\subsubsection*{Aspect ratio and display size}
 
-\subsubsection*{Képarány és képméret}
-Elsőként fontos leszögezni, mekkora képméretre kell optimális formátum-paramétereket választani.
-Az \ref{sec:HVS} fejezetben látható volt, hogy az emberi szemben a színlátás helye a sárgafolt, ezen belül is az éleslátásért a látógödörben (fovea centralis) elhelyezkedő receptorok felelnek.
-A látógödör mérete alapján az éleslátásunk a teljes $\approx200$ fokos látószögünkből kb. 10-15 fokot \href{http://hyperphysics.phy-astr.gsu.edu/hbase/vision/retina.html}{fed le} a horizontális irányban.
-A normál felbontású televíziós szabvány megalkotása során a cél ezen fő látószög tartalommal való kitöltése volt, vagyis a normál felbontású televízió kb. a látótérből 10 fokot kell, hogy kitöltsön (azaz a periférikus látásnak a képalkotásban nem volt szerepe).
-Természetesen a konkrét képméret ezek után a nézőtávolság függvénye.
-Adott pixelméret/sortávolság mellett az optimális nézőtávolság megválasztásával a későbbiekben foglalkozunk.
+First it is explained what display size should be the optimal format parameters chosen for.
 
-A kép mérete mellett fontos térbeli jellemző a kijelző horizontális és vertikális dimenziójának aránya, azaz az ún. \textbf{képarány (aspect ratio)}.
-Az SD formátum alapjául szolgáló NTSC szabvány létrehozása az 1940-es évekig nyúlik vissza, és kidolgozása során nyilvánvaló törekvés volt a korabeli mozifilmek megjelenítésével való kompatibilitás biztosítása.
-A mozi korai korszaka, így a teljes némafilm korszak (az anamorf lencsék megjelenése előtt) kizárólag 4:3 képarányt alkalmazott, azaz a horizontális és vertikális képhosszak aránya $1.3\dot{3}$ volt\footnote{A 4:3 képarány létrejötte egészen Thomas Alva Edison munkájáig vezethető vissza, aki az általa használt 35 mm széles filmen egy képkockát 4 perforációnyi magasságúra (19 mm) definiált. 
-A perforációk közötti kihasználható szélességből (25.375 mm) így a hasznos terület épp 4:3-hoz képarányúra adódik. 
-A 35 mm-es filmen 4 perforációnyi képméretet 1909-ben fogadták el általános szabványnak ("4-perf negative pulldown"), lehetővé téve a szabványos mozikamerák, mozigépek és így a mozi térhódítását.}.
-Habár az 50-es években megjelentek az első szélesvásznú mozis formátumok, az NTSC szabvány ezt a \textbf{4:3} képarányt fogadta el a televízió szabványos képarányának, amely egészen a HD formátum bevezetésig használatban maradt.
+It was already discussed in \ref{Sev:HVS} that the human color vision is ensured by the macula, containing mostly cones, located around the center of the retina.
+In the center of the macula the fovea is responsible for sharp central vision (also called foveal vision).
+Due to the size of the fovea, the human central vision with high visual acuity covers about $10-15^{\circ}$ from the entire field of view of $\approx 200^{\circ}$ horizontally.
+During the creation of standard definition television standard the basic goal was to fill only the central vision with content, therefore, the SD television should cover about $10^{\circ}$ from the horizontal field of view (i.e. the peripheral vision does not contribute to imaging).
+Obviously, the actual display size then depends on the viewing distance, as it will be discussed later in this chapter.
+
+\vspace{3mm}
+Another important spatial attribute of video formats is the ratio of the horizontal and vertical screen size, i.e. the \textbf{aspect ratio} ($a_r$).
+The basis of all the color TV formats was the NTSC standard and its black and white predecessor, introduced in the 1940s.
+As an obvious endeavor the introduced broadcasting format was engineered in order to be compatible with the then-existing video sources, e.g. movie films.
+Until the 1950s during the entire silent film era movies were almost exclusively captured with the aspect ratio of 4:3, i.e. the ratio of the horizontal and vertical screen size was $1.3\dot{3}$
+\footnote{
+The introduction of the aspect ratio of 4:3 is connected to the work of Thomas Alva Edison, who \href{https://en.wikipedia.org/wiki/35_mm_movie_film}{defined} the standard image exposure length on $35~\mathrm{mm}$ film for movies is four perforations ($19~\mathrm{mm}$) per frame along both edges. 
+From the available film width between perforations ($25.375~\mathrm{mm}$) the active are has an aspect ratio of 4:3.
+This \href{https://en.wikipedia.org/wiki/Negative_pulldown}{4-perf negative pulldown} became the official standard in 1909, allowing the emerging of standard movie cameras, movie projectors, and hence emerging of cinema technologies.}.
+Although by the 1950s first widescreen movie formats have already emerged, the NTSC standard adopted the \textbf{4:3} aspect ratio, which remained the standard TV and video aspect ratio until the introduction of the HD format.
+
 %TODO anamorphic lenses?
 % Forrás: https://www.shutterstock.com/blog/4-3-aspect-ratio
 % https://www.cinematographers.nl/FORMATS1.html
 
-\subsubsection*{Képfrissítési frekvencia és képfrekvencia}
+\subsubsection*{Refresh rate and frame rate}
 
-Következő kérdésként vizsgáljuk a mozgókép temporális mintavételi frekvenciájának, azaz a másodpercenként felvillantott képelemek számának megválasztási szempontjait.
-Ezzel kapcsolatban fontos megkülönböztetni néhány szorosan összefüggő fogalmat:
+The next parameter to investigate is the temporal sampling frequency of the video data, i.e. the number of frame fed to the display device per second.
+First three closely related terms are introduced:
 \begin{itemize}
-\item Az $\mathbf{f_{\mathrm{r}}}$ \textbf{képfrissítési frekvencia (refresh rate)} a képernyő tartalmának másodpercenkénti újrarajzolásának száma (jellemzően $\mathrm{Hz}$-ben kifejezve)
-\item Az $\mathbf{f_{\mathrm{V}}}$ \textbf{képfrekvencia (frame rate) (V: vertical)} a képernyő tartalmának másodpercenkénti változásának száma, vagyis a másodpercenként megjelenített új képek száma (jellemzően $\mathrm{fps}$-ben (frame per second) $\mathrm{Hz}$-ben kifejezve)
-\item Az $\mathbf{f_{\frac{\mathrm{V}}{2}}}$ \textbf{félképfrekvencia (field rate)} váltott-soros letapogatás esetén értelmezhető mennyiség, ami a másodpercenként megjelenített félképek számát jelöli.
-(jellemzően $\mathrm{fps}$-ben (frame per second) $\mathrm{Hz}$-ben kifejezve)
-Általánosan igaz, hogy $f_{\frac{\mathrm{V}}{2}} = 2\cdot f_{\mathrm{V}}$.
+\item The \textbf{refresh rate} ($\mathbf{f_{\mathrm{r}}}$) refers to the number of times in a second that a display ,,flashes'', i.e. redraws its content, expressed usually in $\mathrm{Hz}$.
+\item The \textbf{frame rate} ($\mathbf{f_{\mathrm{V}}}$) express the number of time in a second that the content of the display changes, i.e. the number of frames, contained by the video signal per second, usually expressed in $\mathrm{fps}$ (frame per second) or in $\mathrm{Hz}$.
+\item The \textbf{field rate} ($\mathbf{f_{\frac{\mathrm{V}}{2}}}$) can be defined for interlaced video data, denoting the number of fields (half frames) per second in the video data, generally expressed in $\mathrm{fps}$.
+Universally $f_{\frac{\mathrm{V}}{2}} = 2\cdot f_{\mathrm{V}}$ holds.
 \end{itemize}
-Az első két fogalom között a különbség úgy értelmezhető, hogy a képfrekvencia a videóra jellemző mennyiség, a tárolt másodpercenkénti képkockák számát jelzi.
-A képfrissítési frekvencia a megjelenítőre jellemző, azt jelzi, hányszor ,,villan fel'' a kijelzett képelem másodpercenként, függetlenül attól, hogy a kijelzett képtartalom változik-e.
-Ebből kifolyólag általánosan igaz, hogy $f_{\mathrm{r}} \geq f_{\mathrm{V}}$.
+The key difference between refresh rate and frame rate is that refresh rate is the property of the display device (e.g. LCD display) and includes the repeated drawing of identical frames, while frame rate measures how often a video source can feed an entire frame of new data to a display.
+The frame rate and refresh rate can be independent in digital systems (e.g. in a video card and a VGA monitor), where a \textbf{display buffer} is present, containing the data of an entire frame, generating and feeding the video signals towards the display.
+Still, as a rule of thumb even in the presence of a video buffer the content of the video buffer may change during the vertical blanking of the display in order to avoid \href{https://en.wikipedia.org/wiki/Screen_tearing#/media/File:Tearing_(simulated).jpg}{screen tearing}.
+As a consequence, generally $f_{\mathrm{r}} = \mathrm{n} \cdot f_{\mathrm{V}}$ holds, where $\mathrm{n} \in \lbrace 1,2,3,... \rbrace$.
 
-\paragraph*{Alsó korlát a kép- és képfrissítési frekvenciára:}
-A kép- és képfrissítési frekvencia megválasztásánál két szempontot szükséges figyelembe venni:
+In analog TV receiver no frame buffer could be present due to the lack of appropriate technology, thus, the refresh rate must equal either the frame rate of the field rate, as presented in the following section. 
+
+\paragraph*{Psychophysical limit for the frame and refresh rates:}
+
+In order to arrive at practical frame rate and refresh rate two perceptual aspects have to be taken into consideration:
 \begin{itemize}
-\item Egyrészt mozgó objektumok képi reprodukciója során fontos, hogy elegendő mozgási fázist jelenítsünk meg ahhoz, hogy a megfigyelő folytonosnak érzékelje a képtartalom változását, amely szempont a képfrekvencia megválasztására ad kiindulópontot.
-\item Emellett elegendően magas képfrissítési frekvenciát kell választani a képernyő újrarajzolásából származó \textbf{villogás (flickering)} elkerüléséhez.
+\item On one hand when reproducing objects under motion it is crucial to display sufficient number of motion phases in order to ensure that the observer perceives a smooth, continuous motion.
+This requirement constitutes a lower limit for the applicable frame rate.
+\item On the other hand the refresh rate has to be chosen high enough in order to avoid \textbf{flickering} and to reduce eye strain.
 \end{itemize}
-
-Utóbbi szempont szigorúbb elvárásokat támaszt, azaz általánosan a képfrekvencia elegendő, ha alacsonyabb a képfrissítési frekvenciánál.
-Ennek oka az ún. \textbf{béta mozgás (beta movement)} nevű optikai illúzió, amely a látás azon jellemzője, hogy egymás után vetített statikus képek sorozatát $~10-12~\mathrm{fps}$ változás fölött az emberi szem már folytonos, látszólagos mozgásként érzékeli \footnote{A béta mozgás magyarázata máig sem teljesen tisztázott, leggyakrabban a látóidegen terjedő ingerület létrejöttének gyakoriságával, terjedési tulajdonságaival magyarázzák.}.
-A béta mozgás jelensége miatt tehát a folytonos mozgás biztosításához 
+Due to the \textbf{beta movement} phenomenon the frame rate can be significantly lower, than the refresh rate:
+Beta movement is an optical illusion whereby viewing a rapidly changing series of static images creates the illusion of a smoothly flowing scene, occurring if the frame rate is greater than 10 to 12 $\mathrm{fps}$. 
+Therefore, due to the beta movement the frame rate should satisfy
 \begin{equation}
-f_{\mathrm{frame}} > \sim20~\mathrm{Hz} 
+f_{\mathrm{frame}} > \sim20~\mathrm{Hz},
 \end{equation}
-képfrekvencia már elegendő lenne 
-\footnote{Érdemes megjegyezni, hogy ez a képfrissítési frekvencia csak ahhoz elegendő, hogy ténylegesen mozgásnak érzékeljük a képsorozatot, ettől még a mozgás gyakran ,,darabos'': a nagyobb---pl. 60 fps rögzített és vetített képek folytonosabbnak, ,,simábbnak'' fognak tűnni. 
-Épp ezért számos modern kijelző, illetve számítógépes szoftver képes időbeli interpolációra, amely során az MPEG kódolóban is használatos mozgásbecslés alkalmazásával megpróbálják ''kitalálni'' az egyes képkockák közötti tartalmat.
-Érdekes tény azonban, hogy a néző szeme már kellően hozzászokott a mozis 24 fps rögzítési frekvenciához, emiatt a magasabb fps-el rögzített, vagy interpolált videó természetellenesen hat.
-Ennek a hatásnak a neve a szappanopera effektus (soap opera effect), amely elnevezés onnan származik, hogy a TV-s szappanoperákat---a klasszikus filmhez képest olcsón---közvetlenül digitális videóra rögzítették jellemzően $60 \mathrm{fps}$-el.},
-ezt a képfrissítési frekvenciát azonban az átlagos néző még villogónak érzékelné.
+\footnote{
+It is worth noting that the above frame rate only allows the perception of motion instead of distinct static images, higher frame rates )(usually $60~\mathrm{fps}$) still ensure much smoother motion reproduction.
+In order to increase the effective frame rate of the video stream, modern displays and software allow temporal interpolation by estimating the intermediate frames, based on some motion prediction algorithm, similarly to MPEG encoding.
+However, the average viewer already adapted to the frame rate of $24~\mathrm{fps}$, being the standard frame rate of movie films, therefore the increased frame rate often generates an unpleasant, unnatural effect.
+This is termed as the \textbf{soap opera effect}, originating from the fact that usually low cost TV shows are recorded directly to digital video cameras (being much cheaper than capturing to film), allowing higher frame rates, usually set to $60 \mathrm{fps}$.}
+however, applying the same refresh rate would lead to serious perceived flickering artifacts.
 
-Ahhoz, hogy ezt elkerüljük, a képfrissítési frekvenciának tehát magasabbnak kell lennie a fúziós frekvenciánál\footnote{
-A fúziós frekvencia fényingerek változásának azon frekvenciája, amely fölött a fényinger változását az emberi szem már nem képes követni.
-Különböző világosságú felületek váltakozása esetén a gyakorlatban efölött a megfigyelő csak egy ,,összeolvadt" átlagos világosságot érzékelni.
-A fúziós frekvencia értéke számtalan tényezőtől függ. 
-Többek között emberről emberre változik, függ az átlagos megvilágítási szinttől és színhőmérséklettől, az adaptációs állapottól, a váltakozó fényinger színétől (a frekvencia növelésével jellemzően 15-20 Hz környékén a színezetbeli fluktuáció megszűnik, és csak a világosságszintek közötti vibrálás érzékelhető) amplitúdójától, és a gerjesztés helytől a retinán: azaz, hogy a villogást a fő látóterünkben, vagy a periférikus látásunkkal érzékeljük-e.}.
-Általánosan elmondható, hogy a fúziós frekvencia az embereknél 50-90 Hz közé esik: a fő látótérben, amelyet a csapok dominálnak a látás lassabb, itt a fúziós frekvencia ~50 Hz, míg a periférikus látás jóval gyorsabb, itt a fúziós frekvencia magasabb.
-Mivel az analóg TV-formátum bevezetésénél a cél a fő látótér tartalommal való kitöltése volt, így célszerűen a képfrissítési frekvenciát 
+In over to avoid flickering the refresh rate has to be higher than the \textbf{flicker fusion threshold}
+\footnote{
+The flickering fusion threshold is the frequency at which an intermittent light stimulus appears to be completely steady to the average human observer.
+For surfaces with temporally alternating luminances above the flickering threshold the average luminance is perceived.
+The threshold depends on numerous factors:
+Depends on the average illumination intensity, the adaptation state, the color of vibration (above $15-20~\mathrm{Hz}$ fluctuation of hue information can not be perceived) of and the position on the retina at which the stimulation occurs}.
+For the purposes of presenting moving images, the human flicker fusion threshold is usually taken between 60 and $90~\mathrm{Hz}$:
+in the central vision, dominated by the cones the response time is high, and the flickering fusion threshold is around $50~\mathrm{Hz}$.
+The peripheral vision is dominated by the rods, with a much lower response time and the flickering fusion threshold is higher.
+
+In case of analog TV formats the goal was to fill the central vision of the viewer with, therefore, with a refresh rate of
 \begin{equation}
 f_{\mathrm{r}} > 50-60~\mathrm{Hz} 
 \end{equation}
-környékére kellett választani.
-A konkrét érték megválasztását azonban már a katódsugárcsöves TV technológia egy hátránya határozta meg: a katódsugárcső tápfeszültségére rákerülő hálózati ,,brumm''.
+flickering can be avoided\footnote{This is true only for the central vision.
+The flickering of CRTs can be easily observed with a display watched from the peripheral vision}.
+The choice of the actual refresh rate was, however, a consequence of the CRT technology's imperfection: a trick in order to avoid the effect of the supply voltage ripple.
 
 \begin{figure}[]
 	\centering
