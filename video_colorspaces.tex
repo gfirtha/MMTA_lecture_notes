@@ -1320,7 +1320,7 @@ Másrészt az ábrázolásmód jobban illeszkedik az emberi színérzékelés mo
 az emberi látás színezet-információra vett kisebb felbontása lehetővé teszi az analóg chroma jelek sávszélesség-csökkentését, azaz a színjelek kisebb felbontáson való tárolását, átvitelét.
 Digitális ábrázolás, azaz \ycbcr reprezentáció esetén ez a csökkentett felbontású színjel-ábrázolást a \textbf{chroma-alulmintavételezés} (\textbf{chroma subsampling}) valósítja meg.
 
-\subsection*{A mintavételi struktúra jelzése:\\}
+\subsubsection*{A mintavételi struktúra jelzése:\\}
 Az \ycbcr komponensek tartalma egy egyszerű mintakép esetén a \ref{Fig:umbrella} ábrán látható.
 Egyértelmű, hogy a színezet-tartalom ritkán tartalmaz apró részleteket (nagyfrekvenciás tartalmat), így a chroma jeleket elegendő kisebb felbontással tárolni.
 A chroma jelek felbontása a horizontális és vertikális irányban is csökkenthető, jellegzetesen a luma jel felbontása felére, vagy negyedére választják, azaz alulmintavételezik.
@@ -1366,7 +1366,7 @@ Egy pixel ábrázolása 8 bites bitmélység esetén $3 \cdot 8 ~\mathrm{bit} = 
 \item \textbf{4:2:2}: A chroma jelek vízszintes felbontása a luma jelek fele, míg függőlegesen nincs alulmintavételezés.
 A chroma minták vízszintesen minden második luma mintával megegyező pozícióban helyezkednek el (\textbf{cosited}) (ld. később).
 Ez az alapvető SD és HD stúdióformátum, konzumer célra inkább csak high-end berendezések alkalmazzák.
-Mivel jut pixelre egy $C_{\mathrm{R}}$ és egy $C_{\mathrm{R}}$ minta, egy pixel ábrázolása 8 bit/komponens esetén $(1+ 2\cdot \frac{1}{2})\cdot 8~\mathrm{bit} = 16~\mathrm{bit}$-et vesz igénybe, így a tömörítési tényező 4:4:4-hez képest $\frac{2}{3}$.
+Mivel 2 pixelre jut egy $C_{\mathrm{B}}$ és egy $C_{\mathrm{R}}$ minta, egy pixel ábrázolása 8 bit/komponens esetén $(1+ 2\cdot \frac{1}{2})\cdot 8~\mathrm{bit} = 16~\mathrm{bit}$-et vesz igénybe, így a tömörítési tényező 4:4:4-hez képest $\frac{2}{3}$.
 %
 \item \textbf{4:1:1}: Manapság ritkábban alkalmazott mintavételi struktúra, DV kézikamerák, olcsóbb konzumer elektronikák használták.
 A chroma minták vízszintes felbontása a luma felbontásának negyede, függőlegesen nincs alulmintavételezés.
@@ -1396,7 +1396,7 @@ Láthattuk, hogy a chroma jelek csökkentett felbontású tárolása két fontos
 
 \paragraph{A decimálás megvalósítása}
 Általánosan, decimálás során a feladat a bemeneti jel mintavételi frekvenciájának csökkentése.
-Jól ismert tény, hogy egy jel mintavételezése hatására a folytonos jel spektruma a mintavételi egész számú többszörösein ismétlődni fog.
+Jól ismert tény, hogy egy jel mintavételezése hatására a folytonos jel spektruma a mintavételi frekvencia egész számú többszörösein ismétlődni fog.
 Emiatt ha a jel sávszélessége nagyobb, mint a mintavételi frekvencia fele a spektrumok átlapolódnak, és a jel nem állítható vissza mintáiból.
 \begin{figure}[]
 	\centering
