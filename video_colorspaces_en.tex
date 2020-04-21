@@ -1333,7 +1333,7 @@ The conversion of light to stimulus is ensured by the frequency-selective photor
 However, the transmission of the stimulus towards the brain on three types of optic nerves, one carrying black and white and two carrying color information.}: 
 The perceptual spatial resolution of the HVS (i.e. the visual acuity) is much lower for spatial change of color information than for that of the luminance.
 Therefore, the separate transmission of color information allows the bandwidth reduction of the chroma signals, i.e. their transmission with lower spatial resolution.
-In case of digital representation the decreasing of chroma resolution is performed by \textbf{chroma subsampling}.
+In case of digital representation the reduction of chroma resolution is performed by \textbf{chroma subsampling}.
 
 \begin{figure}[]
 	\centering
@@ -1455,10 +1455,11 @@ In case of converting from 4:4:4 $\rightarrow$ 4:2:0 also a further, \textbf{ver
 	\centering
 	\begin{overpic}[width = 0.75\columnwidth ]{figures_en/aliasing2.png}
  	\end{overpic}
-	\caption{Példa a színkülönbségi jelek átlapolódására nem megfelelő átlapolódásgátló szűrés esetén.
- 	A tesztkép (a) egy mind vertikális, mind horizontális irányban növekvő frekvenciájú vörös és zöld alapszín között ingadozó térbeli szinusz.
- 	A (b) ábra a tesztkép átlapolódásgátló szűrés nélküli 4:4:4 $\rightarrow$ 4:1:1 konverziójának eredményét mutatja be, inteproláció során egyszerű mintaismétlést alkalmazva ($\mathbf{h}_H= \left[ 1\,1 \,1 \,1 \right]^{\mathrm{T}}$).
-	A (c) ábra ideális aluláteresztő szűrést alkalmaz mind átlapolódásgátló, mind interpolációs szűrőként.}
+	\caption{
+	Example for the aliasing of the chroma samples.
+	The original 4:4:4 test image (a) contains a sine signal with its frequency increasing along both the horizontal and vertical dimensions, oscillating between the red and green primaries.
+	Figure (b) shows the result of chroma subsampling conversion 4:4:4 $\rightarrow$ 4:1:1, with the interpolation performed by simply repeating the nearest sample ($\mathbf{h}_H= \left[ 1\,1 \,1 \,1 \right]^{\mathrm{T}}$).
+	Figure (c) shows the result of ideal low pass filtering for both antialiasing and interpolation filtering.}
 	\label{Fig:chroma_subsampling}
 \end{figure}
 \vspace{3mm}
@@ -1470,34 +1471,34 @@ Loosely speaking, the color information of the image contains high-frequency com
 Hence, the application of appropriate antialiasing filtering is crucial.
 Obviously, since high frequency components in the spectrum represent small details in the image, therefore, spatial low pass filtering can be interpreted as ,,smoothing'' the image by blurring the small details.
 
-
-Részletek nélkül: a képtartalom aluláteresztő szűrése, azaz a részletek ,,elkenése'' legegyszerűbben a szomszédos minták (pixelek) súlyozott átlagolásával történik \footnote{Más szóval a kép FIR szűrésével}: 
-Tételezzük fel, hogy mind vízszintes, mind függőleges irányban szűrjük a képet, azaz átlagoljuk a szomszédos mintákat.
-Az átlagolás során a vízszintes, illetve függőleges minták súlyát rendre $\mathbf{h}_H = h_H(n)$ és $\mathbf{h}_V = h_V(n)$ vektorok tartalmazzák.
-Jelöljük az aktuális kép adott komponensének (pl. $C_{\mathrm{B}}$, $C_{\mathrm{R}}$) $m.$ sorának $n.$ oszlopának intenzitását $x(m,n)$-el.	
-Ekkor a szűrt (azaz súlyozott átlagolt) képelemek intenzitása
+\vspace{3mm}
+Without going deep into signal processing details: the blurring of the small details in a signal can be most easily performed by weighted averaging of the adjacent samples (pixels), i.e. with FIR filtering.
+Assume that the image is filtered in both the horizontal and vertical dimensions, meaning that both the horizontally and vertically adjacent samples are averaged.
+The weights of the horizontal samples in the calculated sample is given by vector $\mathbf{h}_H = h_H(n)$.
+Similarly, the vertical weight factors are given by $\mathbf{h}_V = h_V(n)$.
+Let $x(m,n)$ denote the intensity of the input sample in the $m$-th row and $n$-th column, e.g. in this case being either $C_{\mathrm{B}}$ or  $C_{\mathrm{R}}$ samples.
+The intensity of the filtered (or averaged) output sample can be expressed as
 \begin{equation}
-y(m,n) = \sum_{k = -\infty}^{\infty} \sum_{l = -\infty}^{\infty} x(k,l)\, h_V(m-k) \, h_H(n-l)
+y(m,n) = \sum_{k = -\infty}^{\infty} \sum_{l = -\infty}^{\infty} x(k,l)\, h_V(m-k) \, h_H(n-l),
 \end{equation}
-alakban adható, amely egy függőleges és vízszintes irányú konvolúciót ír le.
-A $h_H(n)$ és $h_V(n)$ vektorok a horizontális és vertikális szűrőegyütthatók, vagy szűrőkernelek (impulzusválaszok).
+describing consequent horizontal and vertical 1D convolutions.
+Vectors $h_H(n)$ and $h_V(n)$ are the horizontal and vertical filter coefficients, or filter kernels (impulse responses).
 
-Legegyszerűbb esetben mind vertikális, mind horizontális irányban egyszerűen a két szomszédos minta átlagát képezzük.
-Ezt az egyszerű átlagolást a 
+As the simplest filtering approach the output is generated as the average of two adjacent samples both horizontally and vertically.
+This simple averaging process is described by convolution with the filter coefficients
 \begin{equation}
 \mathbf{h}_H =
 \mathbf{h}_V =
 \begin{bmatrix}[c]
        1/2 \\[0.3em]
-       1/2\end{bmatrix}
+       1/2\end{bmatrix}.
 \end{equation}
-szűrőegyütthatókkal való szűrés valósítja meg.
-Ez a megoldást használja a JPEG és MPEG-1 kódoló a szabványos 4:2:0 formátumra való konverzió során a chroma jelek szűrésére, minden második horizontális és vertikális minta eldobása előtt.
-Mivel minden chroma minta 4 szomszédos minta egyszerű átlagaként áll elő, ezért az eredményként kapott átlagminta a négy eredeti minta közé esik.
+As a result, the output sample is obtained as the simple sum of 4 adjacent samples, therefore, the average sample is located between the input samples both horizontally and vertically, i.e. it is sited interstitially.
+This is the antialiasing filtering approach, applied by the JPEG and MPEG-1 encoders during conversion to 4:2:0 subsampling scheme.
 
-A szűrés számításigényének növelésével, hosszabb szűrőket alkalmazva a szűrés hatékonysága növelhető, a zárósávban (az decimálás utáni mintavételi frekvencia fele fölött) nagyobb elnyomás valósítható meg.
-Az MPEG-2 kódoló a vertikális irányban az MPEG-1-el megegyező egyszerű átlagolást alkalmaz, míg a horizontális irányban 3 minta átlagolásával hozza létre a szűrt jelet, így az MPEG-1-nél pontosabb szűrést elérve.
-A szűrőegyütthatók így MPEG-2 esetében
+With increasing the computational complexity of filtering---i.e. by applying filters with longer impulse response/involving more input samples to the averaging process---the accuracy of the filtering can be improved, with higher achieved attenuation factor above the filter's cutoff frequency.
+As an example: MPEG-2 encoder applies the same vertical filter coefficients as the MEPG-1, but in the horizontal direction every output sample is obtained from 3 adjacent input samples, resulting in improved antialiasing performance.
+The filter coefficients for MPEG-2 are given by
 \begin{equation}
 \mathbf{h}_V =
 \begin{bmatrix}[c]
@@ -1511,47 +1512,50 @@ A szűrőegyütthatók így MPEG-2 esetében
        1/2 \\[0.3em]
        1/4\end{bmatrix}
 \end{equation}
-Mivel a vízszintes irányban 3 minta átlagolódik, amelyek közül a középső szerepel a kimenetben a legnagyobb súllyal, így MPEG-2 esetében a szűrt és decimált chroma minták horizontálisan minden második luma minta (azaz az eredeti chroma minta) helyével esnek egybe.
+Since along the horizontal dimension 3 adjacent samples are symmetrically averaged, therefore, the output sample will be located coinciding with the input sample at the center position, i.e. they are cosited.
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.8\columnwidth]{figures_en/interpolation.png}
  	\end{overpic}
-	\caption{Az egyszerű lineáris szűréssel megvalósított interpoláció folyamatábrája:
-	(1) a bemeneti jel, és $F(1)$ a bemenő jel spektruma.
-	(2) a nullákkal kibővített bemenő jel és $F(2)$ ennek spektruma.
-	(3) az interpolációs szűrő kimenete.}
+	\caption{Interpolation process, realized by simple linear filtering:
+	(1) is the input signal, and $F(1)$ illustrating its spectrum.
+	(2) zero stuffed input signal and its spectrum $F(2)$.
+	(3) output of the interpolation filter.}
 	\label{Fig:interpolation}
 \end{figure}
 
-\paragraph{Az interpoláció megvalósítása}
-A decimálás ellentétes műveleteként, a vevő oldali interpoláció során a feladat a bemeneti jel mintavételi frekvenciájának növelése, azaz az adó oldalon eldobott chroma minták becslése.
+\paragraph{Interpolation of the chroma samples:}
+The inverse operation of decimation is the increasing of the sampling frequency, by approximating the samples of the input signal in intermediate sampling positions.
+Interpolation of the missing chroma samples has to be performed in the receiver of the video signal in order to restore the chroma resolution prior to calculating the RGB signal to be displayed.
 
-Jelfeldolgozás szempontjából az interpoláció folyamata a \ref{Fig:interpolation} ábrán látható:
-A mintavételi frekvencia növeléséhez az ismert minták közé az új mintavételi pontokban 0 kezdeti értékű mintákat helyezünk el.
-A csupa-nulla értékű jel az eredeti jelhez adása természetesen a spektrumokat nem módosítja, azonban a valódi mintavételi frekvencia értéke azonban megnőtt, az ábrán látható példában kétszeresére.
-Ez alapján egyértelmű, hogy az új mintavételi pontokban a jel értéke a szomszédos minták alapján történő becslése egyenértékű a fennmaradó ,,image'' spektrumok kiszűrésével.
-Az interpoláció tehát a bemenet egyszerű aluláteresztő szűrésével megvalósítható, ez az ún. \textbf{rekonstrukciós szűrő}.
+The signal processing chain of interpolation is illustrated in Figure \ref{Fig:interpolation}:
+In order to increase the sampling frequency the original signal is stuffed with zeroes in the new sampling positions.
+This zero stuffing leaves the input spectrum unchanged, since a zero-only spectrum is added to the input spectrum, but with an increased sampling frequency.
+The approximation of the intermediate samples can be interpreted as filtering out the image spectrum, i.e. the repeating baseband spectrum on the original sampling frequency.
+Hence, interpolation max be performed by simple low pass filtering of the zero-stuffed signal with an appropriate \textbf{reconstruction filter}.
+
 \begin{figure}[t!]
 	\centering
 	\begin{overpic}[width = 0.8\columnwidth]{figures_en/subsampling_Example.png}
  	\end{overpic}
-	\caption{Egyszerű példa a színkülönbségi jelek alulmintavételezésére.
-	A felső ábrasor a teljes, csökkentett színfelbontású képet mutatja interpoláció után, míg az alsó ábrasor csak a színinformációt ábrázolja.}
+	\caption{Simple example for the chroma subsampling of natural images.
+	The upper row presents the chroma subsampled image after reconstruction, the lower row presents the chroma information only.}
 	\label{Fig:chroma_subsampling_Ex}
 \end{figure}
 
-Hasonlóan a decimáláshoz, az aluláteresztő szűrés legegyszerűbben a szomszédos minták súlyozott átlagolásaként valósítható meg mind a horizontális, és vertikális irányban. 
-Legegyszerűbb esetben a horizontális és vertikális rekonstrukciós szűrőegyütthatók a
+Similarly to decimation, low pass filtering for interpolation can be performed by calculating the weighted average of the adjacent samples.
+For chroma interpolation in case of 4:2:0 scheme interpolation must be performed both in the horizontal and vertical dimensions.
+The simplest horizontal and vertical reconstruction filters are given by the coefficients
 \begin{equation}
 \mathbf{h}_H =
 \mathbf{h}_V =
 \begin{bmatrix}[c]
        1 \\[0.3em]
-       1\end{bmatrix}
+       1\end{bmatrix}.
 \end{equation}
-alakban adhatók meg.
-Könnyen belátható, hogy a szűrő mindkét irányban egyszerű mintaismétlést valósít meg (azaz a visszaállított képelem ,,pixeles'' lesz).
-A szükséges számításigény növelésével a hiányzó minták pontosabban is becsülhetők, pl. a 
+Obviously, the filter coefficients above realize the repetition of the nearest input samples in the interpolation position.
+By increasing the computational cost, the missing samples can be approximated more accurately.
+As an example: Filtering with the horizontal and vertical coefficients
 \begin{equation}
 \mathbf{h}_H =
 \mathbf{h}_V =
@@ -1560,29 +1564,30 @@ A szükséges számításigény növelésével a hiányzó minták pontosabban i
        1 \\[0.3em]
        1/2 \end{bmatrix}
 \end{equation}
-szűrőegyütthatókkal való szűrés (2:1 arányú interpoláció esetén) egyszerű lineáris interpolációt valósít meg.
-A lineáris szűrés (azaz az egyszerű súlyozott átlagolás) mellett egyéb, bonyolultabb módszerek is léteznek az interpoláció megvalósítására, pl. magasabb rendű hatványfüggvényekkel való közelítések (bicubic interpolation).
-Az \ref{Fig:interpolation} ábrán látható példa természetesen kirívó, extrém esetet szemléltet.
+realize linear interpolation (in case of the interpolation ratio 2:1). 
 
-Látható, hogy a bemutatott decimálásra és interpolációra alkalmazott aluláteresztő szűrőegyütthatók formailag megegyeznek.
-Fontos különbség, hogy a decimáláshoz alkalmazott szűrőegyütthatók összege 1, hiszen az ettől eltérő súlyozás a jelenergia megváltozását eredményezné (a kép intenzitása változna), míg $N:1$ arányú interpoláció esetén a rekonstrukciós szűrő együtthatóinak összege $N$, hiszen rekonstrukció során egy minta értékéből $N$ mintát becslünk.
-
-A \ref{Fig:interpolation} (c) ábrán látható példában mind az átlapolódásgátló, mind a rekonstrukciós szűrő ideális szűrést valósít meg.
-Látható, hogy a szűrés eredményeképp a kép azon részén, ahol a színezet változása a decimálás után már nem ábrázolható a $C_B$ és $C_R$ jelek ,,elkenése'' miatt az apró részletek helyett egy átlagos színezet jelenik meg (ami jelen esetben sárga).
-A bemutatott példában az átlapolódás teljesen elkerülhető.
+Also, interpolation can be carried out by more sophisticated methods, besides linear filtering, e.g. based on fitting higher order polynomials to the input data (bicubic interpolation).
 
 \vspace{3mm}
-A gyakorlatban előforduló természetes képek esetében elmondható, hogy a chroma komponens ritkán tartalmaz olyan nagyfrekvenciás komponenseket amelyek kiszűrése látható hatással lenne a teljes, megjelenített (visszainterpolált) képre.
-A \ref{Fig:chroma_subsampling_Ex} ábra egy ilyen gyakrabban előforduló tesztképre mutatja be a chroma-alulmintavételezés hatását.
-Látható, hogy még a példa kedvéért létrehozott 4:1:0 formátum esetében is---amely esetben a chroma jelek felbontása horizontális és vertikális irányban is a luma negyede---, a visszaállított képen a színjelek felbontáscsökkentése nem zavaró.
-A 4:2:0 formátum ehhez képest közel az eredetivel megegyező minőséget biztosít felezett horizontális és vertikális chroma felbontás mellett.
+Clearly, the introduced antialiasing and reconstruction filter coefficients coincide up to a constant.
+However, the sum of the antialiasing filtering coefficients has to be equal to 1, otherwise the averaging process would change the intensity of the input signal (e.g. the saturation of the colors).
+On the other hand, the reconstruction filter in case of $N:1$ interpolation should have the total energy $N$, in order to keep the signal energy unchanged.
+
+Figure \ref{Fig:interpolation} (c) illustrates the effect of chroma subsampling and reconstruction by applying ideal low pass filters for both antialiasing and reconstruction (meaning that its frequency transfer characteristics is a rectangular window).
+It is clearly shown that on those parts of the image where the rapid change of color information can not be represented in the subsampled grid, the blurring the color information results in an average yellow hue instead of the oscillation between red and green.
+In practice, in case of natural images the chroma component rarely contains alternating high frequency components, which would result in such clearly visible artifacts after filtering.
+
+Figure \ref{Fig:chroma_subsampling_Ex} depicts the chroma subsampling and reconstruction process of a more natural test image.
+As it is demonstrated, even in the case of a theoretical 4:1:0 subsampling scheme---in which case the chroma resolution is the quarter of the luma information both in the horizontal and vertical dimensions---the final quality of the reproduced image is only slightly degraded.
+The subsampling scheme 4:2:0, on the other hand, ensures the image quality, approximately indistinguishable from the original.
 
 \vspace{2cm}
 \noindent\rule{12cm}{0.4pt}
 
-\subsection*{Ellenőrző kérdések}
+\subsection*{End-of-Chapter Questions}
 
 \begin{itemize}
-\item a
-\item b
+\item What are the most commonly used chroma subsampling schemes? 
+What is the compression factor of the 4:2:0 scheme, compared to the 4:2:2 scheme?
+\item What is the difference between the subsampling scheme of MPEG-1 and MPEG-2?
 \end{itemize}
