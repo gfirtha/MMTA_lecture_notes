@@ -21,11 +21,17 @@
   \let\@ifnextchar\new@ifnextchar
   \array{#1}}
 \makeatother
-\usepackage{mathtools, nccmath}
+\usepackage{nccmath}
 \makeatletter
 \setlength{\@fptop}{0pt}
 \makeatother
 
+
+\usepackage{amssymb}
+
+\DeclareRobustCommand{\bbone}{\text{\usefont{U}{bbold}{m}{n}1}}
+
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
 \DeclarePairedDelimiter{\nint}\lfloor\rceil
 
 \DeclarePairedDelimiter{\abs}\lvert\rvert
@@ -79,15 +85,18 @@
 \pagenumbering{arabic}			% arabic page numbering
 \setcounter{page}{1}			% set page counter 
 
-
+%
 %\chapter{Representation of colors in video technologies}
 %\label{sec:video_color_representation}
 %\input{video_colorspaces_en} 
 
-\chapter{Video formats}
-\label{sec:video_formats}
-\input{video_formats_en} 
+%\chapter{Video formats}
+%\label{sec:video_formats}
+%\input{video_formats_en} 
 
+\chapter{Basics of image and video compression}
+\label{sec:compression}
+\input{compression_en} 
 
 
 \end{document}

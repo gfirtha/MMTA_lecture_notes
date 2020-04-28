@@ -114,15 +114,8 @@ First three closely related terms are introduced:
 Universally $f_{\frac{\mathrm{V}}{2}} = 2\cdot f_{\mathrm{V}}$ holds.
 \end{itemize}
 The key difference between refresh rate and frame rate is that refresh rate is the property of the display device (e.g. LCD display) and includes the repeated drawing of identical frames, while frame rate measures how often a video source can feed an entire frame of new data to a display.
-The frame rate and refresh rate can be independent in digital systems (e.g. in a video card and a VGA monitor), where a \textbf{display buffer} is present, containing the data of an entire frame, generating and feeding the video signals towards the display.
-Still, as a rule of thumb even in the presence of a video buffer the content of the video buffer may change during the vertical blanking of the display in order to avoid \href{https://en.wikipedia.org/wiki/Screen_tearing#/media/File:Tearing_(simulated).jpg}{screen tearing}.
-As a consequence, generally $f_{\mathrm{r}} = \mathrm{n} \cdot f_{\mathrm{V}}$ holds, where $\mathrm{n} \in \lbrace 1,2,3,... \rbrace$.
 
-In analog TV receiver no frame buffer could be present due to the lack of appropriate technology, thus, the refresh rate must equal either the frame rate of the field rate, as presented in the following section. 
-
-\paragraph*{Psychophysical limit for the frame and refresh rates:}
-
-In order to arrive at practical frame rate and refresh rate two perceptual aspects have to be taken into consideration:
+In order to arrive at practical frame rate and refresh rate choice for video data two perceptual aspects have to be taken into consideration:
 \begin{itemize}
 \item On one hand when reproducing objects under motion it is crucial to display sufficient number of motion phases in order to ensure that the observer perceives a smooth, continuous motion.
 This requirement constitutes a lower limit for the applicable frame rate.
@@ -163,41 +156,38 @@ The choice of the actual refresh rate was, however, a consequence of the CRT tec
 	\centering
 	\begin{overpic}[width = 1\columnwidth ]{figures/ripple.png}
 	\end{overpic}
-	\caption{Periodikus hálózati brumm megjelenése az egyenirányított tápfeszültségen egyutas egyenirányítás esetén}
+	\caption{Source of the supply voltage ripple in a single-way rectifier}
 	\label{Fig:ripple}
 \end{figure}
 
-\paragraph*{A hálózati frekvencia hatása a képre:}
-A brumm (angolul ripple) a hálózati váltófeszültség egyenirányításának tökéletlenségéből származó periodikus zavarjel, ahogy az a \ref{Fig:ripple} ábrán látható.
-A zavarjel frekvenciája a hálózati frekvenciával egyezik meg (egyutas egyenirányítás), vagy annak kétszerese (kétutas egyenirányítás esetén).
-Magyar elnevezése a hangerősítők kimenetén megszólaló jellemzően 50 Hz-es mélyfrekvenciás zugásból származik.
-Televízió esetében mivel ez a zavarjel közvetlenül hozzáadódik a katódsugárcső vezérlőjeléhez, ezért a zavarjel kirajzolódik a kijelzőn, így látható hibát okoz.
+\paragraph*{Effect of the mains frequency:}
+Voltage ripple is the residual periodic variation of the DC voltage in a power supply due to the imperfect rectification of the alternating means AC voltage, as illustrated in \ref{Fig:ripple}.
+The ripple frequency coincides with the means frequency in case of single-way rectification, or with its double in the two-way case.
+As in a CRT display the anode is directly connected to the supply voltage, therefore, any perturbation in the DC voltage is directly added to the video signal and is displayed on the screen.
 
-A fejezetben elején láthattuk a CRT kijelzők működési elvét és a videójel felépítését.
-Vizsgáljuk meg, mi rajzolódik ki a képernyőn, ha az elektronágyú vezérlőjele, azaz maga a videó jel periodikus, legegyszerűbb esetben 0 és 1 között oszcilláló szinusz, azaz
+Assume a screen consisting of $N_{\mathrm{V}}$ horizontal scan lines, with the refresh rate denoted by $f_\mathrm{r}$.
+The number of scan lines displayed in a second, i.e. the line frequency is given by
 \begin{equation}
-Y(t) = \frac{1}{2} \sin 2 \pi f t + \frac{1}{2},
+f_\mathrm{H} = N_\mathrm{V} \cdot f_\mathrm{r}.
 \end{equation}
-ahol $f$ a vezérlőjel frekvenciája (most az egyszerűség kedvéért a kioltási időktől eltekintve).
-A képernyőre ekkora sorról sorra kirajzolódik ez a szinuszos vezérlőjel.
-
-Jelölje a képfrekvenciát $f_\mathrm{V}$, és a sorfrekvenciát $f_\mathrm{H}$ (mint horizontális frekvencia), köztünk természetesen fennáll az
+In order to investigate the effect of supply ripple, as a generalization, assume a periodic black and white video signal, oscillating between 0 and 1, described by
 \begin{equation}
-f_\mathrm{H} = N_\mathrm{V} \cdot f_\mathrm{V}
+Y(t) = \frac{1}{2} \left( 1 + \sin 2 \pi f t \right),
 \end{equation}
-összefüggés, ahol $N_\mathrm{V}$ a képernyő sorainak száma!
-Az egyszerűség kedvéért a képfrissítési frekvencia egyezzen meg a képfrekvenciával ($f_\mathrm{r} = f_\mathrm{V}$).
-Könnyen belátható, hogy 
+with $f$ being the signal frequency. 
+For the sake of simplicity the blanking intervals are assumed to be of zero length.
+In this case the sine wave is displayed on the screen line by line.
+Depending on the signal frequency $f$ the content of the screen can be the following:
 \begin{itemize}
-\item $f = f_\mathrm{H}$ választással minden sor tartalma ugyanazon szinuszhullám, a hullám kezdőfázisa minden sor elején és minden kép elején azonos, így egy álló, horizontális hullámforma jelenik meg a képernyőn, ahogy az a \ref{Fig:ripple_display} (a) ábrán látható.
-\item $f > f_\mathrm{H}$ választással a szinuszos jel fázisa sorról sorra lassan növekszik (mivel a periódushossza rövidebb, mint egy TV sor), így a hullámforma a horizontálishoz képest enyhe dőlést mutat.
-Emellett már az első sorban is a hullám kezdőfázisa képről képre változik, így a teljes képtartalom lassan balra mozog.
-Hasonlóképp a sorfrekvencia alatti választással lassan jobbra mozgó képet kapunk.
-\item $f = f_\mathrm{V}$ választással a teljes szinuszhullám egy teljes kép kirajzolásának ideje alatt rajzolódik ki.
-Mivel egy sor ideje alatt (megfelelően nagy $N_\mathrm{V}$ sorszám esetén) a jel értéke alig változik, ezért soronként állandónak tekintheő a tartalom.
-Így tehát a teljes képidő alatt egy álló, vertikális szinuszhullám jelenik meg a kijelzőn, ahogy az az \ref{Fig:ripple_display} (b) ábrán látszik.
-\item $f > f_\mathrm{V}$ választással a jelalak kezdőfázisa képről képre nő, így a hullámalak lassan felfelé mozdul.
-Hasonlóképp $f < f_\mathrm{V}$ esetén a hullámalak lefelé mozog.
+\item If $f = f_\mathrm{H}$ each scan line consists of exactly one period of the sine wave, resulting in a horizontal sine on the screen, as depicted in Figure \ref{Fig:ripple_display} (a).
+\item If $f > f_\mathrm{H}$ each scan line consists of less then one period of the sine wave, with the initial phase in the beginning of the scan lines increasing line by line and frame by frame.
+Therefore, the horizontal sine on the screen is slightly steered, and moves towards left.
+Similarly, with $f < f_\mathrm{H}$ the image moves slowly towards right.
+\item If $f = f_\mathrm{r}$ each frame consists of a single period of the sine wave.
+Assuming $N_\mathrm{V} \gg 1$ the value of the sine function changes insignificantly over one scan line, therefore, the displayed image is a vertical sine.
+\item If $f > f_\mathrm{r}$ the initial phase of the vertical sine increases frame by frame, thus, the sine wave moves slowly upwards.
+Similarly, for $f < f_\mathrm{r}$ the vertical sine moves downwards.
+%
 \end{itemize}
 \begin{figure}[]
 	\centering
@@ -210,129 +200,135 @@ Hasonlóképp $f < f_\mathrm{V}$ esetén a hullámalak lefelé mozog.
 	\small
 	\put(0,0){(b)}
 	\end{overpic}
-	\caption{Periodikus jel képernyőn megjelenítve $f = f_\mathrm{H}$ (a) és $f = f_V$ (b) választással}
+	\caption{Periodic video signal with $f = f_\mathrm{H}$ (a) and $f = f_V$ (b) as displayed line by line}
 	\label{Fig:ripple_display}
 \end{figure}
-
-Belátható tehát, hogy periodikus jelek megjelenítése során megfelelő választással álló rajzolatot jeleníthetünk meg a kijelzőn.
-Márpedig a hálózati brumm épp ilyen periodikus zavarjelként jelenik meg a képernyőn, frekvenciája pedig az adott régió hálózati frekvenciája.
-A korai, fekete-fehér televíziós rendszer megalkotása során végzett megfigyelési tesztek egyértelműen kimutatták, hogy elektromos zavar esetén az álló zavarkép jóval kevésbé zavarja a nézőt, mintha a zavar mozgó rajzolatként jelenne meg.
-Ennek megfelelően mind az amerikai, mind később, az európai rendszer esetében a képfrekvenciát a hálózati frekvenciának választották meg, így biztosítva, hogy az esetleges hálózati brumm a kijelzőn egy vertikális állóképként jelenik meg, amely a nézők számára alig észrevehető.
-Így tehát a képfrissítési frekvencia értéke az amerikai és az európai rendszerben rendre
+%
+Based on the foregoing, with the appropriate synchronization of the signal frequency and the refresh rate a periodic video signal can be displayed as a still, non-moving image.
+The effect of voltage ripple acts as such a periodic noise signal, with the frequency determined by the mains voltage of the given region and displayed inevitably on the screen.
+Early tests with black and white TV receiver suggested the visible effect of this periodic noise of less disturbing if the noise image is still.
+Therefore, both in the American, and later in the European systems refresh rate was chosen to coincide the mains frequency
+\footnote{
+In the American NTSC system with the introduction of color information the choice of refresh rate became more complicated, as the frequency of the color subcarrier could not be correctly chosen.
+Without more details: as a consequence both the refresh rate (and the field rate) and the line frequency had to be decreased by $0.1~\%$.
+Therefore, in the American system the refresh rate is $f_r = 60\cdot \frac{1000}{1001} = 59.94~\mathrm{Hz}$.
+Due to the presence of vertical and horizontal sync pulses, this change did not had and effect on the then-existing TV receivers.}.
 \begin{equation}
 f_{\mathrm{r,USA}} = 60~\mathrm{Hz}, \hspace{1cm} f_{\mathrm{r,Eu}} = 50~\mathrm{Hz}
 \end{equation}
-lett \footnote{A helyzet a színes TV bevezetésével, azaz az NTSC megjelenésével Amerikában bonyolódott, mivel a színsegédvivő frekvenciáját nem lehetett megfelelően megválasztani.
-Részletek nélkül: ennek eredményeképp mind a képfrekvenciát, mind a sorfrekvenciát $0.1~\%$-al csökkentették, így az amerikai rendszer képfrekvenciája $f_V = 60\cdot \frac{1000}{1001} = 59.94~\mathrm{Hz}$ lett végül. 
-Ezt a változás szerencsére a megfelelő szinkronjeleknek köszönhetően a már létező TV vevőkészüléket nem befolyásolta.}.
+ensuring that supply ripple only manifests in a non-moving vertical noise image on the screen.
 
-Bár kézenfekvő lenne a képfrekvenciát a képfrissítési frekvenciával egyenlővé tenni, a gyakorlatban nem ezt a megoldást szokás alkalmazni.
-Ennek okát és megoldását a következő bekezdés mutatja be.
+Having found the refresh rate for early TV systems, which has been also in use by modern CRTs and LCD displays, still, the actual frame rate is an open question.
+An obvious choice for the frame rate would be the refresh rate itself.
+Due to bandwidth efficiency, however, instead a special raster scan order was introduced. 
 
-\subsubsection*{A progresszív és interlaced letapogatás}
+\subsubsection*{Raster scan orders}
 
-Az analóg videójel felépítésénél láthattuk, hogy az elektronnyaláb a teljes képernyő tartalmát bejárja egy képidő alatt.
-A bejárás módja azonban nem egyértelmű, egy ügyes trükkel számottevő videójel-sávcsökkentés érhető el.
-A következőekben a különböző \textbf{képernyő-letapogatási (raster scanning)} módokat vizsgáljuk\footnote{Természetesen a jelenlegi LCD kijelzők esetében értelmetlen a kijelző bejárásának módjáról beszélni, ezek a kijelzők egyszerre változtatják az összes pixelsor és oszlop tartalmát.
-Azonban digitális esetben is értelmezhető a letapogatási mód átviteltechnika szempontjából, hiszen a videójel átvitele és felépítése a letapogatási módtól függ.}.
+The raster scan order is the rectangular pattern of image capture and reconstruction in television.
+In the receiver side it defines the systematic process how the electron beam scans the entire screen over a given time interval.
+The following section introduces two frequently used raster scan order, leading to the definition of frame rate and field rate for.
 
-\paragraph{A progresszív letapogatás:}
-A legkézenfekvőbb képernyő bejárási mód az ún. \textbf{progresszív letapogatás (progessive scanning)}, amely során a katódsugár egy képidő ($1/f_{\mathrm{V}}$) alatt sorról-sorra bejárja a képernyő összes sorát.
+Obviously, for currently used LCD and OLED displays the raster scan order can not be interpreted as the scanning pattern of the display, since the entire display content is updated in the same time instant.
+Still, scan order can be understood also as the storing and transmission order of video data, hence scan order is interpretable in modern video systems as well.
+
+\paragraph{Progressive scan:}
+As the most straightforward scanning order, \textbf{progressive scan} is a format of displaying, storing, or transmitting moving images in which all the lines of each frame are drawn in sequence.
+In the receiver side it means that the electron beam scans and updates the content of the entire screen over one frame time ($T_{\mathrm{V}} = 1/f_{\mathrm{V}}$), line by line.
 \begin{figure}[]
 	\centering
 	\begin{minipage}[c]{0.6\textwidth}
 	\begin{overpic}[width = 1\columnwidth ]{Figures/progressive_scan.png}
 	\end{overpic}   \end{minipage}\hfill
 		\begin{minipage}[c]{0.3\textwidth}
-	\caption{Progresszív letapogatás szemléltetése (az egyszerűség kedvéért 11 sorral ábrázolva), az aktív sortartalommal (1), sorvisszafutással (2) és képvisszafutással (3)}
+	\caption{Illustration of progressive scanning (for the sake of simplicity with the exemplary number of 11 lines), with the active line content (1), the vertical retrace/blanking interval (2) and the horizontal retrace/blanking interval (3).}
 	\label{Fig:progressive}  \end{minipage}
 \end{figure}
-A letapogatás módját a \ref{Fig:progressive} ábra szemlélteti.
-Átviteltechnika szempontjából ez azt jelenti, hogy az adott interface-en (konzumer berendezések esetében jellegzetesen HDMI-n keresztül) a kijelzőn megjelenítendő adat sorról sorra érkezik, és természetesen a teljes kép adatait egy soridő alatt továbbítani kell.
-A progresszív formátumot az alkalmazott sorszám utáni ,,p'' jelölés mutatja, lásd HD esetében 1080p.
+Progressive scanning is illustrated in Figure \ref{Fig:progressive}.
 
-Bár a progresszív letapogatás tűnik a legegyértelműbb, legkézenfekvőbb megoldásnak, mégis, egészen az UHDTV szabvány megjelenéséig nem ez volt az általánosan elfogadott megoldás.
-Ennek okait a következőekben tárgyaljuk.
+In the aspect of transmission in case of video data with progressive scanning the content of the entire frames has to be transmitted over the frame time via the given interface (e.g. HDMI) sequentially.
+Progressive scan is usually denoted by letter ,,p'' in the format designation.
+
+Although progressive scan seems to be the most simple and obvious scan order, still, until the emergence of the UHD format progressive scan was only occasionally utilized due to the reasons discussed in the following.
 
 \vspace{3mm}
-\paragraph{A váltottsoros letapogatás:}
-Láthattuk, hogy a folytonos mozgás biztosításához már $20-25~\mathrm{Hz}$ képfrekvencia elegendő lenne, míg a villogás elkerüléséhez legalább $50-60~\mathrm{Hz}$ képfrissítési frekvencia szükséges.
-Ez már bizonyos szintű tömörítést tesz lehetővé, hiszen a teljes képtartalom elegendő, ha lassabban változik, mint kijelző rajzolási frekvenciája.
+\paragraph{Interlaced scan:}
+The previous section have already discussed that in order to avoid flickering the display refresh rate should be risen above $50~\mathrm{Hz}$, while for ensuring continuous motion the video frame rate of around $20~\mathrm{Hz}$ may be sufficient.
+This fact suggests that frame rate should be handled independently by choosing a high refresh rate and a efficiently low frame rate, allowing the reduction of video data and the required bandwith for transmission.
 
-%\begin{figure}  
-%\small
-%  \begin{minipage}[c]{0.64\textwidth}
-%	\begin{overpic}[width = 1\columnwidth ]{Figures/triple_blade_shutter.png}
-%	\end{overpic}   \end{minipage}\hfill
-%	\begin{minipage}[c]{0.3\textwidth}
-%    \caption{Triple blade shutter működése: \url{https://www.youtube.com/watch?v=jrSzRAch930} }
-%\label{fig:triple_blade_shutter}  \end{minipage}
-%\end{figure}
+This concept could be easily implemented in cinematic techniques:
+As a heritage of the early silent movie era (where the frame rate varied between $16-24~\mathrm{Hz}$) movie films are commonly captured with the frame rate of 24 frames per second.
+In order to avoid flickering the film projectors are equipped with special \href{https://www.youtube.com/watch?v=jrSzRAch930}{two or three blade shutters}, rotating in front of the projector beam and flashing each frame two or three times before the film would travel to the next frame.
+With the simple trick of presenting the same frame multiple times the effective refresh rate can be increased to $48\mathrm{fps}$ or $72~\mathrm{fps}$, and flickering may be avoided.
 
-Ez a tömörítés már a korai mozitechnikában is megjelent: 
-A korai, némafilmes korszakban számos képfrekvencia volt használatban $16-24~\mathrm{Hz}$ között.
-Manapság mozitechnikában a szabványos rögzítési frekvenciát $24~\mathrm{fps}$-re rögzítették.
-A villogás elkerüléséhez (tehát a képfrissítési frekvencia növeléséhez) speciális rekesszel látták el a vetítőgépet.
-A fénynyaláb útjában forgó \href{https://www.youtube.com/watch?v=jrSzRAch930}{rekesz}, amelyen kettő, vagy három rés volt található (az ún. ''two'', vagy ''three blade shutter'') egy képkocka megjelenítése során tett meg egy teljes fordulatot, így a vetítőgép ugyanazt a képkockát kétszer, vagy háromszor villantja fel, mielőtt továbbhúzza a mozigép a szalagot.
-Ezzel az egyszerű trükkel a $24~\mathrm{fps}$-en rögzített tartalmat $48\mathrm{fps}$, illetve manapság jellemzően $72~\mathrm{fps}$-en lehet megjeleníteni a mozikban.
+Also, nowadays frame rate and refresh rate can be handled independently in digital systems (e.g. in a video card and a VGA monitor), where a \textbf{display buffer} is present, containing the data of an entire frame, generating and feeding the video signals towards the display.
+Modern LCD displays are usually built with the LED backlight panel flashing at around $200~\mathrm{Hz}$\footnote{
+Obviously, the LED panel could be built with continuous driving voltage of well, instead of flashing, but the dynamic adjustment of its lightness (based on the video content) can be much cost-efficiently solved with PWM modulation.}.
+Still, as a rule of thumb even in the presence of a video buffer the content of the video buffer may change during the vertical blanking of the display in order to avoid \href{https://en.wikipedia.org/wiki/Screen_tearing#/media/File:Tearing_(simulated).jpg}{screen tearing}.
+As a consequence, generally $f_{\mathrm{r}} = \mathrm{n} \cdot f_{\mathrm{V}}$ holds, where $\mathrm{n} \in \lbrace 1,2,3,... \rbrace$.
 
-Hasonlóan elven, a modern megjelenítők esetében a kijelző képfrissítési frekvenciája (pl. amivel egy LCD kijelző esetében a háttérvilágítás villog $200~\mathrm{Hz}$ körül\footnote{Az LCD technika természetesen folytonos háttérvilágítással is megoldható lenne, de egyszerűbb a háttérvilágítás dinamikus változásának PWM modulációval való megoldása.}) jóval a tényleges képtartalom frissítési frekvenciája fölött van.
-A TV műsorszórás bevezetésének idején azonban a vevőkészülékek nem voltak képesek a képtartalom tárolására, a vett jel közvetlenül, valós időben rajzolódott ki a kijelzőre.
-A feladat megoldásául, azaz a másodpercenként átvivendő képek számának csökkentésére, és így sávszélesség-takarékosságra az ún. \textbf{váltott-soros letapogatást (interlaced scanning)} vezették be.
-A váltottsoros formátum jelzése a sorszám mögé illesztett ,,i'' jelzés (pl. 1080i).
+In analog TV receiver no frame buffer could be present due to the lack of appropriate technology, the transmitted signal had to be displayed by the receiver on the fly.
+Obviously, transmitting the same frames multiple times requires a significant increase of bandwidth. 
+Therefore, a more simple engineering workaround was needed for the bandwidth efficient video transmission, which was eventually provided by the concept of \textbf{interlace scanning}.
 
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.85 \columnwidth ]{Figures/interlaced_scan.png}
 	\end{overpic}
-	\caption{Váltott-soros képbontás (TV sorok közbeszövése), a jobb áttekinthetőség kedvéért 21 sorral.
-	A teljes képernyő pásztázásához (feltéve, hogy az elektronnyaláb az első félkép első sorának elejéről indul) az első félképnek fél sorban kell végződnie, míg a második félképnek félsorral kell kezdődnie.
-	Ez csak páratlan teljes sorszám esetén teljesül (mindkét félkép $N_{\frac{V}{2}} + \frac{1}{2}$ sorból áll, a teljes sorszám $2 N_{\frac{V}{2}} + 1$, ami szükségszerűen páratlan) }
+	\caption{Illustration of interlaced scanning (for the sake of simplicity with the exemplary number of 21 lines)
+	Assuming that scanning starts with the beginning of the first scan line, in order to cover the entire screen the first field has to end in a half-line, and the second field has to start with a half-line.
+	This requirement can be satisfied only by applying odd number of scan lines (each field consists of $N_{\frac{V}{2}} + \frac{1}{2}$ lines, thus the total line number is given by $2 N_{\frac{V}{2}} + 1$, being an odd number by definition). }
 	\label{Fig:interlaced}
 \end{figure}
 
-A megoldás alapötlete--ahogy a \ref{Fig:interlaced} ábrán is látható---a következő:
-Ahelyett, hogy a kijelző egy teljes képidő alatt az összes sort egymás után végigpásztázná, bontsuk a képernyőt páros és páratlan sorszámú sorokra, amelyek így egy páratlan és egy páros félképet alkotnak.
-A teljes képet (angolul \textbf{frame}) tehát két \textbf{félképre} (angolul \textbf{field}) bontjuk.
-A kijelző ezután a teljes képidő első felében a páratlan, a második felében a páros sorokat pásztázza végig.
+The basic concept of interlaced scanning is illustrated in Figure \ref{Fig:interlaced}:
+Instead of scanning each line of the display within one frame period time, the screen is divided into two \textbf{fields}
+\begin{itemize}
+\item the \textbf{odd field}, containing every odd scan line 
+\item the \textbf{even field}, containing every even scan numbered scan line
+\end{itemize}
+The interlaced signal contains the two fields of a video frame captured consecutively (i.e. the even and odd fields are captured in consequent time instants).
+Similarly, in the receiver the electron beam scans first all the odd lines, displaying the content of the odd field, then draws the content of the even field into all the even lines.
+Interlaced scan is usually denoted by letter ,,i'' in the format designation.
 
-Természetesen a képernyő tartalma a félképek frissítési frekvenciájával, az ún. $f_{\frac{\mathrm{V}}{2}}$\textbf{félképfrekvenciával} frissül, tehát ahhoz, hogy elkerüljük a villogást a félképfrekvenciának kell a fúziós frekvencia fölé esnie.
-Az előző szakaszban tárgyalt megfontolásokból kiindulva így váltottsoros letapogatás esetén a félképfrekvencia lett az európai rendszerben $50$, valamint az amerikaiban $60~\mathrm{Hz}$-re (pontosabban $59.94~\mathrm{Hz}$-re) választva.
-A teljes, effektív képfrekvencia pedig ezek felére, tehát $25~\mathrm{Hz}$, illetve $30~\mathrm{Hz}$-re ($29.97~\mathrm{Hz}$-re) adódik
-A technikával tehát a mozis technikához hasonlóan, a képfrissítési frekvenciát elegendően magasra emelték, míg a tényleges, teljes ,,felbontású'' képtartalom ehhez képest fele sebességgel érkezik.
-Összefoglalva tehát interlaced esetben az európai és amerikai rendszerre a 
+By applying interlaced scanning the content of the display is redrawn with the frequency of the fields, thus, for interlaced video the refresh rate is given by the \textbf{field rate} ($f_{\frac{\mathrm{V}}{2}}$).
+Therefore, the field rate is determined by the mains frequency of the given region, being $50~\mathrm{Hz}$ for the European and $60~\mathrm{Hz}$ (more precisely $59.94~\mathrm{Hz}$) for the American electric network.
+Furthermore, the period time of an entire frame, consisting both even and odd fields is obviously twice the field period time, thus the frame rate is half of the field rate.
+As a result in the frame rate is $25~\mathrm{Hz}$ in the European and $30~\mathrm{Hz}$ ($29.97~\mathrm{Hz}$) in the American systems, being high enough to ensure the perception of continuous motion, while the refresh rate is sufficient in order to avoid flickering.
+As a summary for the foregoing in the European and American system 
 \begin{align}
 \begin{split}
-f_{\mathrm{r,USA}} &= f_{\frac{\mathrm{V}}{2},\mathrm{USA}} = 60~\mathrm{Hz} = 2\cdot f_{\mathrm{V},\mathrm{USA}}, \hspace{1cm}  f_{\mathrm{V},\mathrm{USA}}= 30~\mathrm{Hz} \\
-f_{\mathrm{r,Eu}} &= f_{\frac{\mathrm{V}}{2},\mathrm{Eu}} = 50~\mathrm{Hz} = 2\cdot f_{\mathrm{V},\mathrm{Eu}}, \hspace{1cm}  f_{\mathrm{V},\mathrm{Eu}}= 25~\mathrm{Hz}
+f_{\mathrm{r,USA}} &= f_{\frac{\mathrm{V}}{2},\mathrm{USA}} = 2\cdot f_{\mathrm{V},\mathrm{USA}} = 60~\mathrm{Hz} , \hspace{1cm}  f_{\mathrm{V},\mathrm{USA}}= 30~\mathrm{Hz} \\
+f_{\mathrm{r,Eu}} &= f_{\frac{\mathrm{V}}{2},\mathrm{Eu}} =  2\cdot f_{\mathrm{V},\mathrm{Eu}} = 50~\mathrm{Hz}, \hspace{1cm}  f_{\mathrm{V},\mathrm{Eu}}= 25~\mathrm{Hz}
 \end{split}
 \end{align}
-összefüggések érvényesek
+hold.
 
-
-Fontos megjegyezni, hogy a félképek (field-ek) különböző időpillanatokban készülnek, azaz nem ugyanazon teljes képhez tartoznak (nem állítható elő egy teljes kép páros-páratlan sorra való felbontásával). 
-Ez eltérés a mozis rendszerhez képest, amely ugyanazt a képkockát mutatta be többször.
-Ez alapján a következő mondhatóak el a váltottsoros videóról:
+Opposed to the solution of cinema, i.e. displaying the same frame multiple times the even and odd fields in interlaced video are taken in consequent time instants.
+Therefore, in interlaced video the temporal resolution is effectively doubled at the cost of halving the vertical spatial resolution of the video data.
+This means the following properties of interlaced video
 \begin{itemize}
-\item A váltott-soros letapogatás a progresszívhez képest 2:1 arányú tömörítést valósít meg, azaz a továbbítandó adatmennyiséget (és így a szükséges sávszélességet) lefelezi
-\item Álló képtartalomnál a progresszív letapogatással megegyező vertikális felbontást valósít meg (hiszen a páros és páratlan félképek ugyanazt a képet egészítik ki)
-\item Gyorsan mozgó képtartalom mellett a függőleges felbontás gyakorlatilag a progresszív formátum fele (hiszen a félkép tartalma folyamatosan változik)
+\item Compared to progressive video with the same refresh rate, interlaced scanning achieves the compression factor of 2:1, resulting in halved analog bandwidth
+\item In case of still, and slowly moving scenes the vertical resolution coincides with the progressive resolution (since the even and odd fields complete the same frame)
+\item In case of rapid motion the vertical resolution if half of the progressive resolution
 \end{itemize}
-Általánosan elmondhatjuk, hogy lassan változó képtartalom esetén (pl. filmek) a váltott-soros letapogatás megfelelően nagy vertikális felbontást és a progresszívnál folytonosabb mozgásreprodukciót biztosít, megfelelő tömörítés (sávszélesség-hatékonyság) mellett.
-Gyors kameramozgások esetén, pl. sporttartalom már láthatóvá válhatnak a felezett vertikális felbontásból származó hatások.
+Generally speaking for video content with slowly changing content, e.g. movies, interlaced scanning ensures a sufficiently high vertical resolution with improved motion reproduction besides feasible signal bandwidth.
+In case of fast motion, e.g. camera movements in sport programs the artifacts due to the reduced vertical resolution become visible.
 \vspace{3mm}
 
-Mivel a sávszélesség-hatékonyság az analóg műsorszórás bevezetésének idején központi kérdésnek számított, ezért a normálfelbontású analóg (majd később a digitális SD) formátum kizárólag váltottsoros letapogatási módot alkalmazott.
-A HD szabvány bevezetésével már mind interlaced, mind progesszív formátumok léteznek, míg UHDTV esetén a szabványok már kizárólag progresszív formátumokat definiálnak.
+As bandwidth efficiency was of primary importance during the introduction of early analog television broadcasting, all the analog and digital standard definition video formats adopted exclusively interlaced scanning.
+Later the high definition video standard introduced progressive video formats for the first time, while the latest ultra high definition format supports progressive scanning mode only.
 
 \vspace{3mm}
-\paragraph{Az interlaced letapogatás kérdései:}
-Bár számos előnnyel rendelkezik, az interlaced technika számos kérdést, nehézséget is felvet egyszerűsége mellett.
+\paragraph{Questions of interlaced scanning:}
+Besides its obvious advantages, the application of interlaced video rises a number of questions and challenges.
 
-Egyik példaképp: korábban láthattuk, hogy a térbeli mintavételi frekvencia megsértése térbeli átlapolódási jelenségekhez vezet, amelyek jellegzetesen térben periodikus képek esetében (pl. téglafal, ,,kockás'' ing) jól látható Moiré ábrák megjelenését okozza.
-Mivel interlaced esetben a vertikális mintavételi frekvenciát lefelezzük, ezért félképeken ezek a Moiré ábrák erőteljesen megjelenhetnek, az egymás utáni átlapolódó félképek váltakozása pedig igen zavaró átlapolódási jelenségekhez, ún. interline twitter jelenséghez vezet már állókép megjelenítése esetén is.
-A jelenségre egy szemléltető példa \href{https://en.wikipedia.org/wiki/File:Indian_Head_interlace.gif}{itt} található.
-Minthogy az összes SD formátum interlaced letapogatást alkalmazott, épp az interline twitter jelensége volt a fő oka a TV felvételek során a négyzetrácsos, csíkos öltözékek elkerülésének.
+As an example, it introduces the phenomenon of \textbf{interline twitter}:
+The previous chapter explained that the violation of the sampling theorem---i.e. sampling frequency components above half the sampling frequency---leads to spatial aliasing phenomena.
+In the field of image processing it manifests in visible Moiré pattern on spatially periodic textures (e.g. a brick wall, or squared shirts).
+In case of interlaced video the vertical resolution is halved, compared to progressing scanning, therefore, vertical aliasing artifacts are more likely to emerge.
+Since the even and odd fields are displayed alternatively, therefore also the potential Moiré patterns alternate from field to field.
+This may produce a shimmering effect, termed as twittering, even when a still image is \href{https://en.wikipedia.org/wiki/File:Indian_Head_interlace.gif}{reproduced}.
+Interline twittering is the main reason, why television professionals avoid wearing clothing with fine striped patterns, while professional video cameras apply a low-pass filter to the vertical resolution of the signal to prevent interline twitter. 
 
 \begin{figure}  
 \small
@@ -340,56 +336,64 @@ Minthogy az összes SD formátum interlaced letapogatást alkalmazott, épp az i
 	\begin{overpic}[width = 1\columnwidth ]{Figures/Interlaced_video_frame_(car_wheel).jpg}
 	\end{overpic}   \end{minipage}\hfill
 	\begin{minipage}[c]{0.3\textwidth}
-    \caption{Megfelelő deinterlacing technika nélkül váltottsoros formátum megjelenítése progresszív kijelzőn.}
+    \caption{
+    Displaying interlaced video on a progressive display without deinterlacing.}
 \label{fig:deinterlacing}  \end{minipage}
 \end{figure}
 
-További érdekes kérdést vet fel az interlaced és progresszív formátum közötti konverzió.
-Progresszívről interlaced formátumba a feladat viszonylag egyértelmű, a teljes kép páros és páratlan sorokra bontásával megoldható.
-A váltottsoros formátumról progresszívre történő konverzió konzumer felhasználási szempontból gyakoribb, gondoljunk csak egy jellegzetesen váltottsoros formátumban rögzített DVD lemez jellemzően progresszív számítógép monitoron történő megjelenítésére.
-Legegyszerűbb stratégiaként a monitor a szomszédos félképeket összeszőve alakít ki egy teljes felbontású képet.
-Ez azonban gyors mozgások esetén ún. fésűsödési jelenségekhez vezet, amelyet a \ref{fig:deinterlacing} ábra szemléltet.
-Épp ezért, a konverzióhoz kifinomultabb \textbf{deinterlacing} eljárás szükséges a félképek sorai közötti adatok interpolációjához.
-A feladat létjogosultsága manapság is nagy, hiszen a jelenlegi LCD TV és számítógép monitorok már nem támogatnak natív interlaced megjelenítést, míg a HD műsorszórás még napjainkban is váltottsoros formátumot alkalmaz (jellemzően 1080i-t).
+Further questions arise in case of the conversion between interlaced and progressive formats.
+The progressive to interlaced conversion can be straightforwardly solved by dividing the entire frame to odd and even lines.
+Interlaced to progressive conversion emerges more frequently in practice: e.g. in case of the playback of a DVD disc on a usually progressive computer monitor.
+As the simplest solution, two adjacent field can be combined to form a single frame, however, this naive approach leads to the ,,combing'' of moving objects on the screen, as illustrated in Figure \ref{fig:deinterlacing}.
+Generally speaking techniques for the interpolation of the content of intermediate scan lines are termed as \textbf{deinterlacing} methods.
+Deinterlacing is an often emerging problem even today, as broadcasting most often transmits interlaced HD format (generally using format 1080i), while modern LCD displays do not support native interlaced scanning anymore.
 
 
-\section{Analóg videóformátumok}
+\section{Analog video formats}
 
-Az előzőek alapján bevezethetjük a normál felbontású analóg televíziós műsorszórás képformátumát:
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth ]{figures_en/NTSC_PAL.png}
+	\end{overpic}
+	\caption{Distribution of analog television formats by nation}
+	\label{Fig:NTSC_map}
+\end{figure}
 
-Ahogy azt már korábban láthattuk két analóg képformátum terjedt el a világon a színes műsorszórás kezdetével:
+Based on the foregoing, the main properties of the video format used for analog broadcasting can be introduced.
+Historically, three analog video formats were introduced with the advent of color television broadcasting:
 \begin{itemize}
-\item Az Egyesült Államokban és Japánban alkalmazott NTSC képformátumot az FCC vezette be 1953-ban.
-Az NTSC formátum a korabeli technológiának megfelelően $N_V = 525$ TV-sorból áll\footnote{
-Az NTSC szabvány megalkotásának az idejében már több fekete-fehér TV adás létezett, pl. az RCA által létrehozott NBC csatorna, amely 441 sorral dolgozott, míg több gyártó 600-800 soros rendszerek bevezetését szorgalmazta.
-Kompromisszumként 500 sor körüli sorszámot tűztek ki a szabványosítás során célul.
-A konkrét érték végül a korabeli CRT technológia korlátjának hozadéka:
-A TV vevőkben az időzítésekhez egy master oszcillátor hozott létre egy kétszeres sorfrekvenciájú jelet, amelynek frekvenciáját ($2\cdot 15750~\mathrm{Hz}$) leosztották a sorok számával, megkapva a félképfrekvenciát ($60~\mathrm{Hz}$).
-Ezt a jelet összehasonlították a tényleges hálózati frekvenciával és ez alapján korrigálták a master oszcillátor értékét a hálózati zavarokból származó hibaképek elkerülésére.
-A frekvenciaosztás a korabeli technológiával csak egymás után kötött multivibrátorokkal volt megvalósítható, a sorszám megfelelő faktorizációja alapján (szorzat alakra bontás).
-Minthogy interlaced letapogatás esetén páratlan sorszám alkalmazása szükséges, ezért mindegyik multivibrátor szükségszerűen páratlan számmal kellett, hogy osszon (hiszen páratlan számok szorzata lesz páratlan).
-Emellett ezek a szorzó-faktorok értéke aránylag kicsi kell, hogy legyen a frekvencia-drift elkerülésére.
-Az 500-hoz legközelebbi kicsi páratlan számokra faktorizálható szám az $525 = 3\cdot 5\cdot 5 \cdot 7$.
-A PAL esetében a sorszám megválasztásának az alapja ugyanez, ahol $625 = 5\cdot 5\cdot 5 \cdot 5$.
-}, és váltott-soros letapogatást alkalmaz.
-A korábban tárgyalt okokból kifolyólag a rendszer képfrissítési frekvenciája, azaz a félképfrekvencia $60~\mathrm{Hz}$ ($59.94~\mathrm{Hz}$), amelyből természetesen a képfrekvencia $30~\mathrm{Hz}$-re ($29.97~\mathrm{Hz}$-re) adódik.
-\item Európában, Ausztráliában és Ázsiában a PAL rendszer került bevezetésre 1967-ben.
-A PAL formátum sorszáma $N_V = 625$, váltott-soros letapogatással, míg a helyi hálózati frekvenciának megfelelően a félképfrekvencia $50~\mathrm{Hz}$ és így a képfrekvencia $25~\mathrm{Hz}$.
+\item The first color TV broadcast system was the \textbf{NTSC} format, introduced by the Federal Communications Commission (FCC) in the United States in 1954 and have been adopted by western America and Japan.
+For vertical resolution NTSC selected $N_V = 525$ scan lines\footnote{
+The choice of the vertical line number was a compromise between the existing black and white systems, e.g. as used by RCA's NBC TV network, and the intention of manufactures, desiring to increase the line number to 600-800.
+The actual value originates from a limitation of the CRT technology of the day:
+In early TV receivers a master oscillator ran at twice the line-frequency, and this frequency ($2\cdot 15750~\mathrm{Hz}$) was divided down by the number of lines used (in this case $N_V = 525$) to give the field frequency ($f_{\frac{\mathrm{V}}{2}} = 60~\mathrm{Hz}$).
+This frequency was compared with the mains frequency ($60~\mathrm{Hz}$ in America) and the master oscillator's frequency was corrected by the discrepancy in order to avoid a moving noise image due to supply ripple.
+At the time, frequency division was performed use of a chain of multivibrators, the overall division ratio being the mathematical product of the division ratios of the chain.
+Since the line number has to be odd an odd number (see previous section), therefore it can be factorized only to odd numbers as well, which had do be relatively small in order to avoid thermal drift of the oscillator.
+The closest sequence up to about 500 lines that meets all these requirements is $525 = 3\cdot 5\cdot 5 \cdot 7$, giving the number of scan lines.}
+with interlaced scanning and the	 field rate of $f_{\mathrm{\frac{V}{2}}} = 60~\mathrm{Hz}$ in agreement with the mains frequency.
+\item As an improved version of NTSC, the \textbf{PAL} system was introduced by the European Broadcasting Union (EBU) in 1967 and besides Europe it was adopted in Australia, South America, Africa and a part of Asia.
+The PAL format applied interlaced scanning with the number of scan lines of $N_V = 625$ along with the field rate of $50~\mathrm{Hz}$.
+\item Also as an improvement on NTSC, emerging from France the \textbf{SECAM} system was introduced in France and in the Soviet Union.
+The SECAM system will not be discussed in details in the present book.
 \end{itemize}
-Az NTSC és PAL formátum fő jellemzőit a \ref{tab:sd_formats} táblázat tartalmazza.
+The main parameters of the NTSC and PAL formats are summarized in Table \ref{tab:sd_formats}.
+As a summary it can be stated that NTSC provides a higher temporal resolution (i.e. higher refresh rate/field rate) with lower spatial resolution, while PAL ensures a higher spatial resolution due to the increased number of scan lines at the cost of lower field rate.
+
 \begin{table}[h!]
-\caption{}
+\caption{Parameters of the NTSC and PAL analog formats}
 \renewcommand*{\arraystretch}{2.25}
 \label{tab:sd_formats}
 \begin{center}
     \begin{tabular}[h!]{ @{}c | | l | l @{} }%\toprule
 				         &   NTSC  							       & PAL \\ \hline
-    Összes sorok száma ($N_{\mathrm{V}}$):	 &  525   								   &  625 \\
-    Aktív sorok száma ($N_{\mathrm{V,A}}$):   &  480   								   &  576 \\
-    Képfrekvencia ($f_{\mathrm{V}}$):    &  $30~\mathrm{Hz}$ ($29.97~\mathrm{Hz}$) & $25~\mathrm{Hz}$ \\
-    Félképfrekvencia ($f_{\frac{\mathrm{V}}{2}}$): &  $60~\mathrm{Hz}$ ($59.94~\mathrm{Hz}$) & $30~\mathrm{Hz}$ \\
-    Sorfrekvencia ($f_{\mathrm{H}}$):    &  $525 \cdot 30 = 15750~\mathrm{Hz}$ ($15734~\mathrm{Hz}$) & $15625~\mathrm{Hz}$ \\
-    Soridő ($T_{\mathrm{H}}$):           &  $63.49~\mathrm{\mu s}$ ($63.55~\mathrm{\mu s}$) & $64~\mathrm{\mu s}$ \\
+    Total line number ($N_{\mathrm{V}}$):	 &  525   								   &  625 \\
+    Number of active lines ($N_{\mathrm{V,A}}$):   &  480   								   &  576 \\
+    Frame rate ($f_{\mathrm{V}}$):    &  $30~\mathrm{Hz}$ ($29.97~\mathrm{Hz}$) & $25~\mathrm{Hz}$ \\
+    Field rate ($f_{\frac{\mathrm{V}}{2}}$): &  $60~\mathrm{Hz}$ ($59.94~\mathrm{Hz}$) & $30~\mathrm{Hz}$ \\
+    Line frequency ($f_{\mathrm{H}}$):    &  $525 \cdot 30 = 15750~\mathrm{Hz}$ ($15734~\mathrm{Hz}$) & $15625~\mathrm{Hz}$ \\
+    Line period time ($T_{\mathrm{H}}$):           &  $63.49~\mathrm{\mu s}$ ($63.55~\mathrm{\mu s}$) & $64~\mathrm{\mu s}$ \\
+    Active line time ($T_{\mathrm{H,a}}$):           &  $\approx 52 ~\mathrm{\mu s}$ ($63.55~\mathrm{\mu s}$) & $52~\mathrm{\mu s}$ \\
     \end{tabular}
 \end{center}
 \end{table}
@@ -402,111 +406,113 @@ Az NTSC és PAL formátum fő jellemzőit a \ref{tab:sd_formats} táblázat tart
 	\end{overpic}
     \end{minipage} \hfill
 	  \begin{minipage}[c]{0.3\textwidth}
-    \caption[]{ Egy teljes kép felépítése váltottsoros letapogatás esetén egyetlen videokomponensre ábrázolva:
+    \caption[]{ The line structure of an entire frame in case of interlaced scan, illustrated for a single video component:
     \begin{itemize}
-    \item aktív soridő: szürke
-    \item sorkioltási idő: magenta, cián és sárga
-    \item félképkioltási idő: zöld, narancssárga, fehér
+    \item active line interval: grey
+    \item horizontal blanking interval: magenta, cyan and yellow
+	\item vertical blanking interval: green, orange and white
     \end{itemize}
     }\label{fig:PAL_frame}
     \end{minipage}
 \end{figure}
-Egy teljes TV kép (azaz két egymás utáni félkép) felépítése a PAL rendszerben a \ref{fig:PAL_frame} ábrán látható.
-Az ábra természetesen csak egyetlen video komponens felépítését szemlélteti.
+The structure of an entire frame (i.e. two consecutive fields) in the PAL system is illustrated in Figure \ref{fig:PAL_frame}.
+Obviously, the figure depicts only a single video component, the content of the components is discussed in the following.
+The figure depicts the horizontal and vertical blanking intervals, with the VSYNC (denoted by green color) and the HSYNC (yellow interval) sync pulses.
+These pulses ensure the synchronization of the display to the received signal by triggering the vertical and horizontal retrace of the electron beam, therefore, it is ensured that the individual ,,pixel'' values are displayed on the correct position.
+With the loss of these sync pulses the displayed image is misaligned vertically (in case of lost VSYNC), resulting in the \textbf{jitter} or horizontally (in case of lost HSYNC) causing the \textbf{rolling} of the video signal.
 
-Az ábrán jól megfigyelhetőek a a félkép és képkioltási idők, bennük pedig az ún. félképszinkron jelek (a zöld tartományban) és sorszinkron jelek (sárga tartomány).
-Ismétlésként: Ezek a jelek a TV vevő (vagy általában a megjelenítőeszköz) szinkronizációját biztosítják a megfelelő megjelenítés érdekében.
-A szinkronjelek hibás vétele esetén a kép vertikálisan (félképszinkron hiányában), vagy horizontális (sorszinkron hiányába) elmozdul.
-Ezeket a jelenségeket ,,jitter''-nek, illetve ,,rolling''-nak nevezzük.
-
-Bár a videójel felépítése az analóg CRT megjelenítők működési elvéből származik, mégis, ugyanez a felépítés jellemző a ma is alkalmazott digitális videójel esetén, pl. a HDMI, vagy DVI szabvány esetén.
-A jelenleg elterjedt megjelenítők esetén a kioltási idők természetesen okafogyottá váltak:
-A modern, főként stúdió célú CRT megjelenítők már jóval kisebb kioltási idő mellett is működőképesek, míg LCD megjelenítők esetén egyáltalán nincs szükség kioltási időre.
-Ennek ellenére a kioltási idők a jelenlegi digitális szabványok esetén is ugyanúgy jelen vannak, így pl. a HDMI szabvány esetében is.
-Ennek egyik, természetes oka az, hogy a technika fejlődésével megjelenő újabb és újabb szabványok mind a már létező, korábbi szabványokra épülnek.
-Másrészt a kioltási idők lehetővé tették egyéb, kiegészítő adatok tárolását is ezekben az időszegmensekben.
-Így a kioltási időkben továbbítható pl. a teletext adat, feliratok, és digitális esetben a video kísérő audio adat is.
-Ezen adatok helyét az ITU-R BT.1364 és az SMPTE 291M szabványok definiálják. 
-Megjegyezhető, hogy a szabványok a digitális hang átvitelét (pl. a HDMI szabvány esetén is) a sorkioltási időben írják elő \footnote{
-Egy egyszerű példaként HDMI audio átvitelre:
-1080p HD formátum esetén (összes sor: 1125, ld. később) $60~\mathrm{Hz}$-es képfrekvencia mellett a sorfrekvencia $f_V = 67.5~\mathrm{kHz}$.
-$192~\mathrm{kHz}$ mintavételi frekvenciájú 8 csatornás audioanyag átvitele esetén az egy kép alatt átvivendő audiominták száma: $\frac{8 \cdot 192 000 }{60} = 25600~\mathrm{minta}$, azaz soronként kb. 23 minta átvitele szükséges.
-Ez a HDMI 1.0 szabvány által megengedett audiosebesség. (Példa folytatása \href{https://www.sciencedirect.com/science/article/pii/B9780128016305000049}{itt} található.)
-}.
-
+Although the characteristics of the video signal---with containing vertical and horizontal blanking intervals---originates from the operation principle of CRT displays, even in modern digital systems (e.g. in case of HDMI or SDI interfaces) the structure of the video signal is identical with the presented analog one.
+Obviously, modern LCD displays do not need the presence of blanking intervals at all, since they update the content of all the pixels quasi-instantaneously, still, the blanking intervals are present in digital video signals as well.
+One reason for this is that digital video signal is the legacy of the CRT era (and even today, professional CRT studio monitors are often employed), with the newly introduced standards all based on the previous ones.
+On the other hand the blanking intervals allow the transmission of auxiliary data, including teletext, captions, subtitles, and in case of digital standards, \textbf{audio streams} of the media content as well.
+The actual location of the digital data is codified in ITU-R BT.1364 and SMPTE 291M.
+As and example, the audio streams accompanying video data are positioned in the vertical blanking intervals in the HDMI standards, i.e. between the content of active lines
+\footnote{
+As a simple example for audio transmission via HDMI interface:
+In case of a HD format of 1080p (with the total number of lines 1125), with the frame rate of $60~\mathrm{Hz}$, the line frequency is given by $f_V = 67.5~\mathrm{kHz}$.
+Assuming an audio stream with 8 channels, sampled at $f_s = 192~\mathrm{kHz}$ the data to be transmitted over one entire frame is $\frac{8 \cdot 192 000 }{60} = 25600~\mathrm{samples}$.
+This means the transmission of 23 samples transmitted with one video line, which results in the maximum bandwidth of the HDMI 1.0 \href{https://www.sciencedirect.com/science/article/pii/B9780128016305000049}{standard}.}.
 
 \vspace{3mm}
 % https://www.sciencedirect.com/topics/computer-science/blanking-interval
 % https://www.sciencedirect.com/topics/computer-science/horizontal-blanking
-Az eddigiek során a videójel felépítésének általános koncepcióját láthattuk, nem esett szó arról, hogy az aktív intervallumban mik a ténylegesen továbbított videójelek, illetve hogy pontosan hány érpáron történik a videójel átvitele.
-Természetesen a színes képpontok ábrázolásához három videókomponens szükséges, amely videótechnikában leggyakrabban a luma-chroma jeleket jelenti.
+So far only the general structure of the video signals was discussed, without the investigation of the actual data in the active intervals, e.g. in case of analog video, without investigating what the actual video signals are.
+Obviously, the representation of one color pixel requires the transmission of three individual video components, which in the field of video transmission is most often the luma-chroma representation.
 
-Analóg formátumok esetén a továbbított jelek száma alapján a következő formátumokat különböztethetjük meg:
+Based on the number of actual individual transmitted components video signals can be categorized to two main formats 
 \begin{itemize}
-\item \textbf{Komponens formátumok} esetén a három videójel-komponens egymástól függetlenül van tárolva, illetve párhuzamosan, külön érpárokon kerülnek továbbításra.
-\item \textbf{Kompozit formátum} esetén a három videójel-komponens megfelelően multiplexálva egyetlen jellé alakítva van tárolva, illetve kerül egyetlen érpáron továbbításra.
+\item \textbf{Component video} transmits the video signal on three individual signal paths, i.e. on three individual cable pairs.
+\item \textbf{Composite video} transmits the three video signals multiplexed into one single signal, transmitted over a single path, or physically speaking on one pair of cables.
 \end{itemize}
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.90\columnwidth ]{figures/video_comp2.png}
 	\end{overpic}
-	\caption{A kompozit és komponens videójelek előállításának folyamatábrája}
+	\caption{Block diagram of the production of composite and component video signals}
 	\label{Fig:video_components}
 \end{figure}
-A kompozit és komponens videójelek előállításának folyamatábrája a \ref{Fig:video_components} ábrán látható (kompozit esetben a PAL rendszer példáján).
-Mint láthatjuk, mind a kompozit, mind a komponens jelek alapját a színpontok luma-chroma ábrázolása adja\footnote{Kompozit jelekre ez mindig igaz, komponens esetben ritkább esetben közvetlen az $R'G'B'$ jelek továbbítása történik.}.
+The signal processing scheme of composite and component video is illustrated in Figure \ref{Fig:video_components}.
+As it is depicted, in both cases the basis of video representation is given by the luma-chroma separation of the RGB signals\footnote{Although in case of component video the direct transmission of RGB signals is also allowed in case of UHD video.}.
+In the following the actual steps of this production chain is investigated.
 
 \vspace{3mm}
-\paragraph{A videójel sávszélessége:}
-Természetesen mind a luma, mind a chroma jelek véges sávszélességgel kerülnek továbbításra.
-Fontos látni, hogy mivel az időtartománybeli videójel valós-időben felrajzolódik a kijelzőre, ezért a jel időtartománybeli, azaz Hz-ben kifejezett sávszélessége a megjelenített kép részletességét határozza meg.
-A kijelzett képet tehát véges részletességgel visszük át.
-Ennek oka egyrészt a műsorszórás során a nyilvánvaló sávszélesség-takarékosság.
-Másrészt a folytonos videójelet a CRT pixel-struktúrája a kijelzés során gyakorlatilag mintavételezi, amely mintavett képjel spektruma a mintavételi frekvencia egész számú többszörösein ismétlődni fog.
-Ebből kifolyólag sávkorlátozás nélkül a megjelenítő hatására a videójel átlapolódhat, amely a képen Moiré-ábrák megjelenését okozza.
+\paragraph{Bandwidth of the video signals:}
+Obviously, both the luma and chroma signals are transmitted with finite bandwidth.
 
-Az NTSC esetében láthattuk, hogy az aktív sorok száma $N_{V,A} = 480$, míg az aktív soridő $t_{H,A} \approx 52~\mu \mathrm{s}$.
-Kiindulva abból, hogy a képarány 4:3, az egy sorban található pixelek száma kb. $N_{H,A} = \frac{4}{3} N_{V,A} = 640$, négyzet alakú pixeleket feltételezve.
-A mintavételi tétel értelmében a legnagyobb frekvenciájú ábrázolható térbeli szinuszjelből $N_{H,A}$ periódus fér egy TV sor periódusidejébe (ez a pixelenként váltakozó fekete-fehér-fekete-fehér jel).
-Ennek a szinuszjelnek a periódusidejére és frekvenciájára
+As has been already discussed, in case of CRT displays the time domain video signal is drawn on the screen real-time, therefore, the bandwidth of the video signal (defined in $\mathrm{Hz}$) limits the actual horizontal detailedness of the displayed on image.
+Thus, the decrease of temporal bandwidth results in the reduction of the spatial, horizontal resolution.
+Besides bandwidth efficiency at transmission, the actual choice of video bandwidth has a direct, practical reasons.
+
+The screen of the CRT display is divided both horizontally and vertically to individual RGB pixels.
+Therefore, even in case of an continuous CRT driving voltage, the screen itself samples the video signals, that may lead to spatial aliasing artifacts, manifesting in visible Moiré patterns on the screen.
+In order to avoid aliasing the video signal has to be temporally bandlimited \textbf{at least} to the half of the spatial sampling frequency, in accordance with the sampling theorem.
+
+The required temporal bandwidth is investigated for the case of the NTSC format:
+From table \ref{tab:sd_formats} the number of active lines in the format is $N_{V,A} = 480$, while the active line time is $t_{H,A} \approx 52~\mu \mathrm{s}$.
+As the aspect ratio is 4:3 the number of horizontal pixels is approximately $N_{H,A} = \frac{4}{3} N_{V,A} = 640$ (assuming square pixels).
+According to the sampling theorem the sine signal with the largest spatial frequency that can be represented with this resolution contains $N_{H,A}$ periods in one line (this is the consecutive ,,black-white-black-white...'' content).
+The period time and the frequency of this signal can be calculated as
 \begin{equation}
 T_{\mathrm{max}} = \frac{t_H}{N_{H,A}/2}, \hspace{1cm} f_{\mathrm{max}} = \frac{N_{H,A}}{2 t_H} = 6.15~\mathrm{MHz}
 \end{equation}
-adódik, amely tehát a Nyquist frekvencia, azaz az elméleti felső határ a megjeleníthető kép frekvenciájára.
+which is the theoretical upper frequency limit, based on the Nyquist criterion.
 
-A tapasztalat azonban azt mutatta, hogy a tényleges elméleti maximális felbontás a gyakorlatban nem használható ki teljesen, amely jelenséget az ún. \textbf{Kell-hatásnak} nevezzük.
-A jelenség oka a CRT elektronnyalábának véges mérete, a mintavételi tétel alkalmazása során feltételezett végtelen keskeny nyaláb helyett (A nyaláb a képernyőre vetítve nem egyetlen pont, hanem egy Gauss-függvénnyel jól közelíthető intenzitás-profil).
+However, experimental results showed that even this theoretical maximal frequency can not be displayed without artifacts, due to the \textbf{Kell effect}.
+The Kell effect is caused by the finite size of the CRT's electron beam: instead of the theoretical infinitely narrow beam, which is assumed when applying the sampling theorem, the electron beam has a \textbf{point spread function (PSF)} (i.e. the intensity profile, when projected to a single point on the screen) described approximately by a Gaussian distribution.
 \begin{figure}[]
 	\centering
 	\begin{minipage}[c]{0.65\textwidth}
 	\begin{overpic}[width = 0.95\columnwidth ]{figures/kell.png}
 	\end{overpic} \end{minipage}\hfill
-	\begin{minipage}[c]{0.35\textwidth}	\caption{A Kell-hatás szemléltetése.}
+	\begin{minipage}[c]{0.35\textwidth}	\caption{Illustration of the Kell effect.}
 	\label{Fig:Kell}  \end{minipage}
 \end{figure}
-Tekintsük példaképp a \ref{Fig:Kell} ábrán látható esetet, melynek során a megjelenítendő kép egyszerű fekete-fehér, soronként váltakozó vonalak, azaz egy épp vertikális Nyquist-frekvenciájú jel.
-Abban az esetben ha a megjelenítendő vonalak épp a tényleges TV letapogatási sorra (scan line) esnek a kép tökéletesen visszaállítható.
-Ha azonban a vonalak közepe épp két scan line közé esik, úgy a képernyőn a nyaláb a véges kiterjedése miatt a két sor átlagát jeleníti meg, azaz egy azonosan szürke képet kapunk.
 
-Azt, hogy az elvi maximális felbontás (azaz a Nyquist frekvencia) hányadrésze a ténylegesen kihasználható képtartalom megjelenítésére a szubjektíven meghatározott ún. \textbf{Kell faktor} írja le.
-NTSC esetében a korabeli CRT technológiához ezt kb. 0.7-nek adódott.
+A simple example is illustrated in Figure \ref{Fig:Kell} for the effect of the beam PSF:
+The continuous image to be displayed oscillates vertically at the Nyquist frequency, with alternating black and white lines.
+In case the lines of the image exactly coincides with the sampled lines on the screen (i.e. they are aligned) the image can be reconstructed perfectly.
+However, if the lines of the image are located between two actual scan lines, due to the non-zero extension of the electron beam PSF the CRT will display the average of the two lines, i.e. a homogeneous grey image is displayed.
 
-Az átlapolódás elkerüléséhez tehát a Kell hatás figyelembe vétele mellett a megjeleníthető képen a legnagyobb horizontális frekvenciájára az NTSC és PAL rendszerben
+As a conclusion, the theoretical maximal spatial frequency can not be displayed on the screen without artifact.
+The ratio of the experimental, subjective highest displayable spatial frequency and the theoretical limit is given by the \textbf{Kell factor}, being approximately 0.7 for the NTSC video parameters.
+
+In order to avoid spatial aliasing and by taking the Kell effect into consideration the largest horizontal frequency that can be displayed on the screen without visible artifacts is given by
 \begin{equation}
 f^{\mathrm{NTSC}}_{\mathrm{max}} = \frac{N_{H,A} \cdot K}{2 t_H} = 4.3~\mathrm{MHz},
 \hspace{3mm}
 f^{\mathrm{PAL}}_{\mathrm{max}} = \frac{N_{H,A} \cdot K}{2 t_H} \approx 5.2 ~\mathrm{MHz}
 \end{equation}
-adódik, ahol $K = 0.7$ a Kell faktor.
-Ennek megfelelően a luma jel (hasonlóan a korai fekete-fehér videójelhez) NTSC esetében $4.5~\mathrm{MHz}$-re, PAL esetében $5.6~\mathrm{MHz}$-re van sávkorlátozva.
+in the NTSC and PAL systems respectively, where the Kell factor is $K = 0.7$.
+Therfore, the luma signal (similarly to the early black and white TV signal) is bandlimited to $4.2~\mathrm{MHz}$ in the NTSC and to $5~\mathrm{MHz}$ in the PAL system.
 
-Korábban láthattuk, hogy az emberi szem színezetre vett térbeli felbontóképessége jóval kisebb (kevesebb, mint fele) a világosságéhoz képest.
-Ezt kihasználva a különböző videójel formátumokban közös, hogy a színkülönbségi (chroma) jeleket sávkorlátozva, azaz csökkentett felbontással reprezentálják.
-Ez analóg formátumok esetén sávszélességet takarít meg, míg digitális esetben már hatékony kompressziós módszerként is felfogható, mint a következőekben látható lesz.
+\vspace{3mm}
+As discussed earlier, the visual acuity (i.e. the spatial resolution) of the human visual system is less than the half for color information than for luminance.
+This property of human vision can be exploited in order to achieve significant video compression.
+For the \ycbcr representation this served as the starting point for the subsampling of chroma signals.
+In the analog case this phenomena allows the bandwidth reduction of chroma signals, therefore, in component systems the chroma signals are bandlimited to the half of the luma signal (resulting in a halved horizontal color resolution), while in composite video the color information is transmitted with even more reduced bandwidth.
 
-A következőekben a kompozit és komponens jelábrázolás részleteit vizsgáljuk.
+\subsection{Composite video signal}
 
-\subsection{A kompozit videójel}
 Analóg átviteltechnika szempontjából a legegyszerűbb megoldás a videójel továbbítására a 3 videókomponens egyetlen érpáron való átvitele.
 Ebben az esetben a luma és chroma komponensekből egyetlen ún. \textbf{kompozit} jelet kell képzeni, hogy a vevő oldalon az eredeti három komponens különválasztható.
 A feladat megoldására három---alapgondolatában azonos---módszer létezik, az NTSC, PAL és SECAM megoldások.
@@ -762,45 +768,46 @@ A chroma jelek modulációja elkerülhetetlen, hiszen a két független színkü
 Az S-video szabvány csatlakozója a \ref{Fig:composite_video} (b) ábrán látható.
 
 
-\subsection{A komponens videójel}
+\subsection{Component video signal}
 
-A videójel komponensenkét való tárolásának és továbbításának az ötlete kézenfekvő, annak ellenére, hogy a technológia ezt csak a kompozit formátum megjelenésénél jóval később tette lehetővé.
-Komponens videó esetén a luma és chroma (ritkább esetben az $R'G'B'$ komponenseket) egymástól függetlenül, külön tároljuk és külön érpáron továbbítjuk, azaz a továbbított jelek gyakorlatilag az \ypbpr reprezentációk.
+The idea of transmitting the video signal by separated components is straightforward, still, it was allowed by technology only decades after composite video was introduced:
+While interfaces for device-to-device video transmission could be achieved even with analog data, the broadcasting of component video could be only resolved with the introduction of digital video standards.
+In case of component video the transmitted signals are directly the luma and the chroma signals (or less often the $R'G'B'$ signals), or more precisely the \ypbpr components.
 
-Az \ypbpr  ábrázolás esetén tehát a három átvitt jel a következő:
+The \ypbpr representation consists of the three following signals:
 \begin{itemize}
-\item $Y'$: az adott eszközfüggő színtérben ábrázolt luma komponens.
-Megjegyezhető, hogy a szükséges szinkron impulzusok az \ypbpr rendszerben ugyanúgy jelen vannak az $Y'$ jelen.
-Épp ezért pl. egy \ypbpr komponens bemenettel rendelkező megjelenítő $Y'$ bemenetére kompozit videójel szabadon ráköthető.
-Ez esetben a fekete-fehér TV vevőhöz hasonlóan a TV képen a fekete-fehér képre zajként-pontozódásként (,,chroma dots'') érzékelve a megjelenített modulált színsegédvivőt.
-\item $P'_{\mathrm{B}},P'_{\mathrm{R}}$: az aktuális analóg interface dinamikatartományához átskálázott (erősített) $B'-Y', R'-Y'$ chroma jelek.
-Az interface-ek általában $\pm 0.5~\mathrm{V}$ feszültségszinteket definiálnak.
-A $P$-rövidítés a kompozit videóból származik, ahol a színinformációt a színsegédvivő fázisa hordozza.
+\item $Y'$: the luma component, calculated by the luma coefficients defined by the RGB primaries.
+The required sync pulses are added to the luma component.
+Therefore, a device with composite video output can be connected to the $Y'$ interface of a display with component input.
+As a result the black and white image is displayed with the modulated chroma signal resulting in high frequency noise (,,chroma dotting'') on the screen.
+\item $P'_{\mathrm{B}},P'_{\mathrm{R}}$: the $B'-Y', R'-Y'$ chroma components, rescaled to the actual physical interface, usually requiring the dynamic range of $\pm 0.5~\mathrm{V}$.
+Notation $P$ is the legacy of the composite systems, where color information is carried by the \textbf{P}hase of the subcarrier.
 \end{itemize}
-
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.45\columnwidth ]{figures/1280px-Component-cables.jpg}
 	\end{overpic} \hfill
 	\begin{overpic}[width = 0.45\columnwidth ]{figures/YPBPR_signals.png}
 	\end{overpic} \hfill
-	\caption{A leggyakrabban alkalmazott $YP_bP_r$ komponens videójel továbbítására alkalmazott csatlakozó (a) és a komponens videójelek a korábbi színsáv-tesztábra esetén (b)}
+	\caption{RCA connectors, applied frequently for the physical interface of component video (a) and the component video signals of the bar test pattern (b)}
 	\label{Fig:comp_video}
 \end{figure}
-A külön kezelt luma-chroma információra egy példa a \ref{Fig:comp_video} (b) ábrán látható a már korábban is bemutatott SMPTE color bars tesztábra esetében.
-A komponens videójel interface leggyakrabban a \ref{Fig:comp_video} (a) ábrán látható RCA csatlakozóhármas alkalmazásával került megvalósításra.
+Similarly to composite video, the actual parameters of the component formats depend on the region of application: 
+components formats can be considered as the transmission of NTSC and PAL video formats without the QAM modulation of the chroma signals.
+Therefore, both 625 and 525 scan line interlaced component formats exist with $60~\mathrm{Hz}$ and $50~\mathrm{Hz}$ field rate.
+A simple example is depicted for the separately transmitted \ypbpr signals in case of the SMPTE color bar test pattern is depicted in Figure \ref{Fig:comp_video} (b).
+
+In consumer electronic the component video interface is equipped with RCA connectors, with the red and blue cables carrying the red and blue chroma signals and the green connector transmitting the luma information.
 
 \hspace{3mm}
-Az analóg interface-ek közül említést érdemel még elterjedtségük miatt két további videóinterface:
+Finally, from the numerous analog video interfaces two most widespread are mentioned here:
 \begin{itemize}
-\item A SCART (vagy EuroSCART, Syndicat des Constructeurs d'Appareils Radiorécepteurs et Téléviseurs rövidítése) interface mind kompozit videójelek, mind S-video, mind $RGB$ jelkomponensek kétirányú átvitelét lehetővé teszik sztereó hang és digitális jelzések továbbítása mellet.
-A SCART csatlakozó jelentőségét az jelentette, hogy megjelenése előtt a TV vevők videó bemenetére nem létezett szabványos interface.
-Gyakran a külső videójel-források jobb híján a TV vevő rádiófrekvenciás bemenetére csatlakoztak a kompozit videójelet valamilyen az adott jelforrásra előírt vivőfrekvenciára modulálva.
-A SCART interface 1080p HD jel átvitelére is képes volt $YP_bPr$ formátumra a HDMI szabvány elterjedése előtt.
-A tipikus 21-érintkezős SCART csatlakozó a \ref{Fig:scart_vga} (a) ábrán látható
-\item A VGA (Video Graphics Array) a mai napig széles körben elterjedt interface videókártyák és megjelenítők (monitor, projektor, stb) közti analóg komponens videójel-átvitelre.
-A VGA interface alapvetően az analóg megjelenítendő (legalábbis az adott videókártya színterében ábrázolt) $RGB$ komponenseket továbbítják a megjelenítő felé, külön ereken továbbítva a vertikális és horizontális (kép- és sor-) szinkronjeleket.
-A VGA portot az utóbbi években már szinte teljesen leváltották a DVI, HDMI és DisplayPort digitális interface-ek.
+\item The SCART connector (or EuroSCART, shorthand for Syndicat des Constructeurs d'Appareils Radiorécepteurs et Téléviseurs) was designed for the transmission of bidirectional composite, S-video and RGB components in the same time, with also carrying stereo audio and digital signing signals in the same time.
+Before the advent of the HDMI interface SCART connectors also allowed the transmission of high definition 1080p format via \ypbpr component signals.
+The typical 21-pin SCART connector is depicted in Figure \ref{Fig:scart_vga} (a).
+\item The VGA (Video Graphics Array) connector is still a commonly used analog component interface between video cards and displays (external monitors, projectors, etc.).
+The VGA interface transmits analog RGB components (in the color space of the video card) along with dedicate vertical and horizontal sync (VSYNC and HSYNC) cables.
+Nowadays the VGA interface is superseded with DVI, HDMI and DisplayPort digital interfaces.
 \end{itemize}
 
 \begin{figure}[]
@@ -811,73 +818,126 @@ A VGA portot az utóbbi években már szinte teljesen leváltották a DVI, HDMI 
 		\begin{overpic}[width = 0.4\columnwidth ]{figures/vga.jpg}
 	\end{overpic} \end{minipage}\hfill
 	\begin{minipage}[c]{0.35\textwidth}
-	\caption{Analóg videótovábbításra alkalmazott SCART (a) és VGA (b) csatlakozók}
+	\caption{The analog composite/component SCART (a) and RGB component VGA (a) connectors}
 	\label{Fig:scart_vga}  \end{minipage}
 \end{figure}
 
-\section{Digitális videóformátumok}
+\section{Digital video formats}
 	
-\subsection{Az SD formátum}
+\subsection{The SD format}
 
-Az első digitális videoformátumot a normálfelbontású, SD videót az ITU (akkoriban CCIR) alkotta meg 1982-ben a ITU-601 szabvány formájában \footnote{Munkájáért a CCIR 1983-ban tehcnikai Emmy díjat is kapott}.
+The first digital video format was developed by the ITU (International Telecommunication Union) and published in Rec. 601 (or ITU-601) in 1982\footnote{The CCIR (the predecessor of ITU) received the 1982–83 Technology and Engineering Emmy Award for its development}.
 
-Az SD formátum gyakorlatilag az eddig tárgyalt videojel komponensek digitális reprezentációjának tekinthető, azaz a \ref{fig:PAL_frame} látható videojel teljes egészében digitalizációra került kioltási intervallumokkal együtt, mind a luma és chroma komponensekre (más szóval az $Y'P_b'P_r'$ jelek közvetlen digitalizációjával kaphatjuk).
-A digitalizált videojelek neve--ahogy arról már szó volt--$Y'C_b'C_r'$ jelek.
-A jelek elvi előállítása az \ref{Fig:SD_production} ábrán látható.
+The SD format is basically the digital representation of the component analog formats, discussed in the foregoing:
+The structure of digital video is obtained by the sampling of the analog video signal, as depicted in Figure \ref{fig:PAL_frame}, containing all the blanking intervals besides the active video content.
+Therefore, digital video is the direct digitized version of the \ypbpr signals.
+As already discussed in the previous chapter, the components of the video format are the digital representation of the color pixels, referred to as the \ycbcr components.
+The signal processing scheme of digital video representation is illustrated in Figure \ref{Fig:SD_production}.
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.8 \columnwidth ]{Figures/YCbCr_production.png}
 	\end{overpic}
-	\caption{Digitális SD jel előállítása a videokomponensek digitalizálásával}
+	\caption{Production of SD video format by the digitization of \ypbpr components}
 	\label{Fig:SD_production}
 \end{figure}
 
-
-A digitalis reprezentáció egyes kérdéseit már a korábbiakban érintettük.
-Nyitott kérdés még a soronkénti mintaszám meghatározása, amely a sorok számával együtt megadja az SD formátum felbontását (pixelszámát).
-A feladat tehát az analóg videójel mintavételi frekvenciájának meghatározása.
-
-A mintavételi frekvencia megválasztásánál a következő szempontokat vették figyelembe:
+The digitization of the analog video signal consists of two main steps:
 \begin{itemize}
-\item Természetes törekvés volt, hogy a több évtizede egymás mellett létező NTSC és PAL rendszerre egyszerre alkalmazható legyen, azaz mind PAL, mind NTSC video digitális ábrázolását lehetővé tegye.
-Emellett nyilvánvalóan a mintavételezést úgy kell végrehajtani, hogy mindkét rendszerben egy sorba egész számú mintavételi periódus (azaz pixel) férjen bele.
-Ebből következik, hogy a mintavételi frekvencia a sorfrekvencia egész számú többszöröse kell, hogy legyen mind az NTSC, mind a PAL rendszerben, azaz
+\item sampling of the continuous video signal with a-priori antialiasing filtering
+\item quantization of the continuous signal levels to discrete codes
+\end{itemize}
+The questions of quantization, i.e. digital representation of the individual pixels has been already discussed in the previous chapter.
+Still, the parameters of sampling---or more specifically the sampling frequency---needs to be specified, defining the number of pixels per line, which, along with the number of lines gives the spatial resolution of the digital format.
+
+\paragraph*{Sampling frequency of the video signal:\\}
+The sampling frequency of the analog video components was chosen based on the following considerations:
+\begin{itemize}
+\item For several decades analog formats varied between from region to region due to the co-existence of NTSC, PAL and SECAM systems.
+As a straightforward endeavour, a basic goal was to find a common sampling frequency, compatible with all the existing analog formats.
+Furthermore, orthogonal sampling was an obvious need, meaning that in each system a single scan line should contain an integer number of samples (pixels).
+Mathematically these requirements can be formulated, as the line period time has to be dividable by the sampling period, and equivalently
+the sampling frequency has to be the multiple of the line frequency both in the PAL and the NTSC system, satisfying
 \begin{equation}
 f_s = n \cdot f_H^{\mathrm{PAL}} = m \cdot f_H^{\mathrm{NTSC}},
 \end{equation}
-ahol $n, m$ egész számok.
-Minthogy a sorfrekvenciák 
+%
+where $n, m$ are integers.
+The line frequencies in the two systems are given by
 \begin{align}
 f_H^{\mathrm{PAL}} &= 25 \cdot 625 = 15625~\mathrm{Hz} \\
 f_H^{\mathrm{NTSC}} &= 30 \cdot \frac{1000}{1001} \cdot 525 = 15734.2~\mathrm{Hz} ,
 \end{align}
-ezek legkisebb közös többszöröse
+with the smallest common multiple being
 \begin{equation}
 144 \cdot f_H^{\mathrm{PAL}} = 143 \cdot f_H^{\mathrm{NTSC}} = 2.25~\mathrm{MHz}.
 \end{equation}
-A mintavételi frekvencia tehát $2.25~\mathrm{MHz}$ egész számú többszöröse.
-\item Emellett a mintavételi tétel értelmében a mintavételi frekvencia az átlapolódás elkerülésének érdekében legalább a mintavett jel sávszélességének kétszerese kell, hogy legyen.
-Korábban láttuk, hogy a luma jel sávszélessége $5.6~\mathrm{MHz}$, a chroma jeleké pedig ennek a fele.
+Therefore, the sampling frequency must be chosen as the multiple of $2.25~\mathrm{MHz}$.
+\item On the other hand, according to the sampling theory, the sampling frequency has to be at least twice the bandwidth of the sampled signal in order to avoid aliasing artifacts.
+In the foregoing it was discussed that---by taking also the Kell effect into consideration---the bandwidth of the luma signal is around $5.6~\mathrm{MHz}$, with the chroma bandwidth being the half of it.
 \end{itemize}
-A legkisebb frekvencia amire a két előbbi feltétel teljesül $13.5~\mathrm{MHz}$.
-Ezt választották tehát a világosságjel mintavételi frekvenciájának, miközben a színkülönbségi jelek számára, figyelembe véve az emberi látás tulajdonságait, felezett mintavételi frekvenciát ($6.5~\mathrm{MHz}$) választottak.
-Ez az európai rendszerben 1 sorra 864, az amerikaiban 858 teljes mintaszámot eredményez, amely a sorkioltási időt is tartalmazza.
+The smallest frequency satisfying both requirements is given by 
+\begin{equation}
+f^{\mathrm{Y,SD}}_s = 13.5~\mathrm{MHz},
+\end{equation}
+being chosen as the sampling frequency of the luma signal of standard definition video.
+As the chroma signals are bandlimited to the half of luma signal due to the lower visual acuity of the HVS, therefore, the chroma signals are sampled with halved sampling frequency ($f^{\mathrm{Ch,SD}}_s = 6.75~\mathrm{MHz}$).
 
+The number of pixels in a scan line---given by the line period time divided by the sampling interval---is $N_{H,t} = \frac{T_H}{1/f_s} = 858$ pixels in the NTSC and $864$ in the PAL system, including the horizontal blanking intervals as well.
+%
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.65 \columnwidth ]{Figures/SD_formats.png}
 	\end{overpic}
-	\caption{Az SD formátum képmérete az amerikai és az európai rendszerben}
+	\caption{The SD video format in the American and European systems}
 	\label{Fig:SD_format}
 \end{figure}
+For the sake of further unification of the standard definition format the number of active pixels in a line was chosen to be 720 pixels in both the American and European systems.
+Note that the active line period is $52~\mu \mathrm{s}$ in both systems, from which the number of active pixels is $N_{H,a} = T_{\mathrm{H,a}} \cdot f_s = 702$.
+Hence, the 720 pixels contains a small interval from the blanking time as well, due to the uncertainty in the position of the actual analog video signal, distortions and smears near the edges, originating from analog processing.
+The actual digital video data is taken as 704 pixels from the center of the nominal 720 pixels.
+Obviously, the number of the vertical total and active pixels are simply given by the number of total and active scan lines.
 
-A két rendszer további egységesítésének érdekében egy soron belül az aktív pixelek számát közösen 720 pixelre választották (amelyből csak 704 pixel tartalmaz tényleges képi adatot, a digitalizálás előtti analóg jel kezdetének bizonytalansága, szélekhez közeli torzításai, elmosódásai miatt).
-Ezzel tehát megkaptuk az SD formátum tényleges képméretét, ahogy az az \ref{Fig:SD_format} ábrán látható.
-Az aktív sorok száma alapján, és mivel mindkét rendszerben kizárólag interlaced videó definiált, a két formátum megjelölése \textbf{480i} és \textbf{576i}.
-Könnyen belátható, hogy szabványos 4:3 képarány azonos horizontális pixelszám de különböző sorszám mellett csak úgy érhető el, ha az egyes képelemek (pixelek) nem négyzetalakúak (azaz a \textbf{pixel aspect ratio (PAR)} értéke 1-től különböző).
-Számítástechnikában a monitorok ezzel szemben négyzetes pixelméretet definiáltak, így az elterjedt számítógépes SD formátum a jól ismert 640x480 pixelszám.
-%TODO Pixel apsect ratio, storage aspect ratio, display aspect ratio kifejteni
+The spatial resolution/pixel number of the SD formats is illustrated in \ref{Fig:SD_format}.
+The two formats are named after the number of the active lines, resulting the the two SD formats being \textbf{480i} and \textbf{576i}, with ,,i'' referring to the fact that for both formats only interlaced scan is defined.
 
+As it has been already discussed, the aspect ratio of the reproduced SD images should have the aspect ratio of 4:3, which is termed as the \textbf{display aspect ratio (DAR)}.
+However, the ratio of the number of the horizontal and vertical pixel numbers---termed as the \textbf{storage aspect ratio (SAR)} does not coincide this ratio in neither formats.
+The target display aspect ratio, therefore, can be achieved only by applying non-square pixels on the display side, described by the \textbf{pixel aspect ratio (PAR)}, defined as the ratio of the horizontal and vertical pixel size.
+Therefore, format 480i has a pixel aspect ratio of 10:11, and 576i has the PAR of 12:11 with the DAR of 4:3 for both cases.
+In contrary, computer displays are employing squared pixels with the PAR of 1:1, and the standard VGA resolution being 640x480 pixels.
+
+\begin{table}[h!]
+\caption{Spatial and temporal parameters of SD video formats}
+\renewcommand*{\arraystretch}{2}
+\label{tab:SD_formats}
+\begin{center}
+    \begin{tabular}[h!]{ @{}c | | l | l | l @{} }%\toprule
+				         &   480i	   &    576i \\ \hline
+    active pixel number: &  704 x 480  &   704 x 576   \\
+    total pixel number:  &  858 x 525  &  864 x 625 \\
+    display aspect ratio:&  4:3 &  4:3 \\
+    pixel aspect ratio   &  10:11  & 12:11  \\
+    field rate:          &  $59.94~\mathrm{Hz}$ &   $50~\mathrm{Hz}$ \\
+    frame rate:          &   $29.97~\mathrm{Hz}$ &  $25~\mathrm{Hz}$ \\
+    \end{tabular}
+\end{center}
+\end{table}
+
+As a short summary of the foregoing the properties of the SD formats are the following:
+\begin{itemize}
+\item The chromaticity of the primaries and the gamut of the device RGB color space is illustrated in Figure \ref{Fig:SD_gamut} (a).
+The white point of the colors space is D65 white.
+The luma is calculated from the nonlinear RGB components as 
+\footnote{
+It is noted here that the above coefficients---unmathematically---do not coincide with the second row of the $XYZ \rightarrow RGB$ transformation matrix (which can be calculated from the primaries and the white point).
+This means that strictly speaking the $Y$ component---calculated from the RGB values with the above coefficients---does not equal to the relative luminance.
+Instead, for the sake of simplicity the luma coefficients of the NTSC system were used.
+These mathematical inconsistencies are usual in videotechnologies.}
+\begin{equation}
+Y' = 0.299 R' + 0.587 G' + 0.112 B'.
+\end{equation}
+\item In order to achieve perceptual quantization the source RGB signals are pre-distorted with the opto-electronic transfer function, given by
+%
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.4 \columnwidth ]{Figures/sd_gamut.png}
@@ -889,21 +949,9 @@ Számítástechnikában a monitorok ezzel szemben négyzetes pixelméretet defin
 	\small
 	\put(0,0){(b)}
 	\end{overpic}
-	\caption{Az SD formátum gamutja(a) és Gamma-függvénye (b)}
+	\caption{Gamut (a) and OETF (b) of the ITU-601 SD format}
 	\label{Fig:SD_gamut}
 \end{figure}
-
-Röviden összefoglalva a jelen, és előző fejezetet a két SD formátum létrehozásának lépései és főbb tulajdonságai:
-\begin{itemize}
-\item A formátum primary színei és a színtér gamutja a \ref{Fig:SD_gamut} (a) ábrán látható.
-A színtér fehérpontja D65 fehér.
-A luma komponens számításának módja \footnote{Itt jegyezzük meg, hogy ,,matematikaiatlanul'', ezek a luma együtthatók az NTSC szabvány együtthatókból származnak, tradíció miatt a luma jel számítási módját nem változtatták meg az SD szabvány bevezetésével annak ellenére, hogy az alapszínek megváltoztak. 
-Emiatt az $XYZ \rightarrow RGB$ mátrix második sora jelen esetben nem az itt bemutatott luma együtthatókat eredményezné.
-Ez egy újabb példa arra, hogy a hasonló matematikai következetlenségek nem állnak távol a gyakorlatban alkalmazott videotechnikától.}
-\begin{equation}
-Y' = 0.299 R' + 0.587 G' + 0.112 B'
-\end{equation}
-\item A forrás RGB jelei a perceptuális kvantálás megvalósításának érdekében Gamma-torzításon mennek keresztül, ahol a Gamma-függvény, vagy Optoelectronic Transfer Function:
 \begin{equation}
 E = 
 \begin{cases}
@@ -911,157 +959,154 @@ E =
 1.099 L^{0.45} - 0.099, \hspace{3mm} \mathrm{ha}\, L \geq 0.018,
 \end{cases}
 \end{equation}
-ahol $L \in \{ R, G, B \}$.
-A teljes görbe jól közelíthető egy $L^{0.5}$ függvénnyel
-\item A formátum képaránya 4:3. 
-A későbbiekben a HD megjelenése után ezt kiegészítették 16:9 képarányú formátummal is.
-\item Kizárólag interlaced formátum definiált
-\item A videókomponensek megfelelő sávkorlátozás után mintavételezésen és kvantáláson esnek át.
-A kvantálás 8, vagy 10 biten történik.
-\item A világosságjel mintavételi frekvenciája $f_s = 13.5~\mathrm{MHz}$.
-Az 576i (625 soros, 50 félkép/s) rendszerben az aktív felbontás így 720x576 pixel, a 480i (525 soros, 60 félkép/s) rendszerben 720x480 px.
-\item A színkülönbségi jel az eredeti, stúdióformátumban 4:2:2, tehát a horizontális színfelbontás a világosságjelének a fele.
-Ezt később kiegészítették 4:2:0 struktúrával is konzumer célokra.
+where $L \in \{ R, G, B \}$.
+The entire curve can be approximated by $L^{0.5}$.
+\item The original SD display aspect ratio was 4:3.
+After the introduction of the HD format also the SD format was extended with the aspect ratio of 16:9.
+\item SD format exclusively supports interlaced scanning.
+\item ITU-601 originally only allowed the chroma subsampling scheme 4:2:2.
+Later it was extended with the scheme 4:2:0 for consumer applications.
+\item The SD format applies the sampling frequency of $f_s = 13.5~\mathrm{MHz}$. 
+The format strictly prescribes the antialiasing low-pass filters, bandlimiting the luma signal to $5.75~\mathrm{MHz}$ as the upper frequency limit and $6.75~\mathrm{MHz}$ as the lower limit of the stopband.
+The chroma is sampled with halved sampling frequency, and prefiltered with corresponding antialiasing filters.
+\item The sampled luma and chroma sampled are quantized with 8 (for consumer electronics and broadcasting applications) or 10 bits (in studio applications) of bit depths.
 \end{itemize}
 
-\subsection{A HD formátum}
+\subsection{The HD format}
 
-%Whitaker 592. oldal
-Az előzőekben részletesen tárgyaltuk as SD digitális videoformátum megalkotásának alapelveit.
-A részletes vizsgálat oka, hogy ugyanezek az alapelvek, jelfeldolgozási lépések érvényesek a jelenlegi HD és UHD formátumok esetén is, valamint a jelenlegi SD műsorszórás Magyarországon is 576p (azaz már progresszív) formátumban történik.
+The starting point for the introduction of the analog video formats, leading directly to SD digital format was to cover approximately about $10^{\circ}$ of the central vision from the viewer's field of view.
+Obviously, this requirement does not directly define the display size, or the spatial resolution.
+Instead at a given resolution and display size the optimal viewing distance can be derived.
+In the following, first this optimal viewing distance is investigated, highlighting the basic motivation behind the introduction of the HD and UHD formats.
 
-Láthattuk, hogy az SD formátum megalkotásánál az egyes paramétereket úgy választották meg, hogy a kitűzött kb. 10 fokos látószögben minél élethűbb képi reprodukciót lehessen megvalósítani.
-A HD és UHD formátumok tárgyalása előtt vizsgáljuk meg, hogy adott felbontás (pixelméret) mellett mekkora távolságból kell az adott kijelzőt megfigyelni, rávilágítva ezzel a HD formátum létrehozásának fő motivációjára.
-
-\paragraph{Optimális nézőtávolság:\\}
+\subsubsection*{The optimal viewing distance}
 
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.67 \columnwidth ]{Figures/hd_pixel_angle_mod.png}
 	\small
 	\end{overpic}
-	\caption{Geometria az optimális nézőtávolság származtatásához}
+	\caption{Geometry for deriving the optimal viewing distance}
 	\label{Fig:optimal_vd}
 \end{figure}
 
-Általánosan elmondható, hogy pixel alapú képi reprodukció során a fő szempont, hogy a szomszédos pixelekből érkező fénysugarak által bezárt szög az emberi szem felbontóképessége alá essen.
-Ezzel biztosítva van, hogy a kijelző pixelstruktúrája nem látható (a kép nem ,,pixeles''), valamint az RGB alapszíneket alkalmazó reprodukció is lehetővé válik, hiszen az egyes alapszínek érzékelése helyett az additív színkeverés a szemben megvalósul.
+Generally speaking the goal of pixel based image reproduction is to ensure that the light rays, arriving from adjacent pixels include an angle below the spatial resolution of the human vision.
+Once it is achieved it is inherently ensured that the pixel structure of the image is not visible, and allows RGB based color reproduction, since instead of perceiving the individual RGB primaries, only the mixture of the primaries is perceived.
+In the foregoing it has been discussed that the visual acuity of human vision is $\frac{1}{60}^{\circ}$ (at least for luminance, for colors the resolution is significantly lower), from which for a given pixel size the minimal viewing distance can be derived.
+In practice instead of the pixel size, the dimensions and the horizontal and vertical resolution of displays are given, hence it is useful to express the minimal viewing distance as the function of these quantities.
 
-Korábban láthattuk, hogy az emberi szem felbontása 1 szögperc (azaz $\frac{1}{60}^{\circ}$) (legalábbis a világosságjelre véve, segítségünkre van, hogy színezetre ennél is rosszabb).
-Adott pixelméretre természetesen ebből már meghatározható az a minimális nézőtávolság, amelyre az előbbi feltétel teljesül.
-Mivel jellemzően a kijelzőknek nem a pixelmérete van megadva, hanem a kijelző mérete és a vertikális, ill. horizontális pixelszám, ezért célszerű a fenti minimális nézőtávolságot ezek függvényében kifejezni.
+In the following, the geometry depicted in Figure \ref{Fig:optimal_vd} is investigated in case of a display with given height $H$ and number of active lines $N_V$, with the display located at a distance $D$ from the viewer.
+The vertical pixel size is then $\frac{H}{N_V}$.
 
-Vizsgáljuk az \ref{Fig:optimal_vd} ábrán látható geometriát adott $H$ magasságú, $N_V$ sorszámú kijelző esetén.
-A pixelméret ekkor természetesen $\frac{H}{N_V}$.
-A kijelző a megfigyelőtől $D$ távolságra helyezkedik el.
-A szomszédos (szemközti) pixelekből a megfigyelő szemébe érkező fénysugarakra felírható ekkor a 
+The perceived angle between the adjacent pixels ate the observer position is then given as 
 \begin{equation}
-\tan \frac{\Phi}{2} = \frac{H}{2 N_V D}
+\tan \frac{\Phi}{2} = \frac{H}{2 N_V D}.
 \end{equation}
-egyenlőség.
-Alkalmazzuk a tangens függvény kisargumentumú lineáris közelítését, azaz $\tan x \approx x$, ha $x \ll 1$.
-Ekkor
+For the sake of simplicity the small argument approximation of the tangent function can be applied, i.e. $\tan x \approx x$, ha $x \ll 1$, leading to
 \begin{equation}
-\Phi = \frac{H}{N_V D} \hspace{3mm} \rightarrow \hspace{3mm} D = \frac{H}{N_V \Phi}
+\Phi = \frac{H}{N_V D} \hspace{3mm} \rightarrow \hspace{3mm} D = \frac{H}{N_V \Phi}.
 \end{equation}
-érvényes.
-Az emberi szem felbontását $\frac{1}{60}\cdot \frac{\pi}{180}~\mathrm{rad} = 2.9 \cdot 10^{-4}$ behelyettesítve adott felbontású és méretű kijelző esetén az optimális (minimális) nézőtávolságra
+By substituting the visual activity of the HVS ($\frac{1}{60}\cdot \frac{\pi}{180}~\mathrm{rad} = 2.9 \cdot 10^{-4}$) for a display with given vertical resolution the optimal (minimal) viewing distance is given by
 \begin{equation}
-D = H \frac{1}{N_V \,  2.9 \cdot 10^{-4}}
+D = H \frac{1}{N_V \,  2.9 \cdot 10^{-4}}.
 \end{equation}
-adódik. 
-Ez a távolság az ún. Lechner-távolság, amely tehát megadja, hogy a tervezés során figyelembe vett képméret és felbontás mellett mekkora az optimális nézőtávolság adott képformátum esetén.
+This is the so-called \textbf{Lechner distance}, formulating the optimal viewing distance, taken into consideration during the deigning of a display with given size and resolution.
+
 \begin{table}[h!]
-\caption{Fontosabb SD és HD formátumok ideális nézőtávolsága és az így kitöltött horizontális látószög}
+\caption{Optimal viewing distance of common SD and HD formats and the covered observer field of view}
 \renewcommand*{\arraystretch}{2.25}
 \label{tab:viewing_dist}
 \begin{center}
     \begin{tabular}[h!]{ @{}c | | l | l | l @{} }%\toprule
-				         &   Amerikai 		   & Európai 				&	 HDTV \\ \hline
-    TV-sor/képmagasság:	 &     480 	  		   &   576   				&	 1080\\
-    Nézőtávolság:   &  7-szeres képmagasság    &  6-szoros képmagasság & 3-szoros képmagasság \\
-    Nézőtávolság:       &  4.25-szörös képátló &  3.6-szoros képátló	& 1.5-szörös képátló \\
-    Vízszintes látószög &  kb. 11 fok 		&    kb. 13 fok & kb. 32 fok\\
+				         &   SD, 480i & SD, 576i &	 HDTV \\ \hline
+    Active lines:	 &     480 	  		   &   576   				&	 1080\\
+    Viewing distance:   &  7 x height &  6 x height & 3 x height\\
+    Viewing distance:       &  4.25 x diameter &  3.6 x diameter & 1.5 x diameter\\
+    Horizontal field of view &  $\approx 11^{\circ}$ &    $\approx 13^{\circ}$ & $\approx 32^{\circ}$ \\
     \end{tabular}
 \end{center}
 \end{table}
 
-Amennyiben az $a_r$ képátló ismert (SD esetén 4:3, HD esetén 16:9), az összefüggés kifejezhető a képszélesség függvényében is.
-SD esetén ez
+In case that also the display aspect ratio (denoted by $a_r$) is given (for SD 4:3 and for HD 16:9) the Lechner distance can be expressed as the function of the horizontal dimension (for the sake of simplicity assuming square pixels):
 \begin{equation}
 D = \frac{W}{a_r} \frac{1}{N_V \,2.9 \cdot 10^{-4}},
 \end{equation}
-ahol $W$ a kép szélessége.
-Ekkor ha a kijelzőt az így kapott optimális távolságról nézzük, meghatározható a képernyő által bezárt vízszintes látószög:
+where $W$ is the horizontal dimension (width) of the display.
+Furthermore, if the display is observed from the optimal viewing distance, the horizontal field of view angle can be expressed, included by the display:
 \begin{equation}
 \tan \frac{\Phi_H}{2} = \frac{W}{2 D} \hspace{1cm} \rightarrow \hspace{1cm} D = \frac{W}{2 \tan \frac{\Phi_H}{2}}, 
 \end{equation}
-és így adott felbontás mellett a horizontális látószög:
+and the field of view is written as
 \begin{equation}
 \Phi_H = 2\arctan \left( \frac{a_r \, N_V \, 2.9\cdot 10^{-4}}{2} \right).
 \end{equation}
 
-Az eredményeket az eddig bemutatott SD és a következőekben tárgyalt HD formátumokra kiszámítva a \ref{tab:viewing_dist} táblázat foglalja össze.
-Láthatjuk, hogy az SD felbontást ideálisan a képmagasság 6-7-szereséről célszerű nézni.
-Ekkor valóban, a formátum tervezésének kiindulási pontjába érünk vissza, azaz a kijelző a fő látóterünket, kb. 10-13 fokot tölti ki horizontálisan.
+The evaluation of these results for the discussed SD formats and the upcoming HD formats is summarized in Table \ref{tab:viewing_dist}.
+As a result it is obtained that displays with SD resolution should be observed from a distance 6-7 times the height of the screen.
+In this case, it is verified that the display covers about 10-13 degrees from the observer's field of view horizontally.
 
-Ez már előrevetíti a HD formátum megalkotásának fő célját: a vizuális élmény fokozását nagyobb kitöltött látószög alkalmazásával.
-A HD formátum célja tehát---ellentétben a közhiedelemmel---nem a pixelben kifejezett felbontás növelése, és így azonos felületre minél nagyobb számú képpont belezsúfolása, hanem az otthoni vizuális élmény növelése a tartalommal lefedett látótér megnövelésével.
+The table already foreshadows the main motivation behind the introduction of HD video format: increasing the perceived reality of the reproduced scene, by filling an increased field of view with video content, compared to SDTV. Therefore, the basic goal was not to squeeze six times the number of pixels into the same visual angle opposed to the popular misbelief.
+Instead the angular subtense of a single pixel should be maintained, and the entire image shoud occupy a much larger area of the viewer's visual field.
 
-\paragraph{Rövid HD történelem:\\}
+\subsubsection*{Short HD history}
 
-A nagyfelbontású (High Definition) formátum létrehozása gyakorlatilag a televíziózás megjelenése óta a teljes XX. századon átívelt.
-Noha manapság a kifejezés jellemzően digitális formátumra utal, már a korai analóg technika korában is léteztek HD kezdeményezések.
-Olyannyira, hogy már 1949-ben, Franciaországban kísérleti műsorszórást kezdtek monokromatikus (fekete-fehér), de 819 sort alkalmazó analóg rendszerben (a műsorszórás ebben a formátumban egészen 1983-ig tartott).
-A Szovjetunióban kísérleti jelleggel 1958-ban kifejlesztettek egy színes, 1125 sorból álló analóg rendszert, a hadászati célra létrehozott technikát azonban végül a gyakorlatban nem hasznosították.
-Végül a japán NHK cég vezette be az első mai értelemben vett HD műsorszórást 1989-ben.
-Rendszerük, az ún. Hi-Vision, vagy MUSE (Multiple sub-Nyquist Sampling Encoding) 5:3-as képarányú, 1125 soros analóg interlaced videó műsorszórására volt képes.
-A japán HD műsorszórás erőteljesen ösztönözte a HD formátum szabványosítását, amely azonban az analóg rendszer hatalmas sávszélességigénye miatt egészen a 90-es évek elejéig nem valósult meg.
+Although today the term high definition format is associated with digital video, even in the era of early analog TV system increased resolution, high definition initiations existed.
+Years before the introduction of color television, in 1949 France started analog monochromatic transmission with a high resolution standard at 819 lines (with 737 active lines), a system that should have been high definition even by today's standards, discontinued only in 1983. 
+In 1958, the Soviet Union developed the Transfomator, the first high-resolution television system capable of producing an image composed of 1125 lines of resolution aimed at providing teleconferencing for military command. It was a research project and the system was never deployed by either the military or consumer broadcasting.
 
-A HD szabvány létrejötte végül a digitális tömörítési módszerek, főként az MPEG-1 és MPEG-2 tömörítések megjelenésének köszönhető.
-A szabványt 1990-ben tették közre az \href{https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.709-6-201506-I!!PDF-E.pdf}{ITU-709} (Rec. 709) ajánlásban.
+In 1979, the Japanese public broadcaster NHK (Japan Broadcasting Corporation) developed consumer high definition television with 1125 scan lines and a 5:3 display aspect ratio.
+The system, known as Hi-Vision or MUSE required about twice the bandwidth of the existing NTSC system but provided about four times the resolution, applied for analog regular HD broadcasting beginning in 1994.
+The limited standardization of analog HDTV in the 1990 did not lead to global HDTV adoption as technical and economic constraints did not permit HDTV to use bandwidths greater than normal television.
 
-\paragraph{HD paraméterek:\\}
+The introduction of the HD format was finally motivated by the emerging of digital compression methods (mainly of MPEG-1 and MPEG-2).
+The HD format was codified in the \href{https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.709-6-201506-I!!PDF-E.pdf}{ITU-709} (Rec. 709) standard, published in 1990.
 
-Az ITU-709 szabvány a következő HD paramétereket határozta meg:
+\subsubsection*{HD parameters}
+
+The ITU-709 recommendation prescribed the following properties for HD video format:
 \begin{itemize}
-\item \textbf{Képarány:} az első szabványosított formátumjellemző a HD rendszer képaránya volt, amelyet 16:9 értékűre választottak.
-A választás nem kézenfekvő, mivel a formátum létrehozásakor gyakorlatilag nem állt rendelkezésre ebben a képarányban nyersanyag: mind a mozifilmek, mind a korábbi SD formátumú anyagok ettől eltérő képformátumban kerültek rögzítésre.
-A korabeli nyersanyagok jellegzetesen 4:3 (SD videó), 15:9, 1.85:1, 2.2:1, illetve 2,35:1 (mozis szabványok) voltak.
-Azt találták, hogy amennyiben azonos területű téglalapokat vetítünk egymásra a fenti, gyakori oldalarányokkal, akkor az így kapott téglalap sokaság éppen egy 16:9 oldalarányú téglalapba rajzolható bele.
-Továbbá az ezen téglalapok metszete szintén éppen egy 16:9 arányú téglalapot határoz meg.
-A geometria a \ref{Fig:kerns_powers} ábrán látható.
+\item \textbf{Aspect ratio:} The first standardized parameter for the new video format was its aspect ration, being chosen to 16:9.
+The choice is not obvious, since at the time of the standardization process no video content was captured with this aspect ratio: 
+TV movies were shot with the aspect ratio of SD format (4:3), while movie films used widescreen formats (most commonly the 1.85:1 and 2.2:1 widescreen, or 2.35:1 anamorphic format).
+It has been found that rectangles with the side ratios of the above popular aspect ratios and with equal areas exactly fit within an outer rectangle with the aspect ratio of 16:9.
+Furthermore, the intersection of all these rectangles is an inner rectangle with the aspect ratio of 16:9.
+Therefore, the aspect ratio of 16:9 ensured the compatibility with most of the then-existing formats.
+The geometry is shown in Figure \ref{Fig:kerns_powers}.
+%
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.9 \columnwidth ]{Figures/KernsPowers.png}
 	\small
 	\end{overpic}
-	\caption{A 16:9 oldalarány, mint sok gyakori képarányú téglalap határoló-síkidoma és metszete}
+	\caption{The 16:9 aspect ratio as the outer and inner rectangle of rectangles with common aspect ratios}
 	\label{Fig:kerns_powers}
 \end{figure}
-A gondolatmenet eredményeképp, annak érdekében, hogy a legtöbb létező képarányú korabeli nyersanyag optimálisan megjeleníthető legyen az új formátumban esett a választás a ma már jól ismert 16:9 képarányra.
+%
+\item \textbf{Raster scan, field and frame rate:}
+In the HD system besides interlaced scanning the possibility of progressive scan was introduced.
+As the legacy of the SD system, numerous field rate and field rates are specified by the format, being $24~\mathrm{Hz}$, $25~\mathrm{Hz}$, $30~\mathrm{Hz}$, $50~\mathrm{Hz}$ and $60~\mathrm{Hz}$ field/frame rates, along with fractional rates, having the above values multiplied by $\frac{1000}{1001}$.
 
-\item \textbf{Képfrissítési frekvencia:} Az SD rendszer hagyatékaként a HD szabvány számos képfrissítési frekvenciát támogat, így a $24~\mathrm{Hz}$, $25~\mathrm{Hz}$, $30~\mathrm{Hz}$, $50~\mathrm{Hz}$ és $60~\mathrm{Hz}$ képfrekvenciákat, és ezek $\frac{1000}{1001}$-szeres módosításait.
-Ezen kívül, ezek a frissítési frekvenciák mind progresszív, mind váltottsoros módban alkalmazhatóak.
 
-\item \textbf{Mintavételi frekvencia:}
-A mintavételi frekvencia esetében kiindulásul az SD mintavételi frekvencia szolgált.
-A HD formátum célja SD-hez képest mind függőleges ($\times 2$), mind vízszintes ($\times 2$) felbontásduplázás, ezen felül a 4:3 képarány helyett 16:9 alkalmazása ($\times 4/3$), amely együttesen a mintaszám--és így a mintavételi frekvencia---legalább $2\times 2 \times \frac{4}{3} = 5.33$-szorozódását jelenti.
-A legtöbb képfrekvenciához való kompatibilitás biztosítása érdekében (azaz egy sorba egész számú minta férjen) a mintavételi frekvencia $5.5 \cdot 13.5 = 74.25~\mathrm{MHz}$ lett, illetve törtszámú képfrekvencia esetén ennek az $\frac{1000}{1001}$-szerese.
-Progresszív esetben $50-60~\mathrm{Hz}$ képfrekvencia esetén a mintavételi frekvencia ennek a duplája: $fs = 148.5~\mathrm{MHz}$.
+\item \textbf{Sampling frequency:}
+The HD sampling frequency can be derived from the SD sampling rate:
+One of the main goals of the HD format was to double both the horizontal ($\times 2$) and vertical ($\times 2$) spatial resolution, along with the aspect ratio changed to 16:9 ($4 : 3 \times 4/3$), which the total pixel number being at least $2\times 2 \times \frac{4}{3} = 5.33$ times that of the SD format.
+In order to ensure orthogonal sampling (only full pixels in a line) for most field and frame rates the optimal choice for the sampling frequency was $5.5 \cdot 13.5 = 74.25~\mathrm{MHz}$ and the fractional sampling frequency $\frac{1000}{1001} \cdot 74.25~\mathrm{MHz}$ for fractional field/frame rates.
+In case of progressive scanning for frame rates $50-60~\mathrm{Hz}$ the data rate is double compared to the interlaced case, therefore, a doubled sampling frequency of $fs = 148.5~\mathrm{MHz}$ is required.
 %TODO : kibogarászni KovácsI jegyzetéből a mintavételi frek. megválasztását (VidStTech 01.pdf, 46.o)
-\item \textbf{Felbontás:} Hosszas egyeztetések után\footnote{Az első HD szabvány a Japán rendszer nyomán 1035 sort definiált. Ezt később visszavonták} a szabvány 1080 aktív sort definiált 1125 teljes sorszámmal mind progresszív, mind váltottsoros letapogatás mellett (SMPTE 274M szabvány).
-Emellett a különböző képfrekvenciák egységes kezelése érdekében a soronkénti mintaszámot fixen 1920 mintára választották, így a HD formátum felbontása 1920x1080 pixel.
-A különböző képfrekvenciájú HD formátumok így tehát kizárólag a soronkénti inaktív pixelek számában különböznek egymástól (azaz a sorkioltási idő hosszában).
 
+\item \textbf{Spatial resolution:} 
+After a lengthy debate \footnote{The first version of the standard specified 1035 active lines, which was later withdrawn.} the number of active line has been codified to 1080 and the total number of lines to 1125, including the vertical blanking with both progressive and interlaced scan modes (this raster format was also codified in SMPTE 274M).
+The horizontal number of active pixels has been chosen to a fixed number of 1920 regardless of the frame/field rate, resulting in the active resolution of $1920 \times 1080$.
+Therefore, the HD formats with different field and frame rates only differ in the number of total horizontal number of pixels (i.e. in the length of the horizontal blanking time).
+%
 \begin{table}[h!]
-\caption{Néhány HD formátum mintavételi frekvenciája, összes sor és oszlopszáma, felbontása. 
-A soronkénti pixelek száma $S_{\mathrm{LT}} = $} alapján számítható.
+\caption{Sampling frequency, total number of lines and columns and active resolution of commonly used HD formats.
+The total number of pixels in a line can be calculated according to $N_\mathrm{H} = f_s \times \frac{f_{\mathrm{V}}}{N_\mathrm{V}}$, with $f_{\mathrm{V}}$ being the frame rate.}
 \renewcommand*{\arraystretch}{2.25}
 \label{tab:viewing_dist}
 \begin{center}
     \begin{tabular}[h!]{ @{}c | l | l | l | l | l @{} }%\toprule
-		Rendszer     &   $f_s \, [\mathrm{MHz}]$ 				& $S_{TL}$ & $L_T$ & Aktív pixelszám \\ \hline
+		Format       &   $f_s \, [\mathrm{MHz}]$ 				& $N_\mathrm{H}$ & $N_\mathrm{V}$ & Active resolution \\ \hline
 		$720p50$     &   $74.25~\mathrm{MHz}$    				& 1980     &  750  & $1280 \times 720$ \\
 		$720p59.94$  &$74.25\cdot\frac{1000}{1001}~\mathrm{MHz}$& 1650     &  750  & $1280 \times 720$ \\
 		$1080i25$ 	 &   $74.25~\mathrm{MHz}$    				& 2640     & 1125  & $1920 \times 1080$ \\
@@ -1071,16 +1116,15 @@ A soronkénti pixelek száma $S_{\mathrm{LT}} = $} alapján számítható.
         \end{tabular}
 \end{center}
 \end{table}
-
-A különböző HD formátumok jelölése a következő:
+\vspace{3mm}
+The different HD formats are denoted using the following convention:
 \begin{itemize}
-\item Teljes aktív felbontás pixelben kifejezve.
-Gyakran rövidítésképp csak a vertikális méretet jelölik meg.
-\item képletapogatás módja: $p$ a progresszív, $i$ az interlaced letapogatást jelöli
-\item képfrekvencia (frame rate) mind $p$, mind $i$ esetben.
-Interlaced videó esetén gyakran a képfrekvencia helyett---hibásan---a félképfrekvenciát jelölik.
+\item Active resolution in pixels, denoting often only the vertical resolution
+\item Scanning mode: $p$ for progressive and $i$ for interlaced
+\item frame rate.
+For interlaced video often instead of frame frate---incorrectly---field rate is marked.
 \end{itemize}
-Így pl. az $1080i25$ a 1080 soros, váltottsoros $25~\mathrm{Hz}$ képfrekvenciájú, és $50~\mathrm{Hz}$ félkép-frekvenciájú formátumot jelöli.
+As an example: $1080i25$ denotes interlaced video with 1080 active lines, and the frame rate of $25~\mathrm{Hz}$ (i.e. field rate is $50~\mathrm{Hz}$).
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 1 \columnwidth ]{Figures/HD_format.png}
@@ -1090,12 +1134,14 @@ Interlaced videó esetén gyakran a képfrekvencia helyett---hibásan---a félk�
 	\label{Fig:HD_formats}
 \end{figure}
 
-A progresszív HD formátumok nagy adatsebesség-igénye miatt az ITU-709-et néhány évvel később kibővítették egy alacsonyabb felbontású formátummal, ez 720 aktív sort és 1280 aktív pixelt alkalmaz, és kizárólag progresszív letapogatással definiálták \footnote{Az 1080p bevezetése során az egyik kitűzött cél a legalább duplázott sorszám volt.
-A 720p az SD és HD között félúton: másfélszeres sort alkalmaz így a sorszáma $\frac{3}{2} \cdot 480 = 720$-ból adódik, míg az oszlopszám a 16:9 képarányból, négyzetes pixelek mellett}.
-Jelölése: \textbf{720p}.
-A két HD formátumra egy-egy példa a \ref{Fig:HD_formats} ábrán látható.
-\item A HD formátum alapszínei az SD ITU-601-el megegyezőek, így a gamutja is azonos.
-A luma komponens számításának módja 
+Due to the large data rate of progressive HD formats the ITU-709 has been extended with a lower spatial resolution format, containing 720 active lines and 1280 active pixels in a line, with exclusively progressive scanning mode.
+\footnote{
+As already discussed, the basic goal of 1080 lined format was to double the number of scan lines.
+The line number of the 720p format---as an intermediate format between SD and HD---applies $\frac{3}{2} \cdot 480 = 720$ scan lines, with the horizontal number of pixels obtained from the aspect ratio of 16:9}.
+It is denoted by: \textbf{720p}.
+Two examples for the two basic HD formats can be seen in \ref{Fig:HD_formats}.
+\item The primaries of the HD format coincide with that of the ITU-601 SD format, resulting in the same gamut.
+The luma (and the relative luminance) is calculated as
 \begin{equation}
 Y' = 0.2126 R' + 0.7152 G' + 0.0722B'.
 \end{equation}
@@ -1103,11 +1149,11 @@ Y' = 0.2126 R' + 0.7152 G' + 0.0722B'.
 	\centering
 	\begin{overpic}[width = 1\columnwidth ]{Figures/hd_line.png}
 	\end{overpic} 
-	\caption{1080 soros HD formátum egy sorának felépítése}
+	\caption{Structure of one line of the 1080 lined HD format.}
 	\label{Fig:hd_line}
 \end{figure}
-Az együtthatók az SD-vel ellentétben már kolorimetriailag is helyesek, azaz a színtér alapszíneiből (és fehérpontjából) felírható $RGB \hspace{3mm} \rightarrow \hspace{3mm} XYZ$ transzformációs mátrix $Y$ sorából ugyanezeket a világosság-együtthatókat kapnánk.
-\item A szabvány Gamma-karakterisztikája az SD-vel megegyező:
+Opposed to the SD formats, in this case the luma coefficients are mathematically correct, obtained from the relative luminance coefficients of the chosen primaries and its white point, i.e. the coefficients correspond to the second row of the $RGB \hspace{3mm} \rightarrow \hspace{3mm} XYZ$ transformation matrix.
+\item The opto-electronic transfer function coincides with the SD's OETF:
 \begin{equation}
 E = 
 \begin{cases}
@@ -1115,30 +1161,32 @@ E =
 1.099 L^{0.45} - 0.099, \hspace{3mm} \mathrm{ha}\, L \geq 0.018,
 \end{cases}
 \end{equation}
-ahol $L \in \{ R, G, B \}$.
-\item A szabvány az SD-vel azonos 8 és 10 bites digitális reprezentációt ír elő.
-\item A stúdió szabvány alapvetően 4:2:2 szín-mintavételezési struktúrát definiál.
+where $L \in \{ R, G, B \}$.
+\item The bit depth is 8 bits for consumer and 10 bits for studio applications.
+\item The studio standard codifies the chroma subsampling scheme of 4:2:2.
 \end{itemize}
-A szabványos HD videójel ezek mellett teljesen az SD-vel azonos felépítésű, egy egyszerű példa a \ref{Fig:hd_line} ábrán látható.
-Az egyetlen különbség gyakorlati megvalósítás szempontjából, hogy a kioltási időszakokban a szinkron impulzusok ún. 3 állapotúak ($0, \pm300~\mathrm{mV}$).
+The structure of the resulting standardized HD video signal is the same as the SD video signal, discussed in the foregoing, illustrated in Figure \ref{Fig:hd_line}.
+The sole difference is the application of tri-state sync pulses, with the physical dynamic range usually being $0, \pm300~\mathrm{mV}$.
 
-\paragraph{Tömörítetlen videó adatsebesség:\\}
+\subsubsection*{Uncompressed data rate of HD formats}
 
-Vizsgáljuk most néhány alapvető képformátum esetén a videó tömörítetlen adatsebességét!
-Az aktív és teljes pixelszámokat a \ref{Fig:size} ábrán látható jelölésekkel jelölve a teljes adatsebesség
+In the following the uncompressed data rate of different video formats is discussed.
+With denoting the active and total pixel dimensions the notations showed in Figure \ref{Fig:size} the total data rate can be calculated as
 \begin{equation}
-B\!R_T = \underbrace{S_{TL} \cdot L_T \cdot f_f \cdot n_{\mathrm{bit}}}_{\text{mintánkénti bitrate}} \cdot n_{\mathrm{CS}},
+B\!R_T = \underbrace{N_{\mathrm{H}} \cdot N_{\mathrm{V}} \cdot f_{\mathrm{V}} \cdot n_{\mathrm{bit}}}_{\text{bitrate per sample}} \cdot n_{\mathrm{CS}},
 \end{equation}
-ahol $f_f$ a képfrekvencia, $n_{\mathrm{bit}}$ a mintánkénti bitszám és $n_{\mathrm{CS}}$ a színkülönbségi jelek alulmintavételezését jelöli (komponens/minta).
-Utóbbi értéke 4:4:4 struktúra esetén $n_{\mathrm{CS}} = 3$, 4:2:2 estén $n_{\mathrm{CS}}=2$, 4:2:0 esetén $n_{\mathrm{CS}} = 1.5$.
+with denoting $f_{V}$ the frame rate, $n_{\mathrm{bit}}$ the bit depth and $n_{\mathrm{CS}}$ the number of components, depending on the chroma subsampling scheme applied.
+The value of the latter is $n_{\mathrm{CS}} = 3$ for 4:4:4, $n_{\mathrm{CS}} = 2$ for 4:2:2 and $n_{\mathrm{CS}} = 1.5$ for 4:2:0 schemes.
 
-Hasonlóan, az aktív tartalom bitsebessége
+Similarly the active data rate is calculated as
 \begin{equation}
-B\!R_A = S_{TA} \cdot L_A \cdot f_f \cdot n_{\mathrm{bit}} \cdot n_{\mathrm{CS}}
-\end{equation}
-alapján számítható.
+B\!R_A = N_{\mathrm{H,A}} \cdot N_{\mathrm{V,A}} \cdot f_f \cdot n_{\mathrm{bit}} \cdot n_{\mathrm{CS}}
+\end{equation}.
 
-Néhány gyakran alkalmazott videóformátum teljes és aktív videósebessége a \ref{tab:bitrate} táblázatban látható\footnote{Az UHD formátum kioltási idejei \href{http://programmersought.com/article/7908103552/}{szabványosan} 90 inaktív sor és 560 inaktív pixel/sor}.
+The active and total bit rates of several frequently used video formats are summarized in Table \ref{tab:bitrate}\footnote{
+The vertical blanking interval of UHD format is \href{http://programmersought.com/article/7908103552/}{fixed} to 90 lines, with the horizontal blanking depending on the frame rate of the video.
+For a video with the frame rate of $60~\mathrm{Hz}$ the horizontal blanking interval is 560 samples.
+}.
 \begin{figure}[]
 \captionsetup{singlelinecheck=off}
 	\centering
@@ -1146,23 +1194,23 @@ Néhány gyakran alkalmazott videóformátum teljes és aktív videósebessége 
 	\begin{overpic}[width = 1\columnwidth ]{Figures/size.png}
 	\end{overpic}   \end{minipage}\hfill
 		\begin{minipage}[c]{0.55\textwidth}
-	\caption[]{Jelölés-konvenció az adatsebesség számításához
+	\caption[]{Notation-convention for calculating the data rate of video
 	\begin{itemize}
-	\item $S_{TL}$: Összes mintaszám/sor
-	\item $S_{TA}$: Aktív mintaszám/sor
-	\item $L_T$: Összes sor/kép
-	\item $L_A$: Aktív sor/kép
+	\item $N_{\mathrm{H}}$: Total pixel number/line
+	\item $N_{\mathrm{H,A}}$: Active pixel number/line
+	\item $N_\mathrm{V}$: Total number of lines/frame
+	\item $N_\mathrm{V,A}$: Number of active lines/frame
 	\end{itemize}}
 	\label{Fig:size}  \end{minipage}
 \end{figure}
 %
 \begin{table}[h!]
-\caption{Videóformátum mintavételi frekvenciája, összes sor és oszlopszáma, felbontása, $n_{\mathrm{bit}} = 10$ bitmélység esetén}
+\caption{The total and active bitrate of frequently used video formats}
 \renewcommand*{\arraystretch}{2.25}
 \label{tab:bitratet}
 \begin{center}
     \begin{tabular}[h!]{ @{}c | l | l | l | l | l @{} }%\toprule
-\thead{Rendszer} & \thead{Mintavételi \\ frekvencia} &    \thead{Teljes bitrate \\ 4:2:2} & \thead{Aktív bitrate\\ 4:2:2} & \thead{Aktív bitrate\\ 4:4:4} \\ \hline
+\thead{Format} & \thead{Sampling \\ frequency} &    \thead{Total bitrate \\ 4:2:2} & \thead{Active bitrate\\ 4:2:2} & \thead{Active  bitrate\\ 4:4:4} \\ \hline
 $576p50$     &   $13.5~\mathrm{MHz}$        & $0.54~\mathrm{Gbit/s}$  & $0.41~\mathrm{Gbit/s}$ & $0.62~\mathrm{Gbit/s}$ \\
 $720p60$     &   $74.25~\mathrm{MHz}$    	& $1.49~\mathrm{Gbit/s}$  & $1.11~\mathrm{Gbit/s}$ & $1.67~\mathrm{Gbit/s}$ \\
 $1080i30$ 	 &   $74.25~\mathrm{MHz}$    	& $1.49~\mathrm{Gbit/s}$  & $1.24~\mathrm{Gbit/s}$ & $1.86~\mathrm{Gbit/s}$ \\
@@ -1172,22 +1220,10 @@ $2160p60$ 	 &   $297~\mathrm{MHz}$         &  $11.88~\mathrm{Gbit/s}$& $9.96~\ma
 \end{center}
 \end{table}
 %
-Látható, hogy a $720p$ és $1080i$ formátumok tömörítetlenül azonos adatmennyiséget generálnak, ugyanakkor nagy előnye a progresszív formátumnak jóval hatékonyabban tömöríthetősége.
-Ahogy korábban a váltott-soros formátum előnye ezzel szemben, hogy állóképekre a progresszívvel azonos vertikális felbontást biztosít, bár gyors mozgásokra ez a felbontás romlik.
-Épp ezért, azon műsorszolgáltatók, amelyeknél a sport-tartalom elsődleges jellemzően a $720p50/60$ formátumot használ, míg a főként filmeket, hírműsorokat sugárzó operátorok jellemzően $1080i$-t alkalmaznak.
-Magyarországon jelenleg a HD adások mellett minden szolgálgató biztosít SD felbontású verziót is, amely jellemzően $576p50$ formátumot alkalmaz.
-
-Jelenleg stúdiótechnikában a legelterjedtebb digitális videóinterface az SDI (Serial Digital Interface), konzumer elektronikában pedig a HDMI (High-Definition Multimedia Interface).
-A fenti adatsebességek kézzelfoghatóvá-tételéhez, néhány jelenleg is használt HDMI verzió a következő adatmennyiségek továbbítását teszi lehetővé:
-\begin{itemize}
-\item HDMI 1.0-1.2: 4.95 Gbit/s (3.96 Gbit/s tényleges)\footnote{A HDMI szabvány itt nem részletezett okokból ún. 8b/10b csatornakódolást alkalmaz, amely során 8 bitnyi adatot 10 biten visz át.
-A 4.95 Gbit/s teljes sávszélességnek tehát csak $\frac{8}{10}$ része használható ki tényleges adatra.}
-\item HDMI 2.0: 18 Gbit/s (14.4 Gbit/s tényleges)
-\item HDMI 2.1: 48 Gbit/s (38.4 Gbit/s tényleges)
-\end{itemize}
-Természetesen a HDMI méretezéshez a fenti táblázatból a teljes adatsebességet kell tekinteni, hiszen a HDMI kábelen terjedő HD jel tartalmazza a kioltási időket is: mint korábban tárgyaltuk ezekben az időrésekben kerülnek az audio csatornák és egyéb járulékos adatok elhelyezésre.
-Látható, hogy a HDMI 1.0 szabványt főként 1080p videó továbbítására fejlesztették ki 4:2:2 formátum 10, vagy 12 bit, míg 4:4:4 formátum már csak 8 biten továbbítható.
-A HDMI 2.0 szabványt már 4k míg a 2.1 szabvány 8k UHD videó továbbítására fejlesztették ki.
+The uncompressed bit rate approximately equals for $720p$ and $1080i$ formats.
+An advantage of the progressive format is it can be more efficiently compressed than interlaced video.
+On the other hand interlaced format ensures high vertical resolution for still and slowly moving video content, although with the resolution degrading for moving reproduced objects.
+Therefore, broadcasting operators with sport content in their main profile traditionally chose $720p50/60$ format, while operators, broadcasting mainly news and movies usually apply $1080i$ video format.
 
 %TODO 8b/10b codin
 % Fischer Digital Video and Audio broadcasting technology 227.o
@@ -1197,69 +1233,73 @@ A HDMI 2.0 szabványt már 4k míg a 2.1 szabvány 8k UHD videó továbbításá
 %TODO In typical production practice the encoding function of image sources is adjusted so that the final picture has the desired aesthetic look, as viewed on a reference monitor with a gamma of 2.4 (per ITU-R BT.1886) in a dim reference viewing environment (per ITU-R BT.2035).[10][11][12]
 %TODO Rec. 2100, a standard for HDTV and UHDTV with high dynamic range
 
-\subsection{Az UHD formátum}
+\subsection{The UHD format}
 
-Láthattuk, hogy a HD formátum megalkotása során a fő cél a néző látóterének---az SD-hez képest---nagyobb részének tartalommal való kitöltése volt.
-A HD-hez hasonlóan az UHD (Ultra High Definition) formátum a vizuális élmény továbbfokozását tűzte ki fő céljául a pixel-szám---és így a kitöltött látószög---további növelésével.
+The original intention behind the introduction of HD format was to enhance the visual experience by increasing the listener's visual angle filled with video content.
+The ultra high definition format aims at the further improvement of the reproduction quality by applying even larger display sizes---covering an even larger part of the field of view---and by increasing the displayed image quality.
 
-Hasonlóan a HD-hoz, a továbbemelt felbontású formátum fejlesztése a japán NHK nevéhez kötődik, akik már 2003-ban kísérleti UHDTV felvételt készítettek 16 darab HDTV rögzítővel és 4 darab 3840x2048 felbontású CCD szenzorral.
-Az első UHDTV szabvány ezek után már 2007-ben megjelent (SMPTE 2036), majd a jelenleg is érvényben lévő \textbf{ITU-R BT.2020} szabványt 2012-ben fogadták.
-A szabvány két új formátum paramétereit kodifikálja, a 4k formátumot, amely az 1080 soros HD formátumhoz képest mindkét dimenzió mentén duplázott felbontást (így 4-szeres teljes pixelszámot) alkalmaz, és a 8k-t, amely a 4k-hoz képest kétszeres felbontást definiál.
+Similarly to the HD format, the first notable initiation of UHD technology is connected to the Japanese NHK, capturing video data at the resolution of $7680 \times 4096$ by using an array of 16 HDTV recorders and four CCD sensors with the resolution $3840 \times 2048$, as early as 2003.
+The first UHD standard was published in 2007 (SMPTE 2036), while the currently accepted UHD codification was introduced in 2012, entitled the \textbf{ITU-R BT. 2020}.
+The standard specifies two UHD formats, the 4k with its spatial resolution being the double of the 1080p format both horizontally and vertically (meaning 4 times larger total pixel size), and the 8k, with a further  doubled resolution, compared to 4k.
+
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.85 \columnwidth ]{Figures/fov_formats.png}
 	\small
 	\end{overpic}
-	\caption{Az egyes formátumok által biztosított horizontális látószög, a kijelzőt ideális nézőtávolságból nézve.}
+	\caption{Visual angle ensured by SD, HD and UHD formats, with the screen being watched from the optimal viewing distance.}
 	\label{Fig:fov_formats}
 \end{figure}
 
-A szabvány célja szerint ideálisan a 4k formátum a néző horizontális látószögéből kb. $58^{\circ}$-ot, a 8k formátum $96^{\circ}$-ot tölt ki, azaz már a periférikus látás jelentős részét is tartalommal tölti ki.
-Az egyes formátumok által ideálisan kitöltött látószög változását a \ref{Fig:fov_formats} ábra szemlélteti.
+Theoretically, the goal of the 4k and 8k formats was to fill the visual angle of approximately $58^{\circ}$ and $96^{\circ}$ with content, respectively.
+The visual angle of the different SD, HD and UHD formats are compared in Figure \ref{Fig:fov_formats}.
 
-Ahhoz, hogy az ekkora látószögben megfelelő minőségű képi reprodukció valósuljon meg, az ITU-2020 szabvány számos szempontból javította a HD formátum alapparamétereit:
+In order to ensure high quality video reproduction over a large visual angle the ITU-2020 improved the reproduction parameters in numerous aspect compared to HD:
 \begin{itemize}
-\item \textbf{Felbontás: } A szabvány két felbontást deifiniál, ezek a 3840x2160 (4k) és a 7680x4320 (8k) aktív képméretek.
-A HD szabványnak megfelelően mindkét formátum képaránya 16:9 és négyzetes pixelekből áll.
-\item A HD-vel ellentétben az ITU-2020 szabvány már kizárólag csak progresszív letapogatást támogat (így a $p/i$ formátummegjelölés UHD esetén okafogyott.
-Fontos, hogy a kijelző már optimális esetben a néző periférikus látásának jelentős részét is kitölti, ahol az érzékelést már a szem pálcikái dominálják.
-Mivel ezek fúziós frekvenciája jóval nagyobb, mint a fő látóterünké, ezért a villogás elkerülése érdekében a képfrekvenciát az UHD esetében emelni kellett.
-Ennek megfelelően a szabvány a 120, 119.88, 100, 60, 59.94, 50, 30, 29.97, 25, 24, 23.976 Hz képfrekvenciákat támogatja.
+\item \textbf{Spatial resolution:} 
+The standard specifies two resolution types: $3840 \times 2160$ termed as 4k and $7680 \times 4320$ as 8k resolutions.
+Both 4k and 8k employs squared pixels, i.e. both the display and storage aspect ratios are 16:9.
+%
+\item \textbf{Scanning type:}
+Unlike HD, ITU-2020 exclusively allows progressive scanning mode (i.e. the $p/i$ designation is no longer used).
+
+\item \textbf{Frame rate:}
+With the increased visual angle the UHD content already fills the peripheral vision of the observer with content.
+Since the peripheral vision is dominated by rods with a much quicker response time than the cones of the central vision, thus, in order to ensure continuous motion and avoid flickering significantly higher frame rates are supported than the HD frame rates.
+The standard allows the frame rates of $120, 119.88, 100, 60, 59.94, 50, 30, 29.97, 25, 24, 23.976~\mathrm{Hz}$.
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.75 \columnwidth ]{Figures/uhd_gamut.png}
 	\small
 	\end{overpic}
-	\caption{Az ITU-2020 szabvány gamutja, összehasonlítva a HD színtérrel}
+	\caption{Gamut of the ITU-2020 UHD color space compared with the gamut of SD and HD color representations.}
 	\label{Fig:UHD_gamut}
 \end{figure}
 
-\item \textbf{Színtér:} Az ITU-2020 szabvány az NTSC óta először új alapszíneket vezetett be a nagyobb ábrázolható színtartomány érdekében (és a világosság dinamikatartományának növelése érdekében, ld. köv. pont).
-A szabvány színterének gamutja a \ref{Fig:UHD_gamut} ábrán látható.
-Megfigyelhető, hogy a választott alapszínek spektrálszínek (azaz a színpatkó határán helyezkednek el), az RGB hullámhosszok rendre 630 nm, 532 nm és 467 nm
-\footnote{Természetesen ez nem azt jelenti, hogy az UHD kijelzők RGB fényforrásai spektrálszínek lennének, a szabvány csak a tároláshoz és továbbításhoz használt színteret kodifikálja. 
-A megjelenítés már az egyes kijelzők saját színterében történik, amit a ténylegesen alkalmazott alapszínek korlátoznak.
-Szakmai körökön belül napjainkban is fontos hírnek számít, ha egy kijelző az ITU-2020 szabványos színterét közel egészében képes megjeleníteni.
-Így pl. 2018-ban a JDI cég \href{https://www.displaydaily.com/?view=article&id=62235:jdi-may-have-commercial-problems-but-has-technical-highlights}{bemutatott} egy 17.3"-es kijelzőt, amely lézeres háttérvilágítással az ITU-2020-as szabvány gamutjának 97\%-át képes megjeleníteni.}.
-Ezzel a CIE színpatkó 75.8\%-át lefedi (összehasonlításképp, a HD esetében ez 35.9\%), és a Pointer féle valós felületi színek egészét\footnote{
-A Pointer féle valós felületi színek azon színek halmaza, amelyek a természetben előfordulnak, mint valamely felületről visszavert fény által keltett színérzet (ellentétben a természetben elő nem forduló színekkel, pl. neon, vagy monitor által kikevert színek).
-A Pointer gamutot egy 4089 mintából álló mérési adatbázisból állították össze, és publikálták az eredményeket 1980-ban, azóta a Pointer gamut-lefedés az egyes színterek minősítésének de facto szabványa.
-A Pointer féle gamut \href{https://cinepedia.com/picture/color-gamut/}{itt} található, illetve \href{https://www.tftcentral.co.uk/articles/pointers_gamut.htm}{itt} található egy összehasonlítás a gyakran alkalmazott színterek gamutjával.
-}.
-Az új alapszínekből a világosság a következőképp számítható:
+\item \textbf{Color space:} 
+For the first time since the introduction of NTSC the ITU-2020 UHD standard applies new RGB primaries for color representation for the sake of an enlarged gamut.
+The resulting gamut is shown in Figure \ref{Fig:UHD_gamut}: 
+As the figure verifies it, the UHD color space applies spectral colors for the RGB primaries, described by the wavelengths of $\lambda_R = 630~\mathrm{nm}$, $\lambda_G =532~\mathrm{nm}$ and $\lambda_B =467~\mathrm{nm}$.
+\footnote{
+Obviously, this does not mean that UHD displays use spectral colors as RGB primaries, instead the color pixels of UHD video content are stored and transmitted in terms of spectral primary colors.
+Monitors and TVs display colors by using the actual applied LCD or LED primary colors, first converting the ITU-2020 content into the RGB color space of the display.
+The gamut of these color spaces are obviously smaller than the gamut of the UHD standard: as an example, JDI introduced a \href{https://www.displaydaily.com/?view=article&id=62235:jdi-may-have-commercial-problems-but-has-technical-highlights}{studio reference monitor} with the diameter of $14.3''$ in 2018, allowing the reproduction of $97\%$ of the ITU-2020 color space.}.
+The ITU-2020 covers the $75.8\% of$ the CIE chromaticity diagram and the entire Pointer's gamut of real surface colors
+\footnote{
+The Pointer's gamut is the result of the series of measurements, containing the chromaticites (hues) of colors of reflective surfaces, occurring in the natural environment---opposed to the colors that can be produced by emissive surfaces, e.g. neon or colors of LED/LCD light sources.
+The \href{https://cinepedia.com/picture/color-gamut/}{Pointer's gamut} is based on 4089 measurement samples, with the database published in 1980.
+Since then, the Pointer's gamut is a de facto standard of qualifying \href{https://www.tftcentral.co.uk/articles/pointers_gamut.htm}{color spaces}.}.
+The relative luminance (and the luma) can be calculated from the RGB coordinates as 
 \begin{equation}
 Y = 0.2627 \, R + 0.6780 \, G + 0.0593 \, B.
 \label{eq:2020_Y}
 \end{equation}
-\item \textbf{Mintánkénti bitszám:} A tárolt színek tartományának növelése természetesen magával vonja a világosságjel dinamikatartományának növekedését is (nyilván, hiszen adott szín világosságtartalma \ref{eq:2020_Y} alapján az RGB értékekből kiszámítható).
-UHD esetében  tehát már nem csak az SD esetében ökölszabályként tárgyalt 100:1 dinamikatartomány ábrázolása volt a cél.
-Ennek oka, hogy a 100:1 dinamikatartomány a látás fő látóterében, rögzített tekintet mellett értelmezendő.
-Amennyiben egy jeleneten belül a nézőnek lehetősége van körülnézni, úgy a pupilla tágulása és összeszűkülése ezt a dinamikatartományt kb. 5-szörösére emeli.
-Mivel rendeltetésszerűen egy UHD kijelző akkora részét tölti ki a látómezőnek, hogy ez a lokális adaptációs mechanizmus végbe tud menni, így a megfelelő reprodukált dinamikatartomány biztosításához a reprezentálandó dinamikatartományt is növelni kellett.
-Részben ezt valósítja meg a szabvány növelt gamutja, illetve erre szolgál a jelenleg elterjedőben levő HDR kiegészítés is.
-Az ábrázolt dinamikatartomány növelése természetesen magával vonja az ábrázolásra használt bitek számának növelését is, hogy az egyes szintekhez tartozó világosságértékek közti különbség továbbra is az emberi látás modulációs küszöbje alatt maradjon.
-Kísérletek kimutatták, hogy a  ITU-2020 színterének perceptuális kvantálásához 11 bit elegendő, így a szabvány a HD szabvánnyal ellentétben már kizárólag 10 és 12 bit reprezentációt ír elő.
-\item \textbf{Gamma függvény:} Az ITU-2020 szabvány Gamma-korrekciós függvénye az SD és HD szabványokkal megegyezik:
+\item \textbf{Bit depth:} 
+The increase of the range of the described colors requires increasing the bit depth of representation as well, in order to ensure the same quantization precision.
+Since a larger color space increases the difference between colors an increase of 1-bit per sample is needed for Rec. 2020 to equal or exceed the color precision of ITU-709.
+Thus, Rec. 2020 defines a bit depth of either 10 bits per sample for consumer or 12 bits per sample for studio applications.
+\item \textbf{The opto-electronic transfer function:} 
+The OETF of the ITU-2020 coincides with that of the SD and HD standards:
 \begin{equation}
 E = 
 \begin{cases}
@@ -1267,43 +1307,73 @@ E =
 \alpha L^{0.45} - (\alpha - 1 ), \hspace{3mm} \mathrm{ha}\, L \geq \beta,
 \end{cases}
 \end{equation}
-ahol $\alpha = 1.09929682680944$ és $\beta = 0.018053968510807$.
-Különbségként látható: a szabvány a függvény paramétereit nagyobb pontossággal definiálja, és 12 bites ábrázolás esetén a paraméterek 5 tizedesjegy pontossággal számolandók.
-\item \textbf{Mintavételi struktúra:} A szabvány 4:2:0, 4:2:2 és 4:4:4 chromamintavételi-struktúrákat engedélyez, utóbbi esetben természetesen luma/chroma jelek helyett közvetlenül RGB jelek kerülnek tárolásra és átvitelre.
-4:2:0 és 4:2:2 esetében az $YC_bC_r$ ábrázolás mellett lehetőség van ún. konstans fénysűrűségű luma-chroma reprezentációra is.
+where $\alpha = 1.09929682680944$ and $\beta = 0.018053968510807$.
+The only difference is the precision of the coefficients: for 12 bits bit depth the above coefficients should be evaluated with 5 digits precision.
+%
+\item \textbf{Chroma subsampling:} 
+The standard specifies the subsampling schemes of 4:2:0, 4:2:2 and 4:4:4.
+In the latter case instead of luma-chroma representation direct $R'G'B'$ representation is allows.
+In case of 4:2:0 or 4:2:2 sampling, besides \ycbcr representation the so-called \textbf{contant luminance mode} is supported, resulting in the $Y C_{\mathrm{bc}} C_{\mathrm{rc}}$ components.
+This constant luminance mode may be used when the top priority is the most accurate retention of luminance information.
+The luma component in $Y C_{\mathrm{bc}} C_{\mathrm{rc}}$ is calculated using the same coefficient values as for \ycbcr, but it is calculated from linear RGB and then gamma corrected, rather than being calculated from gamma-corrected $R'G'B'$.
+As a result $Y'$ in constant luminance mode is mathematically accurately describes the gamma-corrected relative luminance component (therefore, the resulting luma contains no color information and the resulting chroma contains no luminance information).
+The prevents artifacts that arise in case of \ycbcr representation due to the subsampling of minor luminance information, present in the chroma components.
 \end{itemize}
 
 %TODO \paragraph{Konstans fénysűrűségű mód:\\}
+\subsection{Digital interfaces}
+The most common physical interface for SD, HD and UHD video transmission in video studiotechnologies is the SDI (Serial Digital Interface), and HDMI (High-Definition Multimedia Interface) in consumer applications.
+
+The bit rates of most common video formats were summarized in Table \ref{tab:bitratet}.
+As a comparison, the maximal digital bandwidth of the different HDMI interface versions are the following
+\begin{itemize}
+\item HDMI 1.0-1.2: 4.95 Gbit/s (3.96 Gbit/s effective)\footnote{
+Due to undiscussed reasons the HDMI interface applies a so-called 8b/10b channel coding, transmitting 8 bits of data in 10 bit sequences.
+Therefore, only the part of $\frac{8}{10}$ of the total bandwith can used for effective data transmission.}
+\item HDMI 2.0: 18 Gbit/s (14.4 Gbit/s effective)
+\item HDMI 2.1: 48 Gbit/s (38.4 Gbit/s effective)
+\end{itemize}
+Obviously, in order to find the HDMI version for the transmission of a given video format, the total number of lines and sample per lines have to be taken into consideration, since HDMI signals contains the horizontal and vertical blanking intervals as well.
+As discussed earlier: the vertical blanking interval carries multichannel audio streams and other auxiliary data, presented simultaneously with the video data.
+
+It can be concluded that HDMI 1.0 version was created mainly for the transmission of 1080p video format with 4:2:2 chroma subsampling scheme, and the bit depth of 10 or 12 bits (4:4:4 video can be only transmitted with this version represented on 8 bits).
+On the other hand, HDMI 2.0 was developed for 4k, and the 2.1 version for 8k video transmission.
+
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.75 \columnwidth ]{Figures/optimal-viewing-distance-television-graph-size.png}
 	\small
 	\end{overpic}
-	\caption{Optimális nézőtávolság a kijelzőátmérő függvényében}
+	\caption{Optimal viewing distance as the function of display diameter.}
 	\label{Fig:optimal_vd_2}
 \end{figure}
 
-A fejezet zárógondolataként térjünk vissza a különböző sorszámú kijelzők ideális nézőtávolságához, az ún. Lechner távolsághoz.
-Az optimális nézőtávolságra vonatkozóan számos ajánlás létezik, így léteznek gyártói, forgalmazói, illetve THX ajánlások.
+\subsection{Optimal choice of display resolution}
+
+As the conclusion of the present chapter the Lechner distance is revisited in order to arrive at the the optimal viewing distance for a given display size and for the optimal display size for a given observer distance.
+Besides the Lechner distance, several other recommendations exist for the optimum viewing distance, including manufacturers, retail and THX recommendations.
 \begin{itemize}
-\item SMPTE 30: a már tárgyalt, Lechner távolságon alapuló ajánlás, amely HD felbontás esetén 1.6 x képátló nézőtávolságot ír elő, így a horizontális látószög kb. 30 fok.
-Ez a házimozi közösségen belül legelfogadottabb, általános nézőtávolság
-\item Gyártói és forgalmazói ajánlás: HD felbontás esetén 2.5 x képátló nézőtávolság, így a horizontális látószög kb. 20 fok.
-\item THX ajánlás: HD felbontás esetén 1.2 x képátló nézőtávolság, így a horizontális látószög kb. 40 fok, amely a THX szerint a legjobban közelíti a mozikban biztosított élményt.
+\item SMPTE 30: is the standardized codification of the Lechner distance, recommending the viewing distance of 1.6 times the diameter in case of a HD display with 1080 lines, resulting in a field of view of $30^{\circ}$.
+This recommendation is very popular with the home theater enthusiast community, appearing in books on home theater design,
+%
+\item The recommendation of manufacturers, retails and several publications suggests the viewing distance of 2.5 times the diameter in case of a HD display, resulting in the field of view of $20^{\circ}$.
+%
+\item THX recommends that the ,,best seat-to-screen distance'' is one where the view angle approximates $40^{\circ}$, which according to the THX approximates the cinema experience the most.
+This is achieved in case of HD format with the viewing distance being 1.2 times the display diameter.
 \end{itemize}
-Bár a fenti ajánlások jelentősen eltérnek egymástól, abban azonban egyetértenek, hogy "minél közelebb, annál jobb".
+Although there are slight discrepancies between these recommendations, they all agree in that for the viewing distance of the HD displays ,,the closer the better''.
 
-Az optimális nézőtávolság ábrázolható a képernyőátmérő függvényében különböző videóformátumok mellett.
-Az így kapott grafikont \ref{Fig:optimal_vd_2} mutatja.
-Ekkor egy adott képernyő méret mellett a nézőtávolságot növelve természetesen a pixelstruktúra nem válik láthatóvá, így pl. az $1080p$ vonala fölött a HD kijelzők használhatók.
-A gondolatmenet alapján a grafikon területekre oszthatók, amelyek megadják, egy adott kijelzőméret és nézőtávolság mellett milyen felbontású kijelző az optimális választás.
+The graph of optimal viewing distances can be visualized for the different video formats, as depicted in Figure \ref{Fig:optimal_vd_2}.
+At a given display size, of course the viewing distance can be increased, the pixel structure of the display does not become visible.
+Thus, at a fixed display size above a given line in the graph the display is applicable.
+The graph, therefore, can be divided into regions, indicating the optimal display resolution for a given viewing distance and display size.
 
-Statisztikák szerint (egy szintén Bernard J. Lechner nevéhez köthető felmérés szerint) a háztartásokban az átlagos nézőtávolság kb. 2.7 méterre adódott.
-Ekkora nézőtávolság mellett 50" képátló felett már 1080p felbontású TV-t érdemes venni, míg az UHD tartalom adta előnyök kiélvezéséhez legalább 75"-es ($\sim 1.9~\mathrm{m}$) kijelzőre lenne szükség.
-Jelenleg az ekkora kijelzők természetesen még nem elterjedtek, így ez az adat leginkább azt mutatja, hogy jelenleg a 4k tartalmak előnyeit sem használják ki teljes egészében a kijelzők, és a vásárlók nagyrésze.
-Ennek ellenére mára sorra jelennek meg a konzumer felhasználásra szánt 8k felbontású kijelzők is, és a 8k műsorszórás is kísérleti jelleggel megkezdődött.
-Többek között 2017-ben lőtték fel az első dedikáltan 8k tartalom közvetítésére szánt műholdat (BSAT-4a), amely tervek szerint a 2020-as Japánban tartandó nyári olimpiát hivatott 8k felbontással az ITU-2020 szabvány szerint közvetíteni (amelyet végül a koronavírus járvány miatt 2021 nyarára ütemeztek át).
-
+\vspace{3mm}
+Based on statistics, conducted by Bernard J. Lechner the average domestic TV viewing distance is approximately $2.7~\mathrm{m}$.
+At this distance displays above the diameter of 50'' should have the resolution of 1080p, while in order to exploit the advantages and quality of 4k resolution the display should have a diameter of at least 75'' ($\sim 1.9~\mathrm{m}$).
+Displays with the diameter of 2 meters are extremely rarely applied in domestic use even today, suggesting that the capabilities of even 4k displays are not completely utilized nowadays.
+However, the introduction of consumer 8k displays is already trending, with also experimental 8k broadcasting initiations beginning in the recent years.
+As an example, the first dedicated satellite for broadcasting 8k content has been lunched (BSAT-4a), which was planned to broadcast the 2020 summer olympics, which has been however postponed to 2021 due to the outbreak of the COVID-19 pandemic.
 
 %Periférikus látás:
 %https://www.quora.com/What-is-the-aspect-ratio-of-human-vision
@@ -1313,20 +1383,24 @@ Többek között 2017-ben lőtték fel az első dedikáltan 8k tartalom közvet�
 \vspace{2cm}
 \noindent\rule{12cm}{0.4pt}
 
-\subsection*{Ellenőrző kérdések}
+\subsection*{End-of-Chapter Questions}
 
 \begin{itemize}
-\item Mi volt az oka a váltottsoros formátum bevezetésének?
-Mi volt a váltottsoros megoldás lényege?
-\item Mik voltak az SD formátum mintavételi frekvenciájának szempontjai?
-Hogy következett ebből a HD formátum mintavételi frekvenciája?
-\item Határozza meg egy 65" átmérőjű 2160p kijelző (16:9 képarányú) ideális nézőtávolságát!
-\item Sorolja fel az UHD szabvány néhány újdonságát az SD-hez és HD-hez képest!
-\item Határozza meg $2160p60$ formátum esetén az aktív és teljes pixelszámot! 
-Az inaktív sorok száma a szabvány szerint 90 sor.
-A mintavételi frekvencia $297~\mathrm{MHz}$.
-\item Határozza meg az előző feladat formátumára a teljes adatsebességet 4:2:2 mintavételi struktúra esetén, 12 bit/minta ábrázolás mellett!
-Hányas HDMI verzió képes a videóadat továbbítására, ha a HDMI interface szabványosan 8 bitnyi adatot 10 biten ábrázol és visz át, és a különböző verziók sebességei a következők:
+\item What were the reasons behind the introduction of the interlaced format?
+What is the main idea of interlaced scanning?
+%
+\item How was the sampling frequency of the SD format chosen?
+How was it extended in order to choose the sampling frequency of the HD format?
+%
+\item Calculate the optimal viewing distance for a 4k (2160p) display with the diameter of 65'' (the aspect ratio is 16:9)!
+%
+\item List some improvements of the UHD standard compared to the HD format!
+%
+\item Define the number of total and active resolution of the $2160p60$ format!
+The number of inactive lines is 90 and the sampling frequency is $297~\mathrm{MHz}$.
+%
+\item Define the total bitrate of the video format of the previous example in case of a chroma subsampling scheme of 4:2:2, with 12 bits per sample representation!
+Pick the minimal HDMI version which is capable of transmitting the exemplary video stream, if the HDMI transmits 8 bit data in 10 bits sequences (i.e. the effective bandwidth is $\frac{8}{10}$ times the total bandwidth), and the total bandwidth of the HDMI interface versions are
 \begin{itemize}
 \item HDMI 1.0-1.2: $4.95~\mathrm{Gbit/s}$
 \item HDMI 1.3-1.4: $10.2~\mathrm{Gbit/s}$
