@@ -93,9 +93,9 @@ Types of reversible entropy coding applied often in video, image and audio proce
 In the following this chapter introduces the basic concepts of compression methods, based on differential coding and transformation coding.
 The basic concepts are introduced for the generalized case of arbitrary one and two dimensional input signals, and later specialized to video signal inputs.
 
-\section{Differential quantization}
+\section{Predictive coding}
 
-Differential quantization is a compression technique, utilizing linear prediction along with the requantization of the predicted data (i.e. performing both a change of representation and irreversible coding):
+Predictive coding, or differential quantization is a compression technique, utilizing linear prediction along with the requantization of the predicted data (i.e. performing both a change of representation and irreversible coding):
 instead of the direct quantization and transmission of the input signal, the actual input sample is predicted with an appropriately chosen prediction algorithm, and only the discrepancy between the actual and the estimated sample is further processed.
 In the receiver the same prediction is performed as in the source side, and the output sample is obtained as the sum of the estimated signal and the error of estimation. 
 
@@ -564,4 +564,6 @@ Obiviously, only previously encoded and transmitted pixels can be the reference 
 The number of reference pixels can be chosen by the encoder from the prediction schemes, shown in Figure \ref{Fig:png_encoder}.
 Therefore, in this case linear prediction is based on a 2D FIR filter, containing 2, 3 or 4 values in the prediction accumulator, denoted by $h_{k,l}$.
 \end{itemize} 
+
+\section{Transform coding }
 
