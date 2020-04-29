@@ -153,7 +153,7 @@ m_\xi = \EX(\xi(n) ) = \frac{1}{N} \sum_{n = 1}^{N} \xi(n)
 \end{equation}
 \item For a general process the autocorrelation function can be defined for two distinct samples, i.e. it is a two-dimensional function 
 \begin{equation}
-r_\xi(n_1,n_2) = \EX( \xi(n_1) \cdot \tilde{\xi}(n_2) ),
+r_\xi(n_1,n_2) = \EX( \xi(n_1) \cdot \xi(n_2) ),
 \end{equation}
 loosely speaking measuring the linear dependence between samples $\xi(n_1)$ and $\xi(n_2)$.
 If two samples are uncorrelated---i.e. $r_\xi(n_1,n_2)=0$---it implies that no linear relation exists between them, however, higher order dependence may be present.
@@ -169,7 +169,8 @@ r_\xi(n_1 - n_2) = r_\xi(d).
 \end{equation}
 If the above relation holds, autocorrelation can be statistically approximated from a realization of the process as
 \begin{equation}
-r_\xi(d) = \EX( \xi(n) \cdot \tilde{\xi}(n + d) ) = \frac{1}{N} \sum_{n = 0}^N \xi(n)\tilde{\xi}(n+ d)
+r_\xi(d) = \EX( \xi(n) \cdot \tilde{\xi}(n + d) ) = \frac{1}{N} \sum_{n = 0}^N \xi(n) \xi(n + d)
+\label{Eq:correlation_Def}
 \end{equation}
 \item As a further property for WSS process the auto-correlation function at zero lag ($d=0$) gives the mean value of the squared samples, i.e. the mean energy of the process, being obviously also time invariant
 \begin{equation}
@@ -252,28 +253,28 @@ This arises the question, how the actual input sample can be estimated based on 
 \subsection{The optimal prediction coefficients}
 As the most simple approach the actual input sample $\xi(n)$ can be predicted as the linear combination of the previous $N$ number of samples, written in the form of
 \begin{equation}
-\tilde{\xi}(n) = \sum_{m=1}^N a(m) \xi(n-m) = \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1},
+\tilde{\xi}(n) = \sum_{m=1}^N p(m) \xi(n-m) = \mathbf{p}^{\mathrm{T}} \mathbf{\xi}_{n-1},
 \label{Eq:lin_pred}
 \end{equation}
 written in a vectorial form.
-In the expression vector $\mathbf{a} = [a(1), a(2),...,a(N)]^{\mathrm{T}}$ contains the weights of the previous input samples used for prediction, and vector $\mathbf{\xi}_{n-1} = [\xi(n-1),\xi(n-2),...,\xi(n-N)]^{\mathrm{T}}$ contains the previous $N$ number of the input samples.
+In the expression vector $\mathbf{p} = [p(1), p(2),...,p(N)]^{\mathrm{T}}$ contains the weights of the previous input samples used for prediction, and vector $\mathbf{\xi}_{n-1} = [\xi(n-1),\xi(n-2),...,\xi(n-N)]^{\mathrm{T}}$ contains the previous $N$ number of the input samples.
 
-The goal is to minimize the expected energy of the difference between the actual input sample $\xi(n)$ and the prediction $\hat{\xi}(n)$ by optimizing the prediction weights $\mathbf{a}^{\mathrm{T}}$ so that 
+The goal is to minimize the expected energy of the difference between the actual input sample $\xi(n)$ and the prediction $\hat{\xi}(n)$ by optimizing the prediction weights $\mathbf{p}^{\mathrm{T}}$ so that 
 \begin{equation}
-\arg\min\limits_{\mathbf{a}}: \EX\left( | \xi(n) - \tilde{\xi}(n) |^2 \right) = \arg\min\limits_{\mathbf{a}}: \EX\left( | \xi(n) - \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) 
+\arg\min\limits_{\mathbf{p}}: \EX\left( | \xi(n) - \tilde{\xi}(n) |^2 \right) = \arg\min\limits_{\mathbf{p}}: \EX\left( | \xi(n) - \mathbf{p}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) 
 \end{equation}
 holds.
 The quadratic expression can be expounded to
 \begin{multline}
-\EX\left( | \xi(n)^2 - \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) =
-\EX\left( \xi(n) - 2\xi(n)\mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1}  + \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1}  \mathbf{\xi}_{n-1}^{\mathrm{T}} \mathbf{a}\right) = \\
-\EX\left( \xi(n)^2 \right) - 2 \mathbf{a}^{\mathrm{T}} \EX\left(  \xi(n) \mathbf{\xi}_{n-1} \right) + \mathbf{a}^{\mathrm{T}} \EX\left(  \mathbf{\xi}_{n-1}  \mathbf{\xi}_{n-1}^{\mathrm{T}} \right) \mathbf{a}
+\EX\left( | \xi(n)^2 - \mathbf{p}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) =
+\EX\left( \xi(n) - 2\xi(n)\mathbf{p}^{\mathrm{T}} \mathbf{\xi}_{n-1}  + \mathbf{p}^{\mathrm{T}} \mathbf{\xi}_{n-1}  \mathbf{\xi}_{n-1}^{\mathrm{T}} \mathbf{p}\right) = \\
+\EX\left( \xi(n)^2 \right) - 2 \mathbf{p}^{\mathrm{T}} \EX\left(  \xi(n) \mathbf{\xi}_{n-1} \right) + \mathbf{p}^{\mathrm{T}} \EX\left(  \mathbf{\xi}_{n-1}  \mathbf{\xi}_{n-1}^{\mathrm{T}} \right) \mathbf{p}
 \end{multline}
 with exploiting the linearity of expected value operator and collecting non-stochastic quantities outside of it.
 The expected value of the scalar-vector product and the dyadic product terms of the expression can be recognized as the autocorrelation values of the input signals, rewritten in a matrix form as
 \begin{equation}
-\EX\left( | \xi(n)^2 - \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) =
-r_{\xi}(0) - 2 \mathbf{a}^{\mathrm{T}} \mathbf{r}_{\xi} + \mathbf{a}^{\mathrm{T}} \mathbf{R}_\xi \mathbf{a}
+\EX\left( | \xi(n)^2 - \mathbf{p}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) =
+r_{\xi}(0) - 2 \mathbf{p}^{\mathrm{T}} \mathbf{r}_{\xi} + \mathbf{p}^{\mathrm{T}} \mathbf{R}_\xi \mathbf{p}
 \label{Eq:quad_eq}
 \end{equation}
 with denoting the signal energy, and the autocorrelation vector and matrix as
@@ -292,16 +293,17 @@ r_{\xi}(0) = \EX\left( \xi(n)^2 \right), \hspace{15mm}
        r_\xi(N-1) & r_\xi(N-2) & ... & r_\xi(0)\end{bmatrix}.
 \end{split}
 \end{align}
-Expression \ref{Eq:quad_eq} has to be minimized with respect to vector $\mathbf{a}^{\mathrm{T}}$.
-The minimization can be performed by finding the zero of the derivative of the expression with respect to vector $\mathbf{a}^{\mathrm{T}}$, reading 
+Expression \ref{Eq:quad_eq} has to be minimized with respect to vector $\mathbf{p}^{\mathrm{T}}$.
+The minimization can be performed by finding the zero of the derivative of the expression with respect to vector $\mathbf{p}^{\mathrm{T}}$, reading 
 \begin{equation}
-\frac{\partial}{\partial \mathbf{a}^{\mathrm{T}}}\EX\left( | \xi(n)^2 - \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) =
-- 2  \mathbf{r}_{\xi}  + 2\mathbf{R}_\xi \mathbf{a} = 0.
+\frac{\partial}{\partial \mathbf{p}^{\mathrm{T}}}\EX\left( | \xi(n)^2 - \mathbf{p}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) =
+- 2  \mathbf{r}_{\xi}  + 2\mathbf{R}_\xi \mathbf{p} = 0.
 \end{equation}
 Finally, from the above equation the optimal prediction coefficient vector can be expressed as
 \begin{equation}
-\mathbf{a}^{\mathrm{T}} =
+\mathbf{p}^{\mathrm{T}} =
 \mathbf{R}_\xi^{-1} \mathbf{r}_{\xi}.
+\label{Eq:optimal_coefs}
 \end{equation}
 The above coefficients are the so-called \textbf{Wiener filter} coefficients for the estimation of a stationary stochastic process.
 
@@ -309,43 +311,257 @@ From the form of the optimal prediction coefficients it is clear that the signal
 Hence the optimal prediction is often termed as \textbf{linear prediction}.
 The above Wiener filter is, therefore, capable of the estimation of the correlated part of the input signal.
 
-\subsection{Feedforward prediction and quantization}
+\subsection{Prediction as FIR filtering}
 
-It is important to note that linear prediction \eqref{Eq:lin_pred} describes the discrete linear convolution of vectors $\mathbf{a}$ and $\mathbf{\xi}_{n-1}$. 
-This means that the estimation of the actual sample can be obtained by the simple FIR filtering\footnote{The term FIR (Finite Impulse Response) filtering refers to the fact that the applied filter contains no feedback, thus it is ensured that to an excitation with a finite extent the filter output is of finite extent.
-The actual filter impulse response is described by the coefficient vector itself.} of the input stream with the coefficient vector $\mathbf{a}$.
-The result of estimation is subtracted from the input sample, generating the differential signal, which therefore can be written as
+
+It should be noted that linear prediction \eqref{Eq:lin_pred} describes the discrete linear convolution of vectors $\mathbf{p}$ and $\mathbf{\xi}_{n-1}$. 
+This means that the estimation of the actual sample can be obtained by the simple FIR filtering\footnote{The term FIR (Finite Impulse Response) filtering refers to the fact that the applied filter contains no feedback, thus it is ensured that to an excitation with finite extent the filter output is of finite extent.
+The actual filter impulse response is described by the coefficient vector itself.} of the input stream with the coefficient vector $\mathbf{p}$.
+The result of estimation is subtracted from the input sample, generating the differential signal, which, therefore, can be written as
 \begin{equation}
-\delta(n) = \xi(n) - \sum_{m=1}^{N} a(m) \xi(n-m),
+\delta(n) = \xi(n) - \sum_{m=1}^{N} p(m) \xi(n-m),
 \end{equation}
 or, transforming the equation to the $z$-transform domain---by exploiting that delay by one sample is a multiplication by $z^{-1}$ in the $z$-domain---as
 \begin{equation}
-\delta(z) = \xi(z)\left( 1  - \sum_{m=1}^{N} A(z) \, z^{-m}\right).
+\delta(z) = \xi(z)\left( 1  - \sum_{m=1}^{N} p_m(z) \, z^{-m}\right) = \xi(z)\left( 1 - P(z) \right).
+\label{Eq:lin_pred_filter}
 \end{equation}
-
+The realization of linear prediction with FIR is depicted in Figure \ref{Fig:FIR_prediction}.
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 1\columnwidth ]{figures_en/lin_pred_fir.png}
 	\small
 	\end{overpic}
 	\caption{One dimensional and two dimensional white noise process (a) and correlated noise process (b).}
-	\label{Fig:noise}
+	\label{Fig:FIR_prediction}
 \end{figure}
+The structure of FIR filtering is depicted in Figure \ref{Fig:FIR_prediction} (b).
+The prediction filter can be also interpreted as an accumulator, or memory, containing the previous samples, added with different weights to the output.
+
+\vspace{3mm}
+It is important to note that the prediction filter $P(z)$ is capable of identifying linear tendencies in the input signal and the actual sample is estimated based on the assumed linear relationship between previous samples
+Once all the correlated part of the input signal is removed, by definition, in the remaining differential signal each sample is uncorrelated from the previous samples.
+Thus, with theoretical optimal prediction, filter $\left( 1  -  P(z) \right)$ \textbf{decorrelates} the input signal, and the differential signal is a \textbf{white noise process}:
+The filter is often referred to as whitening filter, since in the optimal case it transforms the input signal into white noise. 
+
+
+Figure \ref{Fig:whitening} illustrates the whitening process in case of a simple 1D input signal, in the present example being an audio stream.
+The correlation of the signal can be estimated based on the input stream according to \eqref{Eq:correlation_Def} from which the linear prediction coefficients are obtained (from \eqref{Eq:optimal_coefs}).
+These coefficients are applied to perform whitening filtering process described by \ref{Eq:lin_pred_filter}.
+
+Figure \ref{Fig:whitening} (a) compares the time histories of the \href{https://github.com/gfirtha/MMTA_lecture_notes/blob/master/Samples/prediction_in.wav}{input} and the \href{https://github.com/gfirtha/MMTA_lecture_notes/blob/master/Samples/prediction_out.wav}{differential} signals.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth  ]{figures_en/linear_prediction.png}
+	\small
+	\put(25,30){(a)}
+	\put(0,0){(b)}
+	\put(51,0){(c)}
+	\end{overpic}
+	\caption{Example for the optimal linear prediction of an audio input stream.}
+	\label{Fig:whitening}
+\end{figure}
+As it is illustrated the dynamics range of the input signal is significantly reduced by subtracting the predicted signal.
+Generally speaking, periodic signals can be predicted efficiently by measuring correlation, therefore, harmonic signals are almost entirely removed from the input.
+Obviously, transients can not be predicted based on previous samples, therefore, they are still present in the differential signals.
+
+Figure \ref{Fig:whitening} (b) verifies that as the effect of filtering the autocorrelation of the differential signal became approximately a delta function, hence the output stream is nearly uncorrelated.
+This is also verified by comparing the input and output spectral density functions, with the output spectrum being nearly constant as depicted in Figure \ref{Fig:whitening} (c).
+
+Note that since the input signal is typically of low-pass filtered characteristics, therefore, the whitening filter has to be of high-pass characteristics in order to flatten out the output spectrum.
+This statement can be generalized to typical audio and video signals: since natural signals are usually dominated by low-frequency content, therefore, in practical applications the differential signal (i.e. prediction) is obtained as the high-pass filtered version of the input signal.
+
+\vspace{3mm}
+It has been highlighted that once the autocorrelation of the input signal can be estimated (e.g. by measurement) nearly optimal prediction coefficients can be defined.
+Hence, the prediction filter $P(z)$ depends on the actual input signal.
+Obviously, the decoding of the differential signal also requires the knowledge of coefficients $P(z)$ in the decoder side.
+In order to avoid the transmission of the prediction filter coefficients, in practice as a sub-optimal solution fixed prediction coefficients are applied for high-pass filtering.
+In the following only this fix-coefficient approach is considered.
+
+\subsection{Problem of feedforward prediction}
+
+Although being a very simple approach, the direct FIR filtering scheme, presented in Figure \ref{Fig:FIR_prediction} (a) is never used directly in practice, due to the following reason:
+
+So far only the prediction and generation of the differential signal have been discussed in details, without taking the receiver side into consideration.
+In the receiver---with assuming that the prediction filter coefficients are known---the original samples are reconstructed by adding the previously accumulated, weighted samples to the residual signal.
+With denoting the decoded signal by $\tilde{\xi}$ it can be written as
+\begin{equation}
+\tilde{\xi}(z) = \delta'(z) + \sum_{m=1}^{N} p_m(z) \tilde{\xi}(z) z^{-m} \hspace{3mm} \rightarrow \hspace{3mm}
+\frac{\tilde{\xi}(z)}{\tilde{\delta}(z)} = \frac{1}{1-P(z)},
+\end{equation}
+hence, in the receiver the original signal can be reconstructed by \textbf{inverse filtering} and the transfer function of the inverse filter is the reciprocal of the forward filter.
+Obviously, $\frac{1}{1-P(z)}$ describes an IIR (Infinite Impulse Response) filter, since the reconstruction in the receiver is performed by feedbacking the output signal to the input of the receiver.
+Hence, the zeros of the forward FIR filter are mapped to the poles of the inverse filter, leading to stability problems in the receiver.
 
 \begin{figure}[]
 	\centering
-	\begin{overpic}[width = 0.85\columnwidth ]{figures_en/fb_diff_quant.png}
+	\begin{overpic}[width = 0.8\columnwidth ]{figures_en/feedforward_enc_dec.png}
+	\small
+	\put(0,0){(a)}
+	\put(5,24){$\xi(z)$}
+	\put(25,14){$\hat{\xi}(z)$}
+	\put(26,24){$\delta(z)$}
+	\put(45,24){$\delta'(z)$}
+	\put(50,0){(b)}
+	\put(94,24){$\tilde{\xi}(z)$}
+	\end{overpic}
+	\caption{Example for the optimal linear prediction of an audio input stream.}
+	\label{Fig:feedforward_enc_dec}
+\end{figure}
+
+These stability problems causes serious artifacts due to the presence of the quantizer:
+As discussed earlier the presence of quantizer can be modeled as introducing quantization noise, added directly to the differential signal.
+Hence, with denoting the $z$-transform of the additive quantization noise by $\epsilon(z)$ and taking both the encoding and decoding steps into consideration the decoded signal can be written as
+\begin{equation}
+\tilde{\xi}(z) = \left( \underbrace{\xi(z) \left( 1 - P(z) \right)}_{\delta(z)} + \epsilon(z) \right) \cdot \frac{1}{1 - P(z) }
+=
+\xi(z) + \epsilon(z) \frac{1}{1-P(z)}.
+\label{eq:reproduced_signal}
+\end{equation}
+The decoded signal, therefore, consists of the original input signal and the quantization noise, filtered with the potentially unstable inverse filter.
+
+In order to highlight the resulting effect as a simple example DPCM encoding is investigated.
+
+\paragraph*{DPCM coding with feedforward prediction:\\}
+As the simplest approach for differential coding the basis of prediction is simply the previous sample of the input signal, hence 
+\begin{align}
+\begin{split}
+\delta(n) &= \xi(n)-\xi(n-1) \\ P(z) &= z^{-1} \hspace{3mm} \rightarrow \hspace{3mm} 1 - P(z) = 1 - z^{-1}.
+\end{split}
+\label{Eq:temp1}
+\end{align}
+The differential sample is simply given as the difference of the actual and the previous input samples.
+The approach is termed as \textbf{Differential Pulse-Code Modulation}.
+
+Generally speaking, the derivative of the a continuous function most simply can be approximated numerically by the finite difference
+\begin{equation}
+\frac{\partial}{\partial t}f(t) \approx \frac{f(t)-f(t-T)}{T} = \frac{1}{T} \left( f(n) - f(n-1) \right),
+\end{equation}
+termed as the backward Euler scheme, with $T$ being the sampling interval.
+Comparison of this expression with \eqref{Eq:temp1} clearly reveals that differential coding realizes the approximate differentiation of the input signal prior to quantization.
+The frequency response of this simple differentiation is obtained analytically by evaluation the $z$-transform along the unit circle, i.e. by the substitution $z = \mathrm{e}^{\mathrm{j} 2\pi f/f_s}$, with $f_s$ being the sampling frequency
+\begin{equation}
+|1-z^{-1}| = |1 - \mathrm{e}^{-\mathrm{j} 2\pi f/f_s}| = 2 \left|\sin \frac{\pi f}{f_s} \right|.
+\end{equation}
+The frequency response of the filter is shown in Figure \ref{Fig:differentiator_integrator} (a) along with the frequency response of an ideal differentiator.
+The filter has a zero at $z=1$, at zero frequency (as the derivative of a constant signal is zero), and approximates an ideal differentiator perfectly in the low frequency region.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth  ]{figures_en/differentiator_integrator.png}
+	\small
+	\put(0,0){(a)}
+	\put(50,0){(b)}
+	\end{overpic}
+	\caption{Example for the optimal linear prediction of an audio input stream.}
+	\label{Fig:differentiator_integrator}
+\end{figure}
+
+Obviously, the inverse operation of differentiation is integration, i.e. the inverse filter $\frac{1}{1-P(z)}$ describes the numerical approximation of integration.
+This is verified by Figure \ref{Fig:differentiator_integrator} (b), depicting the frequency response of the inverse filter and that of an ideal integrator, with a pole at zero frequency (the integral of constant signal tends to infinity).
+
+As a conclusion, the drawback of the simple feedforward processing scheme---where the encoder performs prediction directly from the input signal---is the following:
+According to \eqref{eq:reproduced_signal} the quantization noise is reproduced in the output of the decoder filtered with the inverse filter $\frac{1}{1-z^{-1}}$.
+Since this filter response describes the integration of the filtered signal, therefore, the quantization noise is integrated, \textbf{accumulated} in the decoder.
+Less formally speaking: the source of accumulation of quantization error is the fact that due to the presence of quantization the basis of prediction is different in the encoder and the decoder side.
+While the encoder predicts the next sample from the original signal, in the decoder side only the quantized, decoded previous samples are available for the next prediction.
+
+\subsection{Feedback prediction loop}
+
+In order to overcome the error of feedforward prediction and to avoid the accumulation of the quantization error it has to be ensured that the encoder and the decoder uses the same past samples for prediction.
+This can be achieved only by ensuring that the encoder predicts from the quantized input samples as well.
+Hence, in the encoder side the quantized differential signal has to be decoded, which decoded signal will serve as the basis for the next prediction: the decoder has to be built in the encoder in a feedback loop.
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures_en/fb_diff_quant.png}
+	\small
+	\put(1,38){$\xi$}
+	\put(36,38){$\delta'$}
+	\put(35,20){$\delta'$}
+	\put(35,10){$\xi'$}
+	\put(29,18){$\hat{\xi}$}
+	\put(13.5,31.5){$\hat{\xi}$}
+	\put(0,0){(a)}
+	\put(58,0){(b)}
+	\end{overpic}
+	\caption{One dimensional and two dimensional white noise process (a) and correlated noise process (b).}
+	\label{Fig:feedback_diff}
+\end{figure}
+
+The concept of differential quantizer with built-in decoder stage is depicted in Figure \ref{Fig:feedback_diff} (a):
+the accumulator/filter $P(z)$ contains the previous quantized samples (in the previous example only the previous, quantized sample) and produces the actual estimation $\hat{\xi}'$ as their weighted sum.
+In the actual time step the estimation is subtracted from the actual input signal, and the difference is quantized, producing the quantized differential output signal.
+Besides transmission to the receiver, the quantized differential signal is added to the estimated sample, producing the decoded, quantized signal $\xi'$, which is pushed into the accumulator and will serve as the basis of the prediction in the next time step.
+Hence, it is ensured that the basis of prediction is the quantized signal, similarly to the receiver side.
+
+Mathematically the entire built in decoder can be modeled as a single transfer function:
+The input of the decoder block is the quantized differential signal $\delta'$, while the output is the estimation $\hat{\xi}$, i.e.
+\begin{equation}
+R(z) = \frac{\hat{\xi}(z)}{\delta'(z)} = \frac{P(z) \left( \hat{\xi}'(z) + \delta'(z) \right) }{\delta'(z)} \hspace{0.3cm}
+\rightarrow \hspace{0.3cm}
+R(z) = \frac{P(z)}{1-P(z)}
+\end{equation}
+holds.
+The transmitted differential signal can be written with taking the quantization error into consideration as
+\begin{align}
+\begin{split}
+\delta'(z) &= \xi(z) - R(z)\delta'(z) + \epsilon(z) \hspace{3mm} \rightarrow \hspace{3mm} \left( 1 + R(z) \right) \delta'(z) = \xi(z) + \epsilon(z) \\
+\delta'(z) &=  \frac{1}{1-R(z)} \left( \xi(z) + \epsilon(z) \right) = (1-P(z)) \left( \xi(z) + \epsilon(z) \right)
+\end{split}
+\end{align}
+and finally after decoding by applying the unchanged decoder with the transfer function of $\frac{1}{1-P(z)}$ the decoded signal reads
+\begin{equation}
+\tilde{\xi}(z) = \frac{1}{1-P(z)}(1-P(z)) \left( \xi(z) + \epsilon(z) \right) = \xi(z) + \epsilon(z).
+\end{equation}
+Therefore, without the accumulation or the error, besides the original input the decoded signal contains only the actual quantization noise.
+Due to this reason in differential coding exclusively the above feedback structure is applied with the encoder containing the built-in decoder stage.
+
+\subsection{Application of predictive coding in video technologies}
+
+Predictive coding is extensively applied in the field of image and video compression.
+Prediction can be applied either between pixels or blocks of the image, performing spatial prediction, or between consequent images, applying temporal prediction:
+\begin{itemize}
+\item \textbf{Temporal prediction:} MPEG video encoders apply block based temporal DPCM prediction, meaning that each block of a frame is predicted from a block from the previous frame.
+Hence, the prediction filter/accumulator contains a single block of the previous image, which is subtracted from the actual input block.
+Newer compression methods, like H.264, allows prediction using multiple reference blocks with arbitrary weights, therefore, the length of the prediction filter may be larger than one, approximating the optimal prediction case, discussed in the foregoing.
+The block in the prediction filter, termed as the \textbf{reference block}, does not necessarily located in the same position as the actual input block, but its location is found where the the reference block resembles the most to the actual input block.
+Finding the position of the reference block is the basic task of \textbf{motion estimation.}
+Motion estimation and temporal prediction of the MPEG encoder is discussed in details in the following chapter.
+%
+\item \textbf{Spatial prediction:} Alternatively, within an image each pixel may be predicted based on the neighboring pixel values, followed by requantization of the difference pixel.
+Assuming that pixel values change slowly over the image, storing only the difference from the previous pixels may result in significant data compression.
+Pixel based predictive coding is applied by the PNG image encoder as discussed in the following, while modern video compression methods, e.g. H.264 allows more sophisticated block based intra-image prediction.
+
+Furthermore, all JPEG and MPEG block-based video encoders stores the average luminance/color of the actual block predictivly compared to the previous block in a DPCM loop.
+
+As a rule of thumb, since in the decoder side only the requantized difference pixels/blocks are available, in order to avoid the accumulation quantization error predictive coding is in all cases performed within a feedback prediction loop.
+\end{itemize}
+
+\paragraph*{PNG encoding:\\}
+
+\begin{figure}[h!]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth ]{figures_en/png_1.png}
 	\small
 	\put(0,0){(a)}
 	\end{overpic}
-	\begin{overpic}[width = 0.85\columnwidth ]{figures_en/fb_diff_quant2.png}
+	\begin{overpic}[width = 0.8\columnwidth ]{figures_en/png_2.png}
 	\small
 	\put(0,0){(b)}
 	\end{overpic}
-	\caption{One dimensional and two dimensional white noise process (a) and correlated noise process (b).}
-	\label{Fig:noise}
+	\caption{Prediction schemes (a) and block diagram (b) of PNG encoder.}
+	\label{Fig:png_encoder}
 \end{figure}
+As a simple example for spatial prediction the PNG encoder is discussed briefly.
+PNG (Portable Network Graphics), being one of the simplest image compression methods apply a lossless spatial prediction along with lossless entropy coding, with the following properties:
+\begin{itemize}
+\item Since PNG is a lossless compression, therefore, no quantization is present in the encoder.
+\item As PNG is lossless, luma/chroma separation  is not beneficiary, but direct RGB coordinates are encoded.
+\item Compression is achieved by the fact that the result of spatial prediction contains mainly small pixel intensities, clustered around 0, which can be efficiently entropy coded with a properly chosen variable-length coding.
+The entropy coder of PNG is termed as \href{https://en.wikipedia.org/wiki/DEFLATE}{DEFLATE} coding, being originally introduced for the early version of ZIP comression.
+\item Before DEFLATE compression the actual pixel, denoted in Figure \ref{Fig:png_encoder} by $x_{m,n}$ is predicted from the neighboring pixels.
+Obiviously, only previously encoded and transmitted pixels can be the reference of prediction, denoted by $z_{m,n}$.
+The number of reference pixels can be chosen by the encoder from the prediction schemes, shown in Figure \ref{Fig:png_encoder}.
+Therefore, in this case linear prediction is based on a 2D FIR filter, containing 2, 3 or 4 values in the prediction accumulator, denoted by $h_{k,l}$.
+\end{itemize} 
 
-
-Once all the correlated part of the input signal is removed, by definition, in the remaining differential signal each sample is uncorrelated from the previous samples.
-Thus, with optimal prediction differential coding \textbf{decorrelates} the input signal before quantization, and the differential signal is a white noise process.
