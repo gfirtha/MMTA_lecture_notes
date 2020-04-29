@@ -185,17 +185,167 @@ The autocorrelation, therefore, is a Kronecker delta (discrete Dirac delta) func
 r_\xi(n) = E_\xi  \cdot \delta(n) = \begin{cases} 0, \hspace{7mm} \text{if} \hspace{2mm} n = 0 \\ E_\xi , \hspace{7mm} \text{elsewhere.} \end{cases} 
 \end{equation}
 Such a stochastic process is called \textbf{white noise}.
+The distribution of the individual samples is arbitrary, most often the samples are drawn from uniform or Gaussian normal distribution.
 
 \begin{figure}[]
 	\centering
 	\begin{overpic}[width = 0.85\columnwidth ]{figures_en/white_noise.png}
+	\small
+	\put(0,0){(a)}
 	\end{overpic}
 	\begin{overpic}[width = 0.85\columnwidth ]{figures_en/white_noise2.png}
+	\small
+	\put(0,0){(b)}
 	\end{overpic}
 	\caption{One dimensional and two dimensional white noise process (a) and correlated noise process (b).}
-	\label{Fig:diff_quant}
+	\label{Fig:noise}
 \end{figure}
 The terminology originates from the \textbf{power spectral density}, defined as the Fourier transform of the autocorrelation function , describing the frequency content of the stochastic process.	
 For white noise the spectral density function is constant, similarly to the spectrum of white light containing all lights with all the visible wavelengths equally.
+A simple example realization of white noise process is depicted in Figure \ref{Fig:noise} (a) in one and two dimensions.
 
-\subsection{The optimal prediction }
+A correlated process can be most easily generated from white noise by linear filtering (e.g. FIR filtering):
+since after filtering each output sample is produced as the linear combination of the previous samples, therefore neighboring samples become correlated, and the autocorrelation is described by the filtering coefficients themselves.
+Correlated noise, obtained by filtering of the exemplary white noise realization is depicted in Figure \ref{Fig:noise}.
+
+\subsection{The goal of differential quantization}
+
+Having introduced basic stochastic concepts differential quantization can be discussed mathematically.
+
+In the model applied the input signal $\xi(n)$ is assumed to be a wide sense stationary process.
+The effect of quantization can be most easily modeled as an additive noise $\epsilon(n)$, added to the quantized signal.
+Efficiency of quantization is usually described by the signal-to-quantization-noise ratio, defined as the ratio of the energy of the quantized signal and the quantization noise, written as
+\begin{equation}
+\mathrm{SQNR} = \frac{\EX(\xi(n)^2)}{\EX(\epsilon(n)^2)},
+\end{equation}
+assuming that the quantized signal is the input signal directly.
+
+In an ideal case where the quantization error is uniformly distributed and the signal has a uniform distribution covering all quantization levels the quantization noise can be calculated as
+\begin{equation}
+\mathrm{SQNR} = 20 \mathrm{log}_{10} 2^N,
+\end{equation}
+where $N$ is the bit depth.
+In case that differential quantization is applied, two statements can be made
+\begin{itemize}
+\item Assuming that in the receiver side the input signal can be regenerated from the quantized differential signal the final signal-to-noise ratio can be calculated as 
+\begin{equation}
+\mathrm{SNR} = \frac{\EX(\tilde{\xi}(n)^2)}{\EX(\epsilon(n)^2)},
+\end{equation}
+\item However, instead of the input signal, the differential signal is quantized, setting the quantization SNR to
+\begin{equation}
+\mathrm{SQNR} = \frac{\EX(\delta(n)^2)}{\EX(\epsilon(n)^2)} = 20 \mathrm{log}_{10} 2^N.
+\end{equation}
+\end{itemize}
+Rewriting the above equations results in the total SNR of 
+\begin{equation}
+\mathrm{SNR} = \frac{\EX(\tilde{\xi}(n)^2)}{\EX(\epsilon(n)^2)} = \frac{\EX(\tilde{\xi}(n)^2)}{\EX(\delta(n)^2)} \cdot 
+\underbrace{\frac{\EX(\delta(n)^2)}{\EX(\epsilon(n)^2)}}_{20 \mathrm{log}_{10} 2^N}
+,
+\end{equation}
+revealing that compared to the direct quantization of the input signal the signal-to-noise ratio is increased by a factor of
+\begin{equation}
+\mathrm{G}_p = \frac{\EX(\tilde{\xi}(n)^2)}{\EX(\delta(n)^2)} 
+\end{equation}
+termed as the \textbf{prediction gain}, being a large number, assuming that the input signal can be predicted precisely.
+This arises the question, how the actual input sample can be estimated based on the previous samples only.
+
+\subsection{The optimal prediction coefficients}
+As the most simple approach the actual input sample $\xi(n)$ can be predicted as the linear combination of the previous $N$ number of samples, written in the form of
+\begin{equation}
+\tilde{\xi}(n) = \sum_{m=1}^N a(m) \xi(n-m) = \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1},
+\label{Eq:lin_pred}
+\end{equation}
+written in a vectorial form.
+In the expression vector $\mathbf{a} = [a(1), a(2),...,a(N)]^{\mathrm{T}}$ contains the weights of the previous input samples used for prediction, and vector $\mathbf{\xi}_{n-1} = [\xi(n-1),\xi(n-2),...,\xi(n-N)]^{\mathrm{T}}$ contains the previous $N$ number of the input samples.
+
+The goal is to minimize the expected energy of the difference between the actual input sample $\xi(n)$ and the prediction $\hat{\xi}(n)$ by optimizing the prediction weights $\mathbf{a}^{\mathrm{T}}$ so that 
+\begin{equation}
+\arg\min\limits_{\mathbf{a}}: \EX\left( | \xi(n) - \tilde{\xi}(n) |^2 \right) = \arg\min\limits_{\mathbf{a}}: \EX\left( | \xi(n) - \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) 
+\end{equation}
+holds.
+The quadratic expression can be expounded to
+\begin{multline}
+\EX\left( | \xi(n)^2 - \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) =
+\EX\left( \xi(n) - 2\xi(n)\mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1}  + \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1}  \mathbf{\xi}_{n-1}^{\mathrm{T}} \mathbf{a}\right) = \\
+\EX\left( \xi(n)^2 \right) - 2 \mathbf{a}^{\mathrm{T}} \EX\left(  \xi(n) \mathbf{\xi}_{n-1} \right) + \mathbf{a}^{\mathrm{T}} \EX\left(  \mathbf{\xi}_{n-1}  \mathbf{\xi}_{n-1}^{\mathrm{T}} \right) \mathbf{a}
+\end{multline}
+with exploiting the linearity of expected value operator and collecting non-stochastic quantities outside of it.
+The expected value of the scalar-vector product and the dyadic product terms of the expression can be recognized as the autocorrelation values of the input signals, rewritten in a matrix form as
+\begin{equation}
+\EX\left( | \xi(n)^2 - \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) =
+r_{\xi}(0) - 2 \mathbf{a}^{\mathrm{T}} \mathbf{r}_{\xi} + \mathbf{a}^{\mathrm{T}} \mathbf{R}_\xi \mathbf{a}
+\label{Eq:quad_eq}
+\end{equation}
+with denoting the signal energy, and the autocorrelation vector and matrix as
+\begin{align}
+\begin{split}
+r_{\xi}(0) = \EX\left( \xi(n)^2 \right), \hspace{15mm}
+\mathbf{r}_{\xi} =  \begin{bmatrix}
+       r_\xi(1) \\[0.3em]
+       r_\xi(2) \\[0.3em]
+       ... \\[0.3em]
+       r_\xi(N) \end{bmatrix}, \\
+\mathbf{R}_{\xi} =  \begin{bmatrix}
+       r_\xi(0) & r_\xi(1) & ... & r_\xi(N-1) \\[0.3em]
+       r_\xi(1) & r_\xi(0) & .... & r_\xi(N-2)\\[0.3em]
+       ... \\[0.3em]
+       r_\xi(N-1) & r_\xi(N-2) & ... & r_\xi(0)\end{bmatrix}.
+\end{split}
+\end{align}
+Expression \ref{Eq:quad_eq} has to be minimized with respect to vector $\mathbf{a}^{\mathrm{T}}$.
+The minimization can be performed by finding the zero of the derivative of the expression with respect to vector $\mathbf{a}^{\mathrm{T}}$, reading 
+\begin{equation}
+\frac{\partial}{\partial \mathbf{a}^{\mathrm{T}}}\EX\left( | \xi(n)^2 - \mathbf{a}^{\mathrm{T}} \mathbf{\xi}_{n-1} |^2 \right) =
+- 2  \mathbf{r}_{\xi}  + 2\mathbf{R}_\xi \mathbf{a} = 0.
+\end{equation}
+Finally, from the above equation the optimal prediction coefficient vector can be expressed as
+\begin{equation}
+\mathbf{a}^{\mathrm{T}} =
+\mathbf{R}_\xi^{-1} \mathbf{r}_{\xi}.
+\end{equation}
+The above coefficients are the so-called \textbf{Wiener filter} coefficients for the estimation of a stationary stochastic process.
+
+From the form of the optimal prediction coefficients it is clear that the signal estimation is based on the measured correlation of the previous source samples, therefore prediction is efficient as long as neighboring samples are linearly related.
+Hence the optimal prediction is often termed as \textbf{linear prediction}.
+The above Wiener filter is, therefore, capable of the estimation of the correlated part of the input signal.
+
+\subsection{Feedforward prediction and quantization}
+
+It is important to note that linear prediction \eqref{Eq:lin_pred} describes the discrete linear convolution of vectors $\mathbf{a}$ and $\mathbf{\xi}_{n-1}$. 
+This means that the estimation of the actual sample can be obtained by the simple FIR filtering\footnote{The term FIR (Finite Impulse Response) filtering refers to the fact that the applied filter contains no feedback, thus it is ensured that to an excitation with a finite extent the filter output is of finite extent.
+The actual filter impulse response is described by the coefficient vector itself.} of the input stream with the coefficient vector $\mathbf{a}$.
+The result of estimation is subtracted from the input sample, generating the differential signal, which therefore can be written as
+\begin{equation}
+\delta(n) = \xi(n) - \sum_{m=1}^{N} a(m) \xi(n-m),
+\end{equation}
+or, transforming the equation to the $z$-transform domain---by exploiting that delay by one sample is a multiplication by $z^{-1}$ in the $z$-domain---as
+\begin{equation}
+\delta(z) = \xi(z)\left( 1  - \sum_{m=1}^{N} A(z) \, z^{-m}\right).
+\end{equation}
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures_en/lin_pred_fir.png}
+	\small
+	\end{overpic}
+	\caption{One dimensional and two dimensional white noise process (a) and correlated noise process (b).}
+	\label{Fig:noise}
+\end{figure}
+
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.85\columnwidth ]{figures_en/fb_diff_quant.png}
+	\small
+	\put(0,0){(a)}
+	\end{overpic}
+	\begin{overpic}[width = 0.85\columnwidth ]{figures_en/fb_diff_quant2.png}
+	\small
+	\put(0,0){(b)}
+	\end{overpic}
+	\caption{One dimensional and two dimensional white noise process (a) and correlated noise process (b).}
+	\label{Fig:noise}
+\end{figure}
+
+
+Once all the correlated part of the input signal is removed, by definition, in the remaining differential signal each sample is uncorrelated from the previous samples.
+Thus, with optimal prediction differential coding \textbf{decorrelates} the input signal before quantization, and the differential signal is a white noise process.
