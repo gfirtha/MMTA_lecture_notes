@@ -563,7 +563,301 @@ The entropy coder of PNG is termed as \href{https://en.wikipedia.org/wiki/DEFLAT
 Obiviously, only previously encoded and transmitted pixels can be the reference of prediction, denoted by $z_{m,n}$.
 The number of reference pixels can be chosen by the encoder from the prediction schemes, shown in Figure \ref{Fig:png_encoder}.
 Therefore, in this case linear prediction is based on a 2D FIR filter, containing 2, 3 or 4 values in the prediction accumulator, denoted by $h_{k,l}$.
+\item Note that in this exclusive case, since no quantization is performed, feedback prediction may be interchangeable with feedforward structure.
 \end{itemize} 
 
-\section{Transform coding }
+%TODO : Here should go and example of predicted image. E.g. Lenna: https://www.eecs.wsu.edu/~cs445/Lecture_19.pdf
+%http://www.cmlab.csie.ntu.edu.tw/cml/dsp/training/coding/
 
+\section{Transform coding}
+Alternatively to linear prediction, potential linear dependence between samples can be eliminated by representing the input data in a new representation space as the linear combination of properly chosen basis vectors (or matrices).
+The change of basis can be performed by applying a linear transform to the input.
+With an optimal choice of the linear transform the weights of the basis vectors/matrices---i.e. the representation of the data in the new basis---are less correlated, with reduced spatial redundancy, and allows more efficient quantization adapted to the properties of human vision.
+
+\begin{figure}[h!]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth ]{figures_en/transform_coding.png}
+	\end{overpic}
+	\caption{General block scheme of image transform encoder.}
+	\label{Fig:transform_coding}
+\end{figure}
+The general processing scheme for image coding is depicted in Figure \ref{Fig:transform_coding}.
+In image processing applications usually block-based coding is applied, with the input image segmented to $N\times N$ sized pixel blocks.
+The input blocks are transformed by a properly chosen 2D linear transform, representing the pixel block as the weighted sum of basis images.
+Similarly to prediction, the linear transform itself is theoretically reversible.
+The irreversible, lossy coding is usually the requantization of the transformed data, followed by an efficient reversible entropy coding method.
+
+\subsection{1D and 2D linear transforms}
+
+Before discussing the 2D linear transforms applied frequently in image coding, the general theoretical basics of linear transforms are revisited.
+
+\paragraph*{One-Dimensional Transforms:\\}
+Let $x(n) = [x(0),\, x(1),\,...,\, x(N-1)]^{\mathrm{T}}$ denote the \textbf{input vector} $\mathbf{x}$ of $N$ samples and $y(k) = [y(0),\, y(1),\,...,\, y(N-1)]^{\mathrm{T}}$ the \textbf{transform vector} $\mathbf{y}$ with the same size.
+
+The connection of the input and transform vectors is established by 
+\begin{equation}
+y(k) = \sum_{n=0}^{N-1} x(n) \, A(k,n), \hspace{5mm} \text{for} \, k = 0,1,...,N-1,
+\end{equation}
+or in matrix notation
+\begin{equation}
+\mathbf{y} = \mathbf{A} \mathbf{x},
+\end{equation}
+where $A(k,n)$ is the forward transformation kernel, forming the $\mathbf{A}$ \textbf{forward transform matrix}, and $y(k)$ are termed as the transform coefficients. 
+The inverse transform that recovers the input sequence is given by
+\begin{equation}
+x(n) = \sum_{k=0}^{N-1} y(k) \, B(k,n), \hspace{5mm} \text{for} \, n = 0,1,...,N-1,
+\label{Eq:inv_tr}
+\end{equation}
+or in matrix notation
+\begin{equation}
+\mathbf{x} = \mathbf{B} \mathbf{y},
+\end{equation}
+where $\mathbf{B}$ is the \textbf{inverse transform matrix}, satisfying $\mathbf{B} = \mathbf{A}^{-1}$.
+
+Let $\mathbf{b}_k$ denote the $k$-th basis vector of the new representation space.
+The inverse transform \eqref{Eq:inv_tr} can be rewritten with a slightly modified notation
+\begin{equation}
+x(n) = \sum_{k=0}^{N-1} y(k) \, b_k (n), \hspace{5mm} \text{for} \, n = 0,1,...,N-1,
+\end{equation}
+clearly reflecting the fact that the inverse transform reproduces the original input vector as the weighted sum of the basis vectors, and the weights are given by the transform coefficients $y(k)$.
+Hence, linear inverse transform can be interpreted as the series expansion of the input signal.
+The series expansion can be written in a matrix form as
+\begin{equation}
+\begin{bmatrix}[c]
+      \\
+   \mathbf{y}  \\
+     \\
+\end{bmatrix}
+= 
+\underbrace{\begin{bmatrix}[c|c|c|c]
+      &   &  & \\
+   \mathbf{b}_0 & \mathbf{b}_1 & ... & \mathbf{b}_{N-1} \\
+     &   &   & \\
+\end{bmatrix}}_{\mathbf{B}} \cdot 
+\begin{bmatrix}[c]
+      \\
+   \mathbf{x}  \\
+     \\
+\end{bmatrix}.
+\end{equation}
+The above expression shows that generally speaking, the columns of the inverse transform matrix are the basis vectors of the new representations space.
+
+\vspace{3mm}
+In the aspect of image compression the class of \textbf{orthogonal transform}---or in case of complex valued basis vectors the \textbf{unitary transforms}---are of special importance.
+In this case the basis vectors form an orthonormal set, their scalar product satisfying 
+\begin{equation}
+\mathbf{b}_i^{*\mathrm{T}} \cdot \mathbf{b}_j = \sum_{n = 0}^{N-1} b_i^*(n) \cdot b_j(n) = \delta_{ij} = \begin{cases} 1 \hspace{3mm} \text{if} \, i = j
+\\ 0 \hspace{3mm} \text{otherwise},
+\end{cases}
+\end{equation}
+with $*$ denoting complex conjugate.
+Therefore, in case of a real orthogonal transform the rows and the columns of the inverse transform matrix are orthonormal, and
+\begin{equation}
+\mathbf{B}^{*\mathrm{T}} \mathbf{B} = \mathbf{E} \hspace{3mm} \rightarrow \hspace{3mm}
+\mathbf{B}^{*\mathrm{T}}  = \mathbf{B}^{-1} = \mathbf{A}
+\end{equation}
+holds, where $\mathbf{E}$ is the identity matrix.
+
+Therefore, in case of a real, orthogonal transform the rows of the forward transform matrix contain the basis vectors:
+\begin{equation}
+\begin{bmatrix}[c]
+\\     
+   \mathbf{x}  \\
+\\     \\
+\end{bmatrix}
+= 
+\underbrace{\begin{bmatrix}[c c c c c]
+     & &   \mathbf{b}_0^{\mathrm{T}} & & \\ 
+     & &  \mathbf{b}_1^{\mathrm{T}}  & &  \\
+     & &  ...  &  & \\ 
+     & &  \mathbf{b}_{N-1}^{\mathrm{T}} & & \\
+\end{bmatrix}}_{\mathbf{A}} \cdot 
+\begin{bmatrix}[c]
+    \\   
+   \mathbf{y}  \\
+   \\    \\
+\end{bmatrix},
+\end{equation}
+and the $k$-th element of the coefficient vector is calculated as
+\begin{equation}
+y(k) = \sum_{k=0}^{N-1} x(n) \, b_k (n), \hspace{5mm} \text{for} \, k = 0,1,...,N-1,
+\end{equation}
+describing the scalar product of the $k$-th basis vector and the input vector.
+Hence, in case of a orthogonal (or unitary) transform the transform coefficients are obtained by projecting the input vector to the basis vectors.
+
+Orthogonality is clearly a necessary property for basis vectors that are used to decompose an input into uncorrelated components in an $N$-dimensional space, otherwise linear relationship exist between the basis vectors.
+Orthonormality of basis vector is a stronger property ensuring the preservation of signal energy in the transform space following
+\begin{equation}
+\left| \mathbf{y} \right|^2 = \mathbf{y}^{\mathrm{T}} \mathbf{y} = \left(\mathbf{A}\mathbf{x}\right)^{\mathrm{T}} \mathbf{\mathbf{A} \mathbf{x}} = \mathbf{x}^{\mathrm{T}} \underbrace{ \mathbf{A}^{\mathrm{T}}\mathbf{A} }_{\mathbf{E}} \mathbf{x} = \mathbf{x}^{\mathrm{T}} \mathbf{x}  =| \mathbf{x} |^2.
+\end{equation}
+This is the Parseval-theorem.
+Transform coding applies the quantization of the transform coefficients, introducing error in the transform space.
+Orthogonality ensures that the average energy of error in the inverse transformed signal equals the error variance introduced in the quantization of transform coefficients.
+
+
+\paragraph*{Two-Dimensional Transforms:\\}
+One-dimensional transforms can be easily generalized towards the two-dimensional case.
+The forward and inverse transforms generalized as
+\begin{align}
+\begin{split}
+Y(k,l) &= \sum_{n=0}^{N-1} \sum_{m=0}^{N-1} X(n,m) \, A(k,l,m,n), \hspace{5mm} \text{for} \, k,l = 0,1,...,N-1,
+\\
+X(m,n) &= \sum_{k=0}^{N-1} \sum_{l=0}^{N-1} Y(k,l) \, B(k,l,m,n), \hspace{5mm} \text{for} \, m,n = 0,1,...,N-1,
+\end{split}
+\label{Eq:2D_Tr}
+\end{align}
+with $X(m,n)$ being the $N\times N$ sized input matrix, representing e.g. non-overlapping pixel intensities of an input image, $Y(k,l)$ the coefficient matrix, and $A(k,l,m,n)$ and $B(k,l,m,n)$ being the forward and inverse transform hyper-matrices.
+By using notation $A(k,l,m,n) \rightarrow A_{k,l}(m,n)$ the orthogonal 2D transform and inverse transform is defined as
+\begin{align}
+\begin{split}
+Y(k,l) &= \sum_{n=0}^{N-1} \sum_{m=0}^{N-1} X(n,m) \, A_{k,l}(m,n), 
+\\
+X(m,n) &= \sum_{k=0}^{N-1} \sum_{l=0}^{N-1} Y(k,l) \, A^{\mathrm{T}}_{k,l}(m,n).
+\end{split}
+\end{align}
+Clearly, $A_{k,l}^{\mathrm{T}}(m,n)$ describes the $k,l$-th \textbf{basis matrix}, with the forward transform representing the projection of the input block to the actual basis matrix, while the inverse transform describes the expansion of the input matrix as the weighted sum of basis matrices.
+The coefficient matrix $Y(k,l)$ gives the weight of the $k,l$-th basis matrix in the input image.
+
+\vspace{3mm}
+The evaluation of the 2D transforms of \eqref{Eq:2D_Tr} may be computationally expensive.
+In practice \textbf{separable transforms are applied} in which case the transform hyper-matrices can be written as a product of two matrices
+\begin{equation}
+A(k,l,m,n) = A_1(k,n) \cdot A_2(l,m),
+\end{equation}
+meaning that the basis matrices $ A_{k,l}(m,n)$ can be also written
+\begin{equation}
+A_{k,l}(m,n) = A_{k}(m) \cdot A_{l}(n)
+\end{equation}
+as the product of a row and column vector (i.e. as a dyadic product).
+
+In this case the forward transform takes the form 
+\begin{align}
+\begin{split}
+Y(k,l) &= \sum_{n=0}^{N-1} \sum_{m=0}^{N-1} X(n,m) \,  A_1(k,n) \cdot A_2(l,m) = \\
+&= \sum_{m=0}^{N-1} A_2(l,m) \cdot \left( \sum_{n=0}^{N-1} A_1(k,n)  X(n,m) \right),
+\end{split}
+\end{align}
+or written in a matrix form
+\begin{equation}
+\mathbf{Y} = \left( \mathbf{A}_2 \left( \mathbf{A}_1 \mathbf{X} \right)^{\mathrm{T}} \right)^{\mathrm{T}}= 
+\left( \mathbf{A}_2 \mathbf{X}^{\mathrm{T}} \mathbf{A}_1^{\mathrm{T}} \right)^{\mathrm{T}} = 
+\mathbf{A}_1 \mathbf{X} \mathbf{A}_2^{\mathrm{T}} .
+\end{equation}
+Obviously, left-multiplication by $\mathbf{A}_1$ describes the 1D linear transform of each column of $\mathbf{X}$ by the transform described by $\mathbf{A}_1$, while right-multiplication describes the 1D linear transform of each rows of the matrix, described by $\mathbf{A}_2$.
+Hence, a separable transform can be written as two consequent vertical and horizontal 1D transforms, allowing efficient numerical evaluation.
+Similarly, the orthogonal inverse transform can be written as
+\begin{equation}
+\mathbf{X} = \left( \mathbf{A}_2^{\mathrm{T}} \left( \mathbf{A}_1^{\mathrm{T}} \mathbf{Y} \right)^{\mathrm{T}} \right)^{\mathrm{T}}= 
+\left( \mathbf{A}_2^{\mathrm{T}} \mathbf{Y}^{\mathrm{T}} \mathbf{A}_1 \right)^{\mathrm{T}} = 
+\mathbf{A}_1^{\mathrm{T}} \mathbf{Y} \mathbf{A}_2.
+\end{equation}
+In most cases the vertical and horizontal transforms are identical ($\mathbf{A}_1 = \mathbf{A}_2 = \mathbf{A}$).
+In this case the 2D transform can be evaluated by 
+\begin{equation}
+\mathbf{Y} = \mathbf{A} \mathbf{X} \mathbf{A}^{\mathrm{T}}, \hspace{1cm} 
+\mathbf{X} = \mathbf{A}^{\mathrm{T}} \mathbf{Y} \mathbf{A}.
+\end{equation}
+
+In image processing the basis matrix $A_{k,l}^{\mathrm{T}}(m,n)$ is usually referred to as \textbf{basis images}, referring to the fact that inverse transform describes the original image block as the weighted sum of the basis images.
+Similarly, forward transform is the decomposition of the input image to basis images.
+
+\subsection{Transforms coding of images}
+
+The basic goal of representing input image blocks in the transform space is to find a representation which can be quantized more efficiently than the direct quantization of the image.
+The efficiency of a linear transform can be qualified as follows:
+\begin{itemize}
+\item The linear transform is usually followed by requantization the transformed coefficients.
+If the transformed representation is \textbf{compact}---meaning most of the input energy is distributed amongst a few coefficients---then basis vectors with low energy can be either quantized more coarsely, or can be completely omitted in the inverse transform by applying a truncated series expression.
+This can lead to significant compression.
+Due to the Parseval theorem, the energy of the quantization error is, of course, the same in the spatial domain, but quantization noise will be distributed among the pixels uniformly.
+
+Hence, the efficiency of the transform applied is described by the compactness of the representation \footnote{As a simple example the Fourier transform of a constant signal contains only a DC coefficient, hence, the spectral representation is much more compact than the spatial one.}.
+\item Alternatively, the same requirement can be formulated via correlation in the transform domain:
+In order to reduce spatial redundancy, i.e. correlation of the pixel values, the transformed coefficient should be uncorrelated.
+It can be verified that the compactness of representation is completely equivalent with being uncorrelated (so the above two requirements are equivalent).
+\end{itemize}
+
+Defining a measure for the compactness of the transform is not straightforward.
+On the other hand, the correlation of the transformed coefficients can be easily defined, allowing the derivation of an optimal linear transform: the Karhunen-Loeve transform
+
+\subsection{The Karhunen-Loeve transform}
+
+Being the optimal solution the Karhunen-Loeve transform (KLT) is defined so that in the transform space the coefficients are completely correlated.
+The goal is then, with a known input signal the linear transform has to be defined, which decorrelates the input samples.
+Note that the basic problem is very similar to the optimal linear prediction approach, which results in filter coefficients, completely estimating the correlated content of an input signal, resulting in a completely decorrelated differential signal.
+
+In order to arrive at the KLT solution assume that the input vector is a realization of a wide-sense stationary stochastic process, denoted by $x(n)$.
+Let $\mathbf{R}_x$ denote the correlation matrix of the input signal, with the elements given as
+\begin{equation}
+R_x(m,n) = \EX( x(m) \cdot x(n) )
+\hspace{3mm} \rightarrow \hspace{3mm}
+\mathbf{R}_x = 
+  \begin{bmatrix}
+       r_x(0) & r_x(1) & ... & r_x(N-1) \\[0.3em]
+       r_x(1) & r_x(0) & .... & r_x(N-2)\\[0.3em]
+       ... \\[0.3em]
+       r_x(N-1) & r_x(N-2) & ... & r_x(0)\end{bmatrix}
+\end{equation}
+giving the estimated correlation between the elements of the input registry (similar to the concept used in optimal prediction theory).
+The correlation matrix is therefore a symmetric (in case of complex input a hermitian) matrix.
+Furthermore, assume that the eigendecomposition of the correlation matrix is known\footnote{For a symmetric matrix the eigendecomposition is guaranteed to exist with the eigenvectors forming a full orthonormal basis} so that it can be written in the form
+\begin{equation}
+\mathbf{R}_x  = \mathbf{U}_x  \mathbf{D}_x  \mathbf{U}_x ^{\mathrm{T}}, \hspace{1mm} \text{with} \hspace{1mm}
+\mathbf{D}_x  =   
+\begin{bmatrix}
+       \lambda_0 & 0 & ... & 0 \\[0.3em]
+       0 & \lambda_1 & .... & 0\\[0.3em]
+       ... \\[0.3em]
+       0 & 0 & ... & \lambda_{N-1}\end{bmatrix},
+       \hspace{2mm}
+\mathbf{U}_x  =       \begin{bmatrix}[c|c|c|c]
+      &   &  & \\
+   \mathbf{v}_0 & \mathbf{v}_1 & ... & \mathbf{v}_{N-1} \\
+     &   &   & \\
+\end{bmatrix}.
+\end{equation}
+In the decomposition the diagonal matrix $\mathbf{D}_x $ contains the eigenvalues of $\mathbf{R}_x$ in its diagonal, and matrix $\mathbf{U}_x $ contains the eigenvectors of $\mathbf{R}_x$ in its columns.
+
+\vspace{3mm}
+By definition, a process is uncorrelated only if its correlation matrix is diagonal (all the samples are correlated only with themselves).
+Hence, the optimal transform is found for a given input vector, so that the correlation matrix of the result of transformed vector is diagonal, being the basic idea behind KLT.
+The correlation matrix of the transformed vector $\mathbf{y}$ is obtained as
+\begin{align}
+\begin{split}
+R_y(m,n) &= \EX( y(m) \cdot y(n) ) = \\
+&\EX(  \sum_{m=0}^{N-1} A(k,m) \, x(m) \cdot \sum_{n=0}^{N-1} A(l,n) \, x(n)  ) = \\ 
+&\sum_{m=0}^{N-1} A(k,m) \sum_{n=0}^{N-1} A(l,n) \, \EX(  x(m) \cdot  x(n)  ) = \\
+&\sum_{m=0}^{N-1} A(k,m) \sum_{n=0}^{N-1} A(l,n) R_x(m,n),
+\end{split}
+\label{eq:eig}
+\end{align}
+which can be written in a matrix form as
+\begin{equation}
+\mathbf{R}_y  = \mathbf{A}^{\mathrm{T}} \mathbf{R}_x  \mathbf{A}
+\end{equation}
+As and educated guess the transform matrix is chosen as $\mathbf{A} = \mathbf{U}_x$, and substituting the eigendecomposition \eqref{eq:eig} into $\mathbf{R}_x$ the correlation matrix reads as
+\begin{equation}
+\mathbf{R}_y  = \underbrace{\mathbf{U}_x^{\mathrm{T}} \mathbf{U}_x  }_{\mathbf{E}}  \mathbf{D}_x  \underbrace{\mathbf{U}_x ^{\mathrm{T}} \mathbf{U}_x }_{\mathbf{E}}  = \mathbf{D}_x 
+\end{equation}
+The autocorrelation of the transform vector is, thus, a diagonal matrix.
+
+The optimal solution, therefore, constructs the transform matrix as its columns being the eigenvectors of the input signal's autocorrelation matrix.
+As a result in the transform domain the coefficients are completely decorrelated.
+This statement is equivalent to that the KLT transform of the input signal gives the most compact representation in a sense that it reduces the total mean-square error resulting of the truncation of the inverse transform series expansion.
+
+\vspace{3mm}
+The Karhunen-Love transform can be easily extended towards 2D input matrices.
+In this case the a 4D hyper-matrix gives the correlation between the samples of the 2D input matrix.
+The optimal transform hyper-matrix is then obtained from the eigenmatrices of the correlation hyper-matrix in the same manner.
+
+\vspace{3mm}
+However, similarly to optimal prediction, the KLT transform depends on the actual input registry, and in order to decode (inverse transform) the original image the transform matrix has to be transmitted along with the transformed signal.
+Therefore, in image compression KLT is rarely used, instead it is frequently applied in image analysis, e.g. in machine image recognition.
+Instead, in image compression sub-optimal, fixed-basis transforms are used.
+The most frequently used sub-optimal linear transforms are the non-harmonic Welsh-Hadamard, Hartley, Haar, Slant transforms and the harmonic Discrete Fourier, Sine and Discrete Cosine transforms (DCT).
+
+\subsection{Discrete Cosine Transform (DCT)}
+
+\subsubsection*{1D DCT}
+
+\subsubsection*{2D DCT}
