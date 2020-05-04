@@ -537,7 +537,7 @@ Furthermore, all JPEG and MPEG block-based video encoders stores the average lum
 As a rule of thumb, since in the decoder side only the requantized difference pixels/blocks are available, in order to avoid the accumulation quantization error predictive coding is in all cases performed within a feedback prediction loop.
 \end{itemize}
 
-\paragraph*{PNG encoding:\\}
+\subsubsection{The PNG encoder}
 
 \begin{figure}[h!]
 	\centering
@@ -591,7 +591,7 @@ The irreversible, lossy coding is usually the requantization of the transformed 
 
 Before discussing the 2D linear transforms applied frequently in image coding, the general theoretical basics of linear transforms are revisited.
 
-\paragraph*{One-Dimensional Transforms:\\}
+\subsubsection{One-Dimensional Transforms}
 Let $x(n) = [x(0),\, x(1),\,...,\, x(N-1)]^{\mathrm{T}}$ denote the \textbf{input vector} $\mathbf{x}$ of $N$ samples and $y(k) = [y(0),\, y(1),\,...,\, y(N-1)]^{\mathrm{T}}$ the \textbf{transform vector} $\mathbf{y}$ with the same size.
 
 The connection of the input and transform vectors is established by 
@@ -689,13 +689,11 @@ Orthogonality is clearly a necessary property for basis vectors that are used to
 Orthonormality of basis vector is a stronger property ensuring the preservation of signal energy in the transform space following
 \begin{equation}
 \left| \mathbf{y} \right|^2 = \mathbf{y}^{\mathrm{T}} \mathbf{y} = \left(\mathbf{A}\mathbf{x}\right)^{\mathrm{T}} \mathbf{\mathbf{A} \mathbf{x}} = \mathbf{x}^{\mathrm{T}} \underbrace{ \mathbf{A}^{\mathrm{T}}\mathbf{A} }_{\mathbf{E}} \mathbf{x} = \mathbf{x}^{\mathrm{T}} \mathbf{x}  =| \mathbf{x} |^2.
+\label{Eq:Parseval}
 \end{equation}
 This is the Parseval-theorem.
-Transform coding applies the quantization of the transform coefficients, introducing error in the transform space.
-Orthogonality ensures that the average energy of error in the inverse transformed signal equals the error variance introduced in the quantization of transform coefficients.
 
-
-\paragraph*{Two-Dimensional Transforms:\\}
+\subsubsection{Two-Dimensional Transforms}
 One-dimensional transforms can be easily generalized towards the two-dimensional case.
 The forward and inverse transforms generalized as
 \begin{align}
@@ -756,6 +754,7 @@ In this case the 2D transform can be evaluated by
 \begin{equation}
 \mathbf{Y} = \mathbf{A} \mathbf{X} \mathbf{A}^{\mathrm{T}}, \hspace{1cm} 
 \mathbf{X} = \mathbf{A}^{\mathrm{T}} \mathbf{Y} \mathbf{A}.
+\label{eq:2D_eval}
 \end{equation}
 
 In image processing the basis matrix $A_{k,l}^{\mathrm{T}}(m,n)$ is usually referred to as \textbf{basis images}, referring to the fact that inverse transform describes the original image block as the weighted sum of the basis images.
@@ -763,10 +762,15 @@ Similarly, forward transform is the decomposition of the input image to basis im
 
 \subsection{Transforms coding of images}
 
+The linear transform in itself is lossless: the consequent forward and inverse transform return the original image block.
+Irreversible coding is applied in the transform space by the quantization of the transform coefficients.
+The Parseval theorem \eqref{Eq:Parseval} ensures that the total quantization noise energy remains the same in the spatial domain after the corresponding inverse transform, however, the spatial distribution of the noise depends on the actual form of inverse transform.
+
 The basic goal of representing input image blocks in the transform space is to find a representation which can be quantized more efficiently than the direct quantization of the image.
 The efficiency of a linear transform can be qualified as follows:
 \begin{itemize}
 \item The linear transform is usually followed by requantization the transformed coefficients.
+However, while in the spatial domain each pixel matrix element contributes approximately equally to the total image, in the transform domain usually most of the energy is concentrated to several coefficients.
 If the transformed representation is \textbf{compact}---meaning most of the input energy is distributed amongst a few coefficients---then basis vectors with low energy can be either quantized more coarsely, or can be completely omitted in the inverse transform by applying a truncated series expression.
 This can lead to significant compression.
 Due to the Parseval theorem, the energy of the quantization error is, of course, the same in the spatial domain, but quantization noise will be distributed among the pixels uniformly.
@@ -786,7 +790,8 @@ Being the optimal solution the Karhunen-Loeve transform (KLT) is defined so that
 The goal is then, with a known input signal the linear transform has to be defined, which decorrelates the input samples.
 Note that the basic problem is very similar to the optimal linear prediction approach, which results in filter coefficients, completely estimating the correlated content of an input signal, resulting in a completely decorrelated differential signal.
 
-In order to arrive at the KLT solution assume that the input vector is a realization of a wide-sense stationary stochastic process, denoted by $x(n)$.
+\subsubsection{1D KLT:}
+In order to arrive at the KLT solution assume that the input vector is a realization of a wide-sense stationary stochastic process, denoted by $x(n)$, with the \emph{mean value being zero}.
 Let $\mathbf{R}_x$ denote the correlation matrix of the input signal, with the elements given as
 \begin{equation}
 R_x(m,n) = \EX( x(m) \cdot x(n) )
@@ -840,24 +845,273 @@ As and educated guess the transform matrix is chosen as $\mathbf{A} = \mathbf{U}
 \mathbf{R}_y  = \underbrace{\mathbf{U}_x^{\mathrm{T}} \mathbf{U}_x  }_{\mathbf{E}}  \mathbf{D}_x  \underbrace{\mathbf{U}_x ^{\mathrm{T}} \mathbf{U}_x }_{\mathbf{E}}  = \mathbf{D}_x 
 \end{equation}
 The autocorrelation of the transform vector is, thus, a diagonal matrix.
+\begin{figure}[t!]
+	\centering
+	\begin{overpic}[width = 0.465\columnwidth ]{figures_en/Lena.png}
+	\small
+	\put(0,0){(a)}
+	\end{overpic}
+	\hfill
+		\begin{overpic}[width = 0.47\columnwidth ]{figures_en/lena_klt.png}
+	\small
+	\put(0,0){(b)}
+	\end{overpic}
+	\caption{Test image (a) and basis images (b) obtained from 2D Karhunen-Loeve transform.}
+	\label{Fig:2d_klt}
+\end{figure}
 
 The optimal solution, therefore, constructs the transform matrix as its columns being the eigenvectors of the input signal's autocorrelation matrix.
 As a result in the transform domain the coefficients are completely decorrelated.
 This statement is equivalent to that the KLT transform of the input signal gives the most compact representation in a sense that it reduces the total mean-square error resulting of the truncation of the inverse transform series expansion.
 
+It should be noted that for processes with non-zero mean value instead of the correlation matrix, the \textbf{covariance matrix} $\mathbf{K}_x$ must be used, which is related to the correlation matrix for a WSS process as
+\begin{equation}
+\mathbf{K}_x = \mathbf{R}_x - m_x^2,
+\end{equation}
+where $m_x$ is the expected value of the process, hence, the covariance equals the correlation biased to zero mean value.
+In image processing the luminance signal takes it values between 0 and 1, therefore, it has a non-zero mean value.
+Thus, in image processing instead of the correlation matrix the covariance should be applied.
+
 \vspace{3mm}
+\subsubsection{2D KLT:}
 The Karhunen-Love transform can be easily extended towards 2D input matrices.
 In this case the a 4D hyper-matrix gives the correlation between the samples of the 2D input matrix.
 The optimal transform hyper-matrix is then obtained from the eigenmatrices of the correlation hyper-matrix in the same manner.
 
+The result of 2D KLT is depicted in \ref{Fig:2d_klt}.
+The figure shows the basis images of KLT decomposition, obtained as follows:
+The input image is divided into $8\times8$ sized blocks, resulting obviously in $8\times8$ sized basis images and each image block is represented in the transform domain as $8\times8$ sized coefficient matrices.
+The covariance hyper-matrix is calculated of the image blocks.
+The eigenmatrices of this hyper-matrix gives the above basis images, from which each input block can be obtained by weighting the basis images with the coefficient matrix of the given block.
+
 \vspace{3mm}
-However, similarly to optimal prediction, the KLT transform depends on the actual input registry, and in order to decode (inverse transform) the original image the transform matrix has to be transmitted along with the transformed signal.
+Similarly to optimal prediction, the KLT transform depends on the actual input registry, and in order to decode (inverse transform) the original image the transform matrix has to be transmitted along with the transformed signal.
 Therefore, in image compression KLT is rarely used, instead it is frequently applied in image analysis, e.g. in machine image recognition.
 Instead, in image compression sub-optimal, fixed-basis transforms are used.
 The most frequently used sub-optimal linear transforms are the non-harmonic Welsh-Hadamard, Hartley, Haar, Slant transforms and the harmonic Discrete Fourier, Sine and Discrete Cosine transforms (DCT).
 
+
+\begin{figure}[h!]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth ]{figures_en/MSE_lin_transforms.png}
+	\end{overpic}
+	\caption{Energy of error with approximating the original image as the truncated series of basis functions.}
+	\label{Fig:MSE}
+\end{figure}
+
 \subsection{Discrete Cosine Transform (DCT)}
 
+Investigating the basis images \ref{Fig:2d_klt} (b) obtained from the KLT of an exemplary test image reveals that independently of the image content the resulting basis images resemble very closely to harmonic, sinusoidal functions.
+Hence, applying a linear transform with fixed basis images max decorrelate the input images sufficiently, giving a good approximation for the optimal KLT solution.
+
+The performance of commonly used linear transforms is depicted in Figure \ref{Fig:MSE}.
+The figure illustrates the mean squared error between the reconstructed image and the original image in case black-based $8 \times 8$ sized linear transforms.
+The reconstructed image is obtained from a truncated inverse transform of the coefficient matrix:
+Instead of using all the coefficients---and the corresponding basis images---only a number of basis images contribute to the inverse transform.
+The figure depicts the introduced error in the reconstructed image as the function of the number of coefficients in the inverse transform.
+Clearly, most simple transforms, e.g. Hadamard and Hartely transforms introduce significant error even in the case of omitting a small number of coefficients in the in series expansion, meaning that these transform does not give a sufficiently compact representation.
+On the other hand, DCT achieves a relatively small error even in case of low order expansions.
+Therefore, in the field of image and video processing the most widely applied linear transform is the Discrete Cosine Transform (DCT), applying harmonic basis images.
+
+The DCT have several important advantages making it feasible for practical applications:
+\begin{itemize}
+\item DCT is a real valued transform, resulting in real valued coefficients (opposed to e.g. the Discrete Fourier Transform, which generates twice the input data due to the complex transform)
+\item The DCT decorrelates natural images almost perfectly, being a nearly optimal transform
+\item Most of the signal energy is concentrated to low frequency coefficients
+\item DCT can be calculated effectively, with numerous fast implementations existing.
+\end{itemize}
+
+
 \subsubsection*{1D DCT}
+The definition of the Discrete Cosine Transform of the input vector $\mathbf{x}$ is given as
+\begin{equation}
+y(k) = \sqrt{\frac{2}{N}} \sum_{n=0}^{N-1} \alpha(n) \, x(n)  \, \cos\left( \frac{\pi}{N} \left( n + \frac{1}{2}\right) k \right)
+\label{eq:DCT}
+\end{equation}
+and the corresponding inverse transform as
+\begin{equation}
+x(n) = \sqrt{\frac{2}{N}} \sum_{k=0}^{N-1} \alpha(k) \, y(k)  \, \cos\left( \frac{\pi}{N} \left( n + \frac{1}{2}\right) k \right),
+\label{eq:IDCT}
+\end{equation}
+with 
+\begin{equation}
+\alpha(k) = \begin{cases}  
+\frac{1}{\sqrt{2}}, \hspace{3mm} \, \text{if} \, k = 0 \\
+1, \hspace{6mm} \, \text{if} \, k \neq 0.
+\end{cases}
+\end{equation}
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures_en/DCT_bases.png}
+	\end{overpic}
+	\caption{Basis vectors of 1D Discrete Cosine Transform.}
+	\label{Fig:1D_dct_bases}
+\end{figure}
+From the inverse transform \eqref{eq:IDCT} the basis vectors can be directly read as
+\begin{equation}
+\mathbf{b}_k = \sqrt{\frac{2}{N}}  \alpha(k)  \, \cos\left( \frac{\pi}{N} \left( n + \frac{1}{2}\right) k \right)
+, \hspace{5mm} \text{for} \, n = 0,1,...,N-1.
+\end{equation}
+The inverse transform, thus, describes and arbitrary input vector as the weighted sum of sampled cosine functions with various frequency.
+The spectral index $k$ describes the frequency of the cosine function, and the spectral coefficient $y(k)$ describes the weight of the cosine $\mathbf{b}_k$ in the input signal.
+Since the DCT is orthogonal (the inner product of cosines with different frequency is zero) the spectral coefficients---i.e. the forward transform---are obtained by projecting the input signal to the $k$-th basis vector.
+
+
+Similarly to the Fourier transform, since $k=0$ describes a constant vector, the zeroth spectral coefficient $y(0)$ is referred to as the DC coefficients, and $y(1),y(2),...,y(N-1)$ are the AC coefficients.
+The DC coefficient gives the mean value of the input vector, low frequency coefficients represent slowly changing input vector content, while high frequency AC components are dominated by fine resolution input content.
 
 \subsubsection*{2D DCT}
+The two-dimensional Discrete Cosine transform is the extension of the DCT for input matrices as the consequent DCT transforms of each column and row.
+
+Formally, the forward and inverse 2D DCT are defined as 
+\begin{align*}
+\begin{split}
+Y(k,l) &= \frac{2}{N} \alpha(k) \alpha(l) \sum_{n = 0}^{N-1} \sum_{m = 0}^{N-1}
+X(m,n) \, \cos\left( \frac{(2m +1) k\pi}{2N}\right)
+\cos\left( \frac{(2n +1) l\pi}{2N}\right) \\
+X(m,n) &= \frac{2}{N}  \sum_{l = 0}^{N-1} \sum_{k = 0}^{N-1} \alpha(k) \alpha(l)
+Y(k,l) \, \cos\left( \frac{(2m +1) k\pi}{2N}\right)
+\cos\left( \frac{(2n +1) l\pi}{2N}\right).
+\end{split}
+\end{align*}
+Again, the inverse transform can be rewritten in a shorter form of
+\begin{equation}
+X(m,n) = \sum_{k,l = 0}^{N-1} B_{kl}(m,n) Y(k,l),
+\end{equation}
+where $B_{kl}(m,n)$ are the basis matrices
+\begin{equation}
+\mathbf{B}_{kl} =  B_{kl}(m,n) = \frac{2}{N} \alpha(k)\alpha(l),  \, \cos\left( \frac{\pi}{N} \left( m + \frac{1}{2}\right) k \right)
+\cos\left( \frac{\pi}{N} \left( n + \frac{1}{2}\right) l \right).
+\end{equation}
+
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.68\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures_en/2d_DCT_bases.png}
+	\end{overpic}   \end{minipage}\hfill
+		\begin{minipage}[c]{0.3\textwidth}
+	\caption{Basis images of $8\times8$ sized 2D Discrete Cosine Transform.}
+	\label{Fig:2D_DCT}  \end{minipage}
+\end{figure}
+Clearly, the basis matrices---i.e. the basis images---are obtained as the product of a horizontal and vertical cosine function with their frequencies given by $l$ and $k$, respectively.
+Hence, $l$ and $k$ are referred to as the horizontal and vertical spatial frequencies.
+The basis images are illustrated for $N=8$ in Figure \ref{Fig:2D_DCT}, from which an arbitrary input block can be produced as their linear combination.
+Since the transform is orthogonal the transform coefficients are obtained as the projection of the input block to the basis images.
+
+The coefficient matrix $Y(k,l)$---being the spectrum of the input image---defines the weight of the individual basis images in the input image block.
+The zero frequency coefficient $Y(0,0)$ gives the average value of the input matrix (e.g. if the input matrix contains the luminance samples of the input block, $Y(0,0)$ defines the average luminance), therefore, it is referred to as the DC coefficient.
+On the other hand, low frequency AC components correspond to slowly changing image content, while high frequency AC components represent fine details.
+
+As a conclusion, generally speaking, the 2D DCT transforms the spatial domain representation of the $N\times N$ sized input block into the spatial frequency domain. 
+\begin{figure}[h!]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures_en/2D_DCT_transform.png}
+	\end{overpic}
+	\caption{Illustration of 2D DCT transform, leading from the spatial domain to the spatial frequency domain.}
+	\label{Fig:2d_dct}
+\end{figure}
+
+\vspace{3mm}
+By definition the 2D Discrete Cosine Transform is a separable transform, since the basis images---and the forward and inverse transform matrices---can be written as the product of merely horizontal and vertical terms.
+Thus, in practice the 2D DCT is always evaluated by the consequent 1D DCT of each row and column of the input matrix.
+
+
+\begin{figure}[b!]
+	\centering
+	\begin{minipage}[c]{0.68\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures_en/dct_test_block.png}
+	\end{overpic}   \end{minipage}\hfill
+		\begin{minipage}[c]{0.3\textwidth}
+	\caption{Simple $8\times8$ test block for the 2D Discrete Cosine Transform.}
+	\label{Fig:2D_DCT_test}  \end{minipage}
+\end{figure}
+By denoting the 1D DCT transform matrix by 
+\begin{equation}
+\mathbf{A} = A(k,n) =  \sqrt{\frac{2}{N}}  \alpha(n) \, \cos\left( \frac{\pi}{N} \left( n + \frac{1}{2}\right) k \right),
+\hspace{10mm}
+\alpha(k) = \begin{cases}  
+\frac{1}{\sqrt{2}}, \hspace{3mm} \, \text{if} \, k = 0 \\
+1, \hspace{6mm} \, \text{if} \, k \neq 0.
+\label{Eq:1D_DCT_mx}
+\end{cases}
+\end{equation}
+and the input matrix by $\mathbf{X} = X(m,n)$ the column-wise and row-wise 1D transforms of the input matrix are written as
+\begin{equation}
+\mathbf{Y}_{c} = \mathbf{A} \mathbf{X}, \hspace{1cm} \mathbf{Y}_r = \left( \mathbf{A} \mathbf{X}^{\mathrm{T}} \right)^{\mathrm{T}} = \mathbf{X} \mathbf{A}^{\mathrm{T}}
+\end{equation}
+respectively.
+The 2D DCT and IDCT can be calculated then as
+\begin{equation}
+\mathbf{Y} = \mathbf{A} \mathbf{X} \mathbf{A}^{\mathrm{T}}, \hspace{1cm}
+\mathbf{X} = \mathbf{A}^{\mathrm{T}} \mathbf{Y} \mathbf{A},
+\label{Eq:2D_DCT_eval}
+\end{equation}
+being in agreement with \eqref{eq:2D_eval}.
+
+\subsubsection*{Example of 2D transform}
+
+As a simple example, the 2D DCT of the $8\times 8$ sized block, illustrated in Figure \ref{Fig:2D_DCT_test} is investigated.
+In the current example the input matrix contains the black-and-white pixel intensities, i.e. only the luma information.
+The samples are stored on 8 bits with full swing representation, i.e. code 0 denotes black level, and code 255 denotes white.
+The pixel intensities are given in the current example by 
+\begin{equation}
+\mathbf{X} =  \begin{bmatrix}
+       48  &  47  &  55 &   47  &  51 &   48 &   46  &  44  \\[0.3em]
+       53  &  53  &  47 &   43  &  54 &   49 &   50  &  40  \\[0.3em]
+       77  &  67  &  43 &   47  &  62 &   60 &   45  &  39  \\[0.3em]
+       90  &  81  &  50 &   60  &  80 &   79 &   48  &  38 \\[0.3em] 
+       103  &  90  &  50 &  57  &  94 &   93 &   76  &  48 \\[0.3em]
+       115  & 107  &  71  &  52  &  92 &   98  &  90  &  72 \\[0.3em]
+       117  & 121  &  99  &  67  &  58 &   84  &  98  &  86 \\[0.3em]
+       108  & 127 &  115  &  88  &  59 &   60  &  79 &   87 \\[0.3em]
+       \end{bmatrix}, 
+\end{equation}
+
+The 2D DCT coefficient matrix can be calculated by perform consequent vertical and horizontal 1D transforms, according to \eqref{Eq:2D_DCT_eval}.
+In order to evaluate the 1D transform the required transform matrix is given by \eqref{Eq:1D_DCT_mx} with $N = 8$, with evaluating the sampled cosine functions at the $k = (0,1,...,N-1)$-th row and  $n = (0,1,...,N-1)$-th column:
+\begin{equation}
+A(k,n) = \mathbf{A} = \begin{bmatrix}
+       0.35  &  0.35  &  0.35  &  0.35  &  0.35  &  0.35  &  0.35 & 0.35  \\[0.3em]
+	0.5     & 0.42  & 0.28   &  0.1   & -0.1   & -0.28  & -0.2  &  -0.5 \\[0.3em]
+    0.46 &  0.19  & -0.19 & -0.46 &  -0.46 & -0.19  &  0.19  &  0.46 \\[0.3em]
+    0.41  & -0.1   & -0.5  & -0.28 &   0.28 &  0.5  &   0.1  & -0.42 \\[0.3em]
+    0.35  & -0.35  & -0.35 &   0.35 &   0.35  & -0.35 &  -0.35  &  0.35 \\[0.3em]
+    0.28  & -0.5 &  0.1 &   0.42 &  -0.42 & -0.1 &   0.5 & -0.28 \\[0.3em]
+    0.19  & -0.46  &  0.46  & -0.19 &  -0.19  &  0.46  & -0.46  &  0.19 \\[0.3em]
+    0.1 &  -0.28 &    0.42 &  -0.5 & 0.5 & -0.42 & 0.28 & -0.1 \\[0.3em]
+       \end{bmatrix}, 
+\end{equation}
+and the DCT coefficient matrix of the input is yielded as two consequent matrix multiplications
+\begin{equation}
+Y(k,l) =  \mathbf{Y} = \mathbf{A} \mathbf{X} \mathbf{A}^{\mathrm{T}} =
+\begin{bmatrix}
+  563  & 61 &  33 &  48 & -19 & -17&  -10 &   3 \\[0.3em]
+ -136 & -29 & -41 &  13&  20 & -0 &  5    &   3 \\[0.3em]
+   -6 &   2 &  14 & -68 & -12 & 15 &   6  &   3 \\[0.3em]
+   15 & -22 &  3  &  23 &  -7 &  -3 &   1 &   10 \\[0.3em]
+   -1 &   9& -18  &  -6 &   8 &  -0 &  -1 &  -4 \\[0.3em]
+    5 &   5&   6  &  -3 &  -4 &   3 &   7 &  -5 \\[0.3em]
+    2 &   2&  -1   &   3 &   6 &  -7 &  1 &   2 \\[0.3em]
+   -1&  -1&   5   &   2 &  -2 &   5 &  -2 &  -1 \\[0.3em]
+       \end{bmatrix}.
+\end{equation}
+It is clearly highlighted that the coefficient matrix is dominated by the DC and low-frequency coefficients.
+The DC coefficient gives the average block intensity ($\times N$, i.e. the average luminance is $ \frac{563}{8} \approx 70.3$).
+Furthermore, the input pixel block consists a dominant vertical line (on the edge of the eye's iris).
+Horizontally invariant, vertical textures can be described as the sum of horizontal cosines with the vertical spatial frequency being zero ($k = 0$).
+This fact is clearly reflected by the coefficient matrix with dominant horizontal frequency content: the energy is concentrated into small vertical frequency values ($k = 0, 1,2 $), while in the first matrix row high horizontal frequency components still have considerable energy.
+This is due to the fine structure/details of the sharp vertical line on the input image.
+
+\subsection{Quantization of the transform coefficients}
+
+\subsection{The JPEG encoder}
+
+
+\vspace{2cm}
+\noindent\rule{12cm}{0.4pt}
+
+\subsection*{End-of-Chapter Questions}
+
+\begin{itemize}
+\item What 
+\end{itemize}

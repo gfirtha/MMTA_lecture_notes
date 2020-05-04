@@ -25,7 +25,9 @@
 \makeatletter
 \setlength{\@fptop}{0pt}
 \makeatother
-
+\usepackage{kbordermatrix} % include package @ document preamble
+\renewcommand{\kbldelim}{(} % change default array delimiters to parentheses
+\renewcommand{\kbrdelim}{)}
 
 \usepackage{amssymb}
 
@@ -86,13 +88,13 @@
 \setcounter{page}{1}			% set page counter 
 
 %
-%\chapter{Representation of colors in video technologies}
-%\label{sec:video_color_representation}
-%\input{video_colorspaces_en} 
+\chapter{Representation of colors in video technologies}
+\label{sec:video_color_representation}
+\input{video_colorspaces_en} 
 
-%\chapter{Video formats}
-%\label{sec:video_formats}
-%\input{video_formats_en} 
+\chapter{Video formats}
+\label{sec:video_formats}
+\input{video_formats_en} 
 
 \chapter{Basics of image and video compression}
 \label{sec:compression}
