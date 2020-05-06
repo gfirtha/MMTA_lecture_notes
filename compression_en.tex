@@ -563,7 +563,7 @@ The entropy coder of PNG is termed as \href{https://en.wikipedia.org/wiki/DEFLAT
 Obiviously, only previously encoded and transmitted pixels can be the reference of prediction, denoted by $z_{m,n}$.
 The number of reference pixels can be chosen by the encoder from the prediction schemes, shown in Figure \ref{Fig:png_encoder}.
 Therefore, in this case linear prediction is based on a 2D FIR filter, containing 2, 3 or 4 values in the prediction accumulator, denoted by $h_{k,l}$.
-\item Note that in this exclusive case, since no quantization is performed, feedback prediction may be interchangeable with feedforward structure.
+\item Note that in this exclusive case---since no quantization is performed---feedback prediction may be interchangeable with feedforward structure.
 \end{itemize} 
 
 %TODO : Here should go and example of predicted image. E.g. Lenna: https://www.eecs.wsu.edu/~cs445/Lecture_19.pdf
@@ -877,6 +877,21 @@ Thus, in image processing instead of the correlation matrix the covariance shoul
 The Karhunen-Love transform can be easily extended towards 2D input matrices.
 In this case the a 4D hyper-matrix gives the correlation between the samples of the 2D input matrix.
 The optimal transform hyper-matrix is then obtained from the eigenmatrices of the correlation hyper-matrix in the same manner.
+\begin{figure}[h!]
+	\centering
+	\begin{overpic}[width = 0.9\columnwidth ]{figures_en/orthogonal_transforms.png}
+	\small
+	\put(0,67){(a)}
+	\put(37,67){(b)}
+	\put(0,33){(c)}
+	\put(37,33){(d)}
+	\put(0,-1){(e)}
+	\put(37,-1){(f)}
+	\end{overpic}
+	\caption{Basis images of frequently used orthogonal transforms: 
+	Hartley (a), Hadamarad (b), Haar (c), Slant (d), Discrete Cosine (e) and Discrete Sine (f) transforms.}
+	\label{Fig:2d_transforms}
+\end{figure}
 
 The result of 2D KLT is depicted in \ref{Fig:2d_klt}.
 The figure shows the basis images of KLT decomposition, obtained as follows:
@@ -889,6 +904,7 @@ Similarly to optimal prediction, the KLT transform depends on the actual input r
 Therefore, in image compression KLT is rarely used, instead it is frequently applied in image analysis, e.g. in machine image recognition.
 Instead, in image compression sub-optimal, fixed-basis transforms are used.
 The most frequently used sub-optimal linear transforms are the non-harmonic Welsh-Hadamard, Hartley, Haar, Slant transforms and the harmonic Discrete Fourier, Sine and Discrete Cosine transforms (DCT).
+The basis functions of the above transforms are depicted in Figure \ref{Fig:2d_transforms}.
 
 
 \begin{figure}[h!]
@@ -1015,16 +1031,6 @@ As a conclusion, generally speaking, the 2D DCT transforms the spatial domain re
 By definition the 2D Discrete Cosine Transform is a separable transform, since the basis images---and the forward and inverse transform matrices---can be written as the product of merely horizontal and vertical terms.
 Thus, in practice the 2D DCT is always evaluated by the consequent 1D DCT of each row and column of the input matrix.
 
-
-\begin{figure}[b!]
-	\centering
-	\begin{minipage}[c]{0.68\textwidth}
-	\begin{overpic}[width = 1\columnwidth ]{Figures_en/dct_test_block.png}
-	\end{overpic}   \end{minipage}\hfill
-		\begin{minipage}[c]{0.3\textwidth}
-	\caption{Simple $8\times8$ test block for the 2D Discrete Cosine Transform.}
-	\label{Fig:2D_DCT_test}  \end{minipage}
-\end{figure}
 By denoting the 1D DCT transform matrix by 
 \begin{equation}
 \mathbf{A} = A(k,n) =  \sqrt{\frac{2}{N}}  \alpha(n) \, \cos\left( \frac{\pi}{N} \left( n + \frac{1}{2}\right) k \right),
@@ -1049,6 +1055,15 @@ The 2D DCT and IDCT can be calculated then as
 being in agreement with \eqref{eq:2D_eval}.
 
 \subsubsection*{Example of 2D transform}
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.75\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures_en/dct_test_block.png}
+	\end{overpic}   \end{minipage}\hfill
+		\begin{minipage}[c]{0.23\textwidth}
+	\caption{Simple $8\times8$ test block for the 2D Discrete Cosine Transform.}
+	\label{Fig:2D_DCT_test}  \end{minipage}
+\end{figure}
 
 As a simple example, the 2D DCT of the $8\times 8$ sized block, illustrated in Figure \ref{Fig:2D_DCT_test} is investigated.
 In the current example the input matrix contains the black-and-white pixel intensities, i.e. only the luma information.
@@ -1094,6 +1109,7 @@ Y(k,l) =  \mathbf{Y} = \mathbf{A} \mathbf{X} \mathbf{A}^{\mathrm{T}} =
     2 &   2&  -1   &   3 &   6 &  -7 &  1 &   2 \\[0.3em]
    -1&  -1&   5   &   2 &  -2 &   5 &  -2 &  -1 \\[0.3em]
        \end{bmatrix}.
+\label{eq:DCT_Example}
 \end{equation}
 It is clearly highlighted that the coefficient matrix is dominated by the DC and low-frequency coefficients.
 The DC coefficient gives the average block intensity ($\times N$, i.e. the average luminance is $ \frac{563}{8} \approx 70.3$).
@@ -1104,8 +1120,337 @@ This is due to the fine structure/details of the sharp vertical line on the inpu
 
 \subsection{Quantization of the transform coefficients}
 
-\subsection{The JPEG encoder}
+In a transform based encoder the linear transform is followed by a lossy encoding step, realized by the requantization of the transform coefficients.
 
+As an important advantage, transform coding allows the adaptation of the quantization process to the human visual system,
+by letting the coarseness of quantization vary as the function of spatial frequency:
+The human eye is good at seeing small differences in brightness over a relatively large area, but not so good at distinguishing the exact strength of a high frequency brightness variation. 
+In other words, human vision is less sensitive to fine details which are mapped to the high spatial frequency components in the DCT domain, than to slow changes in the images, dominating the DC and low spatial frequencies.
+Therefore, applying a more rough quantization to high frequency coefficients than in the lower region does not degrade significantly the final image quality after inverse transform.
+
+Frequency variant quantization can be most simply achieved by describing a frequency dependent constant factor, with which the DCT coefficient is divided before rounded to the nearest integer.
+This leads to the concept of the quantization matrix, defining the quantization resolution of each DCT coefficient.
+With denoting the elements of the \textbf{quantization matrix} by $W(k,l)$, the quantized coefficients are obtained as
+\begin{equation}
+Y^*(k,l) = \nint{ \frac{Y(k,l)}{W(k,l)} },
+\end{equation}
+where $\nint{}$ denotes rounding to the nearest integer.
+Obviously, large entries in $W(k,l)$ result in coarse quantization on the given spatial frequency.
+%
+\begin{figure}[]
+	\centering
+	\begin{minipage}[c]{0.75\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures_en/dct_test_block2.png}
+	\end{overpic}   \end{minipage}\hfill
+		\begin{minipage}[c]{0.23\textwidth}
+	\caption{Reconstructed image and pixel block after quantization of the DCT coefficient matrix.}
+	\label{Fig:2D_DCT_test_Q}  \end{minipage}
+\end{figure}
+A frequently used perceptually based quantization matrix is given as
+\begin{equation}
+W(k,l) = 
+\begin{bmatrix}
+	8   &  16   & 19  &  22  &  26  &  27  &  29  &  34 \\[0.3em]
+    16  &  16  &  22  &  24  &  27  &  29  &  34  &  37 \\[0.3em]
+    19  &  22  &  26  &  27  &  29  &  34  &  34  &  38 \\[0.3em]
+    22  &  22  &  26  &  27  &  29  &  34  &  37  &  40 \\[0.3em]
+    22  &  26  &  27  &  29  &  32  &  35  &  40  &  48 \\[0.3em]
+    26  &  27  &  29  &  32  &  35  &  40  &  48  &  58 \\[0.3em]
+    26  &  27  &  29  &  34  &  38  &  46  &  56  &  69 \\[0.3em]
+    27  &  29  &  35  &  38  &  46  &  56  &  69  &  83,
+\end{bmatrix}
+\label{eq:Q_mx}
+\end{equation}
+with the larger coefficients ensuring coarser quantization with increasing spatial frequency.
+
+As the continuation of the previous example, by quantizing the elements of matrix \eqref{eq:DCT_Example} with the above quantization matrix the quantized coefficient matrix read as
+\begin{equation}
+Y^*(k,l) = \frac{Y(k,l)}{W(k,l)} =
+\begin{bmatrix}
+    70  &   4  &   2  &   2  &  -1  &  -1  &   0  &   0 \\[0.3em]
+    -9  &  -2  &  -2  &   1  &   1  &   0  &   0  &   0 \\[0.3em]
+     0  &   0  &   1  &  -3  &   0  &   0  &   0  &   0 \\[0.3em]
+     1  &  -1  &   0  &   1  &   0  &   0  &   0  &   0 \\[0.3em]
+     0  &   0  &  -1  &   0  &   0  &   0  &   0  &   0 \\[0.3em]
+     0  &   0  &   0  &   0  &   0  &   0  &   0  &   0 \\[0.3em]
+     0  &   0  &   0  &   0  &   0  &   0  &   0  &   0 \\[0.3em]
+     0  &   0  &   0  &   0  &   0  &   0  &   0  &   0.
+\end{bmatrix}
+\label{eq:quantized_Coef_mx}
+\end{equation}
+The coefficient matrix reflects that due to coarse quantization high frequency coefficients are tending to become zero after quantization.
+Therefore, the transform based perceptual quantization can be considered as a type of lossy spatial low-pass filtering of the input image.
+Obviously, increasing all the quantization matrix values would result in larger number of zero entries in the requantized coefficient matrix, requiring less bits for storage.
+Hence, the total bit rate can be controlled by multiplying the quantization matrix with an appropriately chosen constant \textbf{scale factor} at the cost of degrading image quality.
+This is the basic idea of bit rate controlling in JPEG and MPEG compression standards.
+
+\vspace{3mm}
+The effect of requantization can be examined in Figure \ref{Fig:2D_DCT_test_Q} via the previous example.
+The image is obtained by decoding after requantization, i.e. by multiplication by the quantization matrix and performing the inverse DCT ($\mathbf{A}^{\mathrm{T}} \left( \mathbf{W} \cdot \mathbf{Y^*} \right) \mathbf{A}$).
+It is verified that although most of the high frequency content is eliminated, perceptual quantization results in minor degradation of the image quality.
+Two main artifacts are visible:
+\begin{itemize}
+\item The quantization of low frequency coefficients results in visible discontinuities around the border of the transform blocks, leading to the \textbf{blockiness} of the output image.
+\item As a well-known fact, low-pass filtering with sharp transition above the cut-frequency results in under- and overshoot (Gibbs oscillation) around a jump discontinuity in the input signal.
+Since the above matrix quantization approach can be interpreted as spatial low-pass filtering, therefore, \textbf{ringing artifacts} (over- and undershoots) appear near to edges in the input image.
+\end{itemize}
+
+
+\section{The JPEG encoder}
+
+As a complex example for transform encoding the JPEG image encoding standard is investigated in details.
+
+JPEG, standing for Joint Photographic Experts Group, was designed for the compression of full-color or gray-scale continuous-tone still images of natural, real-world scenes, like photographs or naturalistic artworks---hence its performance degrades for non-continuous tone images, like simple cartoons or line drawings---.
+The Joint Photographic Experts Group examined several transform coding techniques and eventually selected the Discrete Cosine Transform (DCT), as it was by far the most efficient practical compression technique. 
+The JPEG standard was published in 1992, specifying the codec, which defines how an image is compressed into a stream of bytes and decompressed back into an image, but not the file format used to contain that stream.
+The Exif and JFIF standards define the commonly used file formats for interchange of JPEG-compressed images. 
+
+\vspace{3mm}
+The JPEG standard allows the compression of images with the maximal size of $65535 \times 65535$ pixels, with the pixels represented either their $RGB$ coordinates in the \ycbcr space.
+The maximum number of components is limited to 255.
+The RGB color space is not defined by the standard, but arbitrary device dependent color space may be used, with the color space information embedded into the JPEG file.
+Commonly used color profiles include sRGB and Adobe RGB. 
+
+\begin{figure}[h!]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures_en/JPEG_encoder_decoder.png}
+	\end{overpic}
+	\caption{Block scheme of the JPEG encoder and decoder for a single image block.}
+	\label{Fig:JPEG_encoder_decoder}
+\end{figure}
+
+The steps of JPEG encoding are discussed in the following.
+
+\subsection*{Chroma subsampling and block splitting}
+
+Although direct RGB processing is also allowed, by default JPEG encoding represents RGB pixels in the \ycbcr space, in order to achieve significant compression by chroma subsampling.
+The components of representation are referred to as \textbf{channels} in the JPEG standard.
+The encoder applies the chroma subsampling of 4:2:0 by default, reducing the spatial resolution of chroma components to half of the luma resolution both horizontally and vertically.
+Besides 4:2:0 scheme, 4:4:4 and 4:2:2 subsampling are also allowed by the standard.
+The actual anti-aliasing filtering strategy of the JPEG encoder was discussed in chapter \ref{video_colorspaces_en}.
+
+After subsampling, each component are split into $8\times 8$ blocks, and further processing is performed block-wise, from left-to-right, starting with the upper-left corner.
+By applying the chroma subsampling scheme 4:2:0 an $8 \times 8$ sized chroma block corresponds to $16 \times 16$ luma samples, which are encoded into the output stream together, hence, the \textbf{Minimum Coded Unit (MCU)} for JPEG is $16 \times 16$.
+In video compression MCUs will be called macroblocks. 
+
+If the data for a channel does not represent an integer number of blocks then the encoder must fill the remaining area of the incomplete blocks with some form of dummy data. 
+Filling the edges with a fixed color (for example, black) can create ringing artifacts along the visible part of the border due to the reasons discussed above.
+Therefore, repeating the edge pixels is a common technique that reduces such artifacts.
+
+\vspace{3mm}
+From that point the processing scheme of a single block is depicted in Figure \ref{Fig:JPEG_encoder_decoder}, discussed as follows.
+
+\subsection{DCT and quantization}
+
+First, the values of the input block are shifted from the positive range to one centered on zero, in order to reduce the dynamic range requirements in the DCT processing stage that follows.
+This is achieved by subtracting the mid-point of the representation from each input entries, being the value of 128 in case of 8 bits representation.
+
+The $8 \times 8$ sized blocks are DCT transformed and requantized by applying an either default or user-defined quantization matrices, which can be uniquely defined for each input channel.
+A typical quantizer matrix was presented in \eqref{eq:Q_mx}.
+The actual image quality can be adjusted by multiplying the quantizer matrix with an appropriately chosen constant value, the \textbf{scale factor}: by choosing a large scale factor after division more coefficients tend to zero, resulting in a lower output data rate and higher compression ratio.
+
+A typical, exemplary quantized coefficient matrix was shown in \eqref{eq:quantized_Coef_mx}, with its DC component being the average chroma or luma value of the input block, and the AC components describing the horizontal and vertical variations along the block.
+These DC and AC values are encoded in the following separately.
+
+\subsection{Encoding the DC coefficients}
+ 
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures_en/DC_coef.png}
+	\small
+	\put(0,0){(a)}
+	\put(50,0){(b)}
+	\end{overpic}
+	\caption{The DC coefficient of all $8\times 8$ sized blocks in an input image (a) and the horizontal difference between DC components of adjacent blocks (b).}
+	\label{Fig:DC_coef}
+\end{figure}
+For natural images both the average luminance and color information changes slowly inside the image.
+This is verified by Figure \ref{Fig:DC_coef} (a), depicting merely the DC coefficient, i.e. the average of each input block, which is simply the original image with its resolution reduced by a factor of 8 both vertically and horizontally.
+In order to reduce spatial redundancy, the JPEG encoder applies linear prediction to the DC coefficients:
+each DC coefficient is encoded differentially, storing only the difference from the previous block's DC value.
+Hence, JPEG encoder is a hybrid encoder, applying both transform coding and predictive coding.
+
+The difference between the DC component of adjacent blocks is depicted in Figure \ref{Fig:DC_coef}, verifying that most differential DC components are nearly zero valued, with the differential representation allowing efficient compression.
+
+Note that in order to avoid the accumulation of prediction error in the decoder side, linear prediction is performed in a feedback prediction loop: for each block the difference is calculated from the \textbf{quantized} DC component of the previous block.
+
+\subsection{Encoding the AC coefficients}
+
+Observing the quantized AC coefficients in \eqref{eq:quantized_Coef_mx} reflects that for natural images most AC coefficients are likely to become zero after requantization.
+Obviously, significant compression can be ensured by storing only the values of the non-zero coefficients along with their positions in the DCT matrix.
+This is achieved by the \textbf{zig-zag ordering} of the matrix entries followed by the \textbf{run-length coding} of the resulting vector.
+
+\paragraph{Zig-zag ordering} means the collection of the matrix entries with increasing spatial frequency order.
+The zig-zag order of matrix entries is depicted in Figure \ref{Fig:zig_zag}.
+\begin{figure}[h!]
+	\centering
+	\begin{minipage}[c]{0.5\textwidth}
+	\begin{overpic}[width = 0.8\columnwidth ]{Figures_en/zig_zag.png}
+	\end{overpic}   \end{minipage}\hfill
+		\begin{minipage}[c]{0.45\textwidth}
+	\caption{Zig-zag ordering of the transform matrix into a $N^2$ sized zig-zag vector.}
+	\label{Fig:zig_zag}  \end{minipage}
+\end{figure}
+With omitting the DC coefficients---since it is differentially encoded as discussed in the foregoing---the zig-zag ordered vector of the example of \eqref{eq:quantized_Coef_mx} reads as
+\begin{equation}
+\left( 4, -9, 0, -2, 2, 2, -2, 0, 1, 0, -1, 1, 1, -1, -1, 1, -3, 0,0,0,0,0,-1, 1, 0,0...\right)
+\label{eq:zig_zag_example}
+\end{equation}
+
+\paragraph{Run-length coding} of the above vector means storing only the non-zero vector values, along with the number of the preceding zeros:
+From the zig-zag vector \textbf{Run-level} pairs are constructed in the form of $\left[ \text{No. of zeros}, \text{Next non-zero coefficient} \right]$.
+The last non-zero coefficient is furthermore signed with an End-of-block (EOB) flag.
+The run-level representation of \eqref{eq:zig_zag_example} reads as
+\begin{align*}
+\begin{split}
+&[0,4]\\
+&[0,-9]\\
+&[1,-2]\\
+&[0,2]\\
+&[0,2]\\
+&[0,-2]\\
+&[0,1]\\
+& ...\\
+& \text{EOB}
+\end{split}
+\end{align*}
+From the above representation the decoder is able to reconstruct the original coefficient matrix.
+
+Finally, both the differential DC coefficients and the run-level AC components are entropy coded by applying mixed \textbf{Huffman coding} and \textbf{Variable Length Integer} representation.
+
+\subsection{Entropy coding of DC and AC coefficients}
+
+\paragraph{Huffman code} is a variable length, optimal prefix code, minimizing the average code length statistically.
+Huffman coding assigns codes to a set of source symbols based on the a-priori probability of the generation of each symbol, with shorter code assigned to more frequent/probable source symbols.
+Being a prefix code---meaning that no whole code word is the prefix of any other code---it is inherently ensured that the stream of output codes can be uniquely decoded.
+
+The generation of Huffmann code is illustrated in Figure \ref{Fig:huffman}.
+In the example a source generates 4 types of symbols ($a_1, a_2, a_3, a_4$) with a-priory known probability. 
+The symbol probabilities are given by $P_{a_1} = 0.4, P_{a_2} = 0.35, P_{a_3} = 0.2, P_{a_4} = 0.05$.
+The Huffman codes are assigned as follows, with the steps illustrated in Figure \ref{Fig:huffman}:
+\begin{figure}[h!]
+	\centering
+	\begin{minipage}[c]{0.5\textwidth}
+	\begin{overpic}[width = 1\columnwidth ]{Figures_en/Huffman_coding_Example.png}
+	\end{overpic}   \end{minipage}\hfill
+		\begin{minipage}[c]{0.45\textwidth}
+	\caption{Construction of binary tree for Huffman coding.}
+	\label{Fig:huffman}  \end{minipage}
+\end{figure}
+\begin{itemize}
+\item A binary tree is built starting as many leaves as symbols there are.
+\item Symbols with the least probabilities are combined into a single leaf with their probabilities summed.
+\item The last step is repeated until a full tree is built.
+\item Starting backward from the root assign a bit symbol to each leaf, so that on a given branch the symbol will be the prefix of the next leaf.
+\end{itemize}
+As a result Huffman codes are assigned to each symbols with the lengths being inversely proportional with the symbol probability.
+The resulting codes are summarized in Table \ref{tab:huffmann}.
+\begin{table}[h!]
+\caption{Probabilities and the resulting Huffman codes.}
+\renewcommand*{\arraystretch}{1}
+\label{tab:huffmann}
+\begin{center}
+    \begin{tabular}[h!]{ @{}c | | c | l @{} }%\toprule
+	Symbol &   Probability & Huffman code \\ \hline
+    $a_1$  &   0.4         &   0 \\
+    $a_2$  &   0.35 	   &   10 \\
+    $a_3$  &   0.2 		   &   110 \\
+    $a_4$  &   0.05   	   &   111 
+\end{tabular}
+\end{center}
+\end{table}
+
+\vspace{3mm}
+The JPEG encoder applies Huffman codes indirectly for encoding both the differential DC and the run-level AC components:
+The actual differential DC coefficient and the amplitude of the non-zero AC components are encoded with \textbf{variable length integer (VLI)} representation.
+VLI is a simple binary representation of the given value with omitting leading zeros, hence, the number of digits of the binary number varies.
+The VLI representation of the DC and AC amplitudes are summarized in Figure \ref{Fig:JPEG_VLI}.
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.8\columnwidth ]{figures_en/JPEG_VLI.png}
+	\end{overpic}
+	\caption{The Variable Length Integer representation of DC and AC coefficients}
+	\label{Fig:JPEG_VLI}
+\end{figure}
+
+Since VLI is not a prefix codes, therefore, the JPEG encoder utilizes Huffman codes that denote the length of the VLI numbers to ensure decodability.
+Both the DC and AC coefficients are encoded using two symbols as presented in the following table
+\begin{table}[h!]
+\renewcommand*{\arraystretch}{2.25}
+\label{tab:JPEG_symbols}
+\begin{center}
+    \begin{tabular}[h!]{ @{}c | l | l | l | l | l @{} }%\toprule
+ & Symbol 1 &    Symbol 2  \\ \hline
+Differential DC    &  (SIZE)  & (AMPLITUDE) \\
+Run-level AC     &   (RUNLENGTH, SIZE) &    (AMPLITUDE)\\
+\end{tabular}
+\end{center}
+\end{table}
+\begin{itemize}
+\item In case of the DC coefficient, symbol 1 is a Huffman code, denoting the length of the following amplitude coefficient in bits, while Symbol 2 is the DC coefficient itself in VLI representation.
+As an example, if the differential DC coefficient is 3, then Symbol 1 is the Huffman code for SIZE = 2, and Symbol 2 is AMPLITUDE = 11 (being the binary representation of 3).
+\item Similarly, the run-level coded AC coefficients are stored by two symbols, with Symbol 1 being a Huffman code and Symbol 2 being a VLI code.
+Symbol 1 denotes the run length, along with the size of Symbol 2, with Symbol 2 encoding the actual level value.
+As an example, if the Run-level pair is (5,-1), being present in the previous example, then Symbol 1 is (RUNLENGTH = 5, SIZE= 1) and Symbol 2 is (AMPLITUDE= 0).
+\end{itemize}
+Obviously, since the differential DC coefficients are usually small values, therefore, shorter Huffman codes are assigned to small SIZE symbols.
+
+
+The JPEG encoder allows the use of either default or user-defined Huffman tables, with the latter maximized to 2 tables per channel per AC or DC component.
+Along with the user defined quantization matrices, the Huffman tables are transmitted in the JPEG bitstream header.
+Both the use of non-default quantization matrices and Huffman tables slightly increases the encoders computational need, otherwise the encoder and decoder are symmetric in computational complexity.
+
+\subsection{Sequential and progressive encoding}
+So far the processing scheme of the individual blocks has been discussed.
+The order of the DC and AC components in the output bitstream depends on the encoding mode.
+Two main encoding modes are supported by the JPEG standard:
+\begin{figure}[]
+	\centering
+	\begin{overpic}[width = 0.48\columnwidth ]{figures_en/spectral_selection.png}
+	\small
+	\put(0,0){(a)}
+	\end{overpic}
+	\begin{overpic}[width = 0.48\columnwidth ]{figures_en/successive_approximation.png}
+	\small
+	\put(0,0){(b)}
+	\end{overpic}
+	\caption{The Variable Length Integer representation of DC and AC coefficients}
+	\label{Fig:Progressive_JPEG}
+\end{figure}
+\begin{itemize}
+\item \textbf{Sequential mode} encodes coefficients of a single block at a time, and the entire image is encoded and decoded (and displayed) block-wise.
+\item \textbf{Progressive mode} encodes and transmits the entire image with increasing resolution, being useful when the main goal is to display a low quality image as soon as possible and successively improve the image quality (e.g. in web applications).
+Two approaches exists to successively improve the image quality
+	\begin{itemize}
+	\item \textbf{Spectral selection} appends first the DC component and first few AC coefficients of all image blocks to the output stream, then gradually transmits the remaining AC coefficients.
+	\item \textbf{Successive approximation} first transmits the bits with increasing significancy of all coefficient of all input blocks, starting with the most significant bit.
+	\end{itemize}
+	The principle of progressive encoding is illustrated in Figure \ref{Fig:Progressive_JPEG}.
+\end{itemize}
+
+\subsection{Artifacts of JPEG encoding}
+
+Overall, JPEG compression consists of tow lossy processing step: the optional chroma subsampling and the requantization of the DCT coefficients.
+In the previous chapters it was verified that the subsampling of the color information results in quasi-unnoticeable image quality degradation.
+The artifacts introduced by requantization were discussed in details in the previous section:
+blocking due to the quantization of the low-frequency coefficients and ringing due to the rough quantization of the high-frequency components.
+The amount of artifacts introduced and the global image quality depends on the quantization matrix and the quantizer scale factor, both set for the entire image in the output bitstream header.
+Therefore, JPEG allows only global image quality and bitrate control. 
+This is opposed to MPEG standards that allow local quality control by adjusting the quantizer scale block from block.
+
+\begin{figure}[h!]
+	\centering
+	\begin{overpic}[width = 1\columnwidth ]{figures_en/Lenna_jpeg_example.png}
+	\small
+	\put(-1,-1){(a)}
+	\put(33,-1){(b)}
+	\put(68,-1){(c)}
+	\end{overpic}
+	\caption{Result of JPEG encoding with the original image (a), with a scale factor of 2 (b) and of 4 (c).}
+	\label{Fig:Lenna_jpeg_example}
+\end{figure}
+A simple example for the artifacts, introduced by JPEG encoding is presented in Figure \ref{Fig:Lenna_jpeg_example}, with clearly highlighting the effects of blocking and ringing.
+The image was compressed with the quantization matrix \eqref{eq:Q_mx} multiplied by the scale factor of 2 in Figure \ref{Fig:Lenna_jpeg_example} (b) and of 4 in Figure \ref{Fig:Lenna_jpeg_example} (c).
 
 \vspace{2cm}
 \noindent\rule{12cm}{0.4pt}
