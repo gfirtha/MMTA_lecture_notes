@@ -28,7 +28,7 @@
 \usepackage{kbordermatrix} % include package @ document preamble
 \renewcommand{\kbldelim}{(} % change default array delimiters to parentheses
 \renewcommand{\kbrdelim}{)}
-
+\newcommand\scalemath[2]{\scalebox{#1}{\mbox{\ensuremath{\displaystyle #2}}}}
 \usepackage{amssymb}
 
 \DeclareRobustCommand{\bbone}{\text{\usefont{U}{bbold}{m}{n}1}}
@@ -91,19 +91,18 @@
 \chapter{Representation of colors pixels}
 \label{sec:video_color_representation}
 \input{video_colorspaces_en} 
-%
-%\chapter{Video formats}
-%\label{sec:video_formats}
-%\input{video_formats_en} 
-%
-%\chapter{Basics of image and video compression}
-%\label{sec:compression}
-%\input{compression_en} 
 
-\chapter{The MPEG video encoder}
+\chapter{Video formats}
+\label{sec:video_formats}
+\input{video_formats_en} 
+
+\chapter{Basics of image and video compression}
+\label{sec:compression}
+\input{compression_en} 
+
+\chapter{MPEG video encoding}
 \label{sec:MPEG}
 \input{MPEG_en} 
-
 
 \end{document}
 
